@@ -1,278 +1,233 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
-// Constants
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+type TargetOption = { id: string; label: string; locked: boolean };
 
-// --- Core Component ---
-function ConverterContent({ mode }: { mode: string | null }) {
-  // Configuration
-  const getModeConfig = () => {
-    switch (mode) {
-      case "jpg-to-png": return { accept: "image/jpeg", text: "Only JPG files", target: "image/png", locked: true };
-      case "jpg-to-webp": return { accept: "image/jpeg", text: "Only JPG files", target: "image/webp", locked: true };
-      case "png-to-jpg": return { accept: "image/png", text: "Only PNG files", target: "image/jpeg", locked: true };
-      case "webp-to-png": return { accept: "image/webp", text: "Only WebP files", target: "image/png", locked: true };
-      default: return { accept: "image/jpeg, image/png, image/webp", text: "JPG, PNG, or WebP", target: "image/webp", locked: false };
-    }
-  };
-  const config = getModeConfig();
+const IMAGE_CONVERSION_MAP: Record<string, TargetOption[]> = {
+  jpg: [{ id: "png", label: "PNG (Lossless)", locked: false }, { id: "webp", label: "WebP (Optimized)", locked: false }, { id: "gif", label: "GIF (Animated) - Coming Soon", locked: true }, { id: "svg", label: "SVG (Vector) - Coming Soon", locked: true }, { id: "pdf", label: "PDF Document - Coming Soon", locked: true }],
+  jpeg: [{ id: "png", label: "PNG (Lossless)", locked: false }, { id: "webp", label: "WebP (Optimized)", locked: false }, { id: "gif", label: "GIF (Animated) - Coming Soon", locked: true }, { id: "svg", label: "SVG (Vector) - Coming Soon", locked: true }, { id: "pdf", label: "PDF Document - Coming Soon", locked: true }],
+  png: [{ id: "jpeg", label: "JPEG (Standard)", locked: false }, { id: "webp", label: "WebP (Optimized)", locked: false }, { id: "gif", label: "GIF (Animated) - Coming Soon", locked: true }, { id: "svg", label: "SVG (Vector) - Coming Soon", locked: true }, { id: "ico", label: "ICO (Windows Icon) - Coming Soon", locked: true }],
+  webp: [{ id: "jpeg", label: "JPEG (Standard)", locked: false }, { id: "png", label: "PNG (Lossless)", locked: false }, { id: "gif", label: "GIF (Animated) - Coming Soon", locked: true }],
+  heic: [{ id: "jpeg", label: "JPEG (Standard) - Coming Soon", locked: true }, { id: "png", label: "PNG (Lossless) - Coming Soon", locked: true }],
+  svg: [{ id: "png", label: "PNG (Lossless) - Coming Soon", locked: true }, { id: "jpeg", label: "JPEG (Standard) - Coming Soon", locked: true }],
+  gif: [{ id: "mp4", label: "MP4 (Video) - Coming Soon", locked: true }, { id: "webp", label: "WebP (Animated) - Coming Soon", locked: true }]
+};
 
-  // State
+export default function ImageConverter() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [fileExt, setFileExt] = useState<string>("");
+  const [convertTarget, setConvertTarget] = useState<string>("");
+  const [isDragging, setIsDragging] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [targetFormat, setTargetFormat] = useState<string>(config.target);
-  const [quality, setQuality] = useState<number>(90);
   const [convertedUrl, setConvertedUrl] = useState<string | null>(null);
-  const [convertedSize, setConvertedSize] = useState<number | null>(null);
-  const [isConverting, setIsConverting] = useState<boolean>(false);
-  const [isDragging, setIsDragging] = useState<boolean>(false);
-
-  // Handlers
-  const processFile = (file: File) => {
-    if (config.locked && file.type !== config.accept) {
-      toast.error(`Invalid format! Please upload ${config.text}`);
-      return;
-    }
-
-    if (file.size > MAX_FILE_SIZE) {
-      toast.error("File is too large! Maximum allowed size is 10MB.");
-      return;
-    }
-
-    setSelectedFile(file);
-    const objectUrl = URL.createObjectURL(file);
-    setPreviewUrl(objectUrl);
-    setConvertedUrl(null);
-    setConvertedSize(null);
-    toast.success("Image loaded successfully!");
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) processFile(e.target.files[0]);
-  };
-
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragging(false);
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) processFile(e.dataTransfer.files[0]);
-  };
-
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragging(true);
-  };
-
-  // Logic
-  const calculateBase64Size = (dataURI: string) => {
-    const base64str = dataURI.split(",")[1];
-    try { return atob(base64str).length; } catch { return 0; }
-  };
+  const [isConverting, setIsConverting] = useState(false);
+  const [quality, setQuality] = useState<number>(90);
 
   const formatBytes = (bytes: number) => {
     if (bytes === 0) return "0 Bytes";
-    const k = 1024;
-    const sizes = ["Bytes", "KB", "MB", "GB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    const k = 1024, sizes = ["Bytes", "KB", "MB", "GB"], i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   };
 
-  const handleConvert = () => {
-    if (!selectedFile || !previewUrl) return;
-    
-    setIsConverting(true);
-    const toastId = toast.loading("Converting image...");
-
-    const img = new Image();
-    img.src = previewUrl;
-    img.onload = () => {
-      const canvas = document.createElement("canvas");
-      canvas.width = img.width;
-      canvas.height = img.height;
-      
-      const ctx = canvas.getContext("2d");
-      if (!ctx) {
-        toast.error("Failed to initialize conversion engine", { id: toastId });
-        setIsConverting(false);
-        return;
-      }
-
-      if (targetFormat === "image/jpeg") {
-        ctx.fillStyle = "#FFFFFF";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-      }
-
-      ctx.drawImage(img, 0, 0);
-      const dataUrl = canvas.toDataURL(targetFormat, quality / 100);
-      setConvertedUrl(dataUrl);
-      setConvertedSize(calculateBase64Size(dataUrl));
-      setIsConverting(false);
-      
-      toast.success("Conversion complete!", { id: toastId });
-    };
-
-    img.onerror = () => {
-      toast.error("Failed to process image", { id: toastId });
-      setIsConverting(false);
-    };
-  };
-
-  // Cleanup
   useEffect(() => {
     return () => { if (previewUrl) URL.revokeObjectURL(previewUrl); };
   }, [previewUrl]);
 
-  // Derived Values
-  const getFileExtension = (mimeType: string) => mimeType.split("/")[1];
-  const downloadName = selectedFile 
-    ? `${selectedFile.name.split('.')[0]}_qupa.${getFileExtension(targetFormat)}`
-    : "converted_image";
-  const showQualitySlider = targetFormat === "image/jpeg" || targetFormat === "image/webp";
-  const sizeDifference = selectedFile && convertedSize 
-    ? ((selectedFile.size - convertedSize) / selectedFile.size) * 100 : 0;
+  const handleFile = (file: File) => {
+    const extension = file.name.split('.').pop()?.toLowerCase() || "";
+    if (IMAGE_CONVERSION_MAP[extension]) {
+      setFileExt(extension);
+      setSelectedFile(file);
+      setPreviewUrl(URL.createObjectURL(file));
+      setConvertTarget(IMAGE_CONVERSION_MAP[extension][0].id);
+      setConvertedUrl(null);
+    } else if (file.type === "application/pdf" || file.type.includes("word")) {
+      toast.error("Please use the Document Converter for this file.");
+    } else {
+      toast.error(`Unsupported image format: .${extension}`);
+    }
+  };
 
-  // Render
+  const handleConvert = () => {
+    if (!selectedFile || !previewUrl) return;
+    setIsConverting(true);
+    const toastId = toast.loading(`Converting to ${convertTarget.toUpperCase()}...`);
+    const img = new Image();
+    img.src = previewUrl;
+    img.onload = () => {
+      try {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) throw new Error("Could not get canvas context");
+        if (convertTarget === "jpeg" || convertTarget === "jpg") {
+          ctx.fillStyle = "#FFFFFF";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+        ctx.drawImage(img, 0, 0);
+        const dataUrl = canvas.toDataURL(`image/${convertTarget === "jpg" ? "jpeg" : convertTarget}`, quality / 100);
+        setConvertedUrl(dataUrl);
+        toast.success("Image converted successfully!", { id: toastId });
+      } catch {
+        toast.error("Error during image conversion.", { id: toastId });
+      } finally {
+        setIsConverting(false);
+      }
+    };
+    img.onerror = () => {
+      toast.error("Failed to load image for conversion.", { id: toastId });
+      setIsConverting(false);
+    };
+  };
+
+  const handleReset = () => {
+    setSelectedFile(null);
+    setConvertedUrl(null);
+    setFileExt("");
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setPreviewUrl(null);
+  };
+
+  const currentOptions = IMAGE_CONVERSION_MAP[fileExt] || [];
+  const selectedOptionObj = currentOptions.find(opt => opt.id === convertTarget);
+  const isCurrentlyLocked = selectedOptionObj ? selectedOptionObj.locked : true;
+  const showQualitySlider = (convertTarget === "jpeg" || convertTarget === "webp") && !isCurrentlyLocked;
+
+  // UPLOAD STATE
+  if (!selectedFile) {
+    return (
+      <div 
+        onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+        onDragLeave={() => setIsDragging(false)}
+        onDrop={(e) => { e.preventDefault(); setIsDragging(false); if (e.dataTransfer.files) handleFile(e.dataTransfer.files[0]); }}
+        className={`w-full h-64 border-2 border-dashed rounded-xl flex flex-col items-center justify-center transition-colors cursor-pointer ${
+          isDragging 
+            ? "border-blue-500 bg-blue-50 dark:bg-blue-500/10 dark:border-blue-400" 
+            : "border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50"
+        }`}
+      >
+        <label className="cursor-pointer flex flex-col items-center justify-center w-full h-full">
+          <svg className="w-10 h-10 text-slate-400 dark:text-slate-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+          </svg>
+          <p className="mb-2 text-sm text-slate-500 dark:text-slate-400"><span className="font-semibold text-slate-700 dark:text-slate-200">Click to upload image</span> or drag and drop</p>
+          <p className="text-xs font-bold text-blue-600 dark:text-blue-400">JPG, PNG, WebP, SVG, HEIC & more</p>
+          <input type="file" className="hidden" accept=".jpg,.jpeg,.png,.webp,.svg,.heic,.gif,.bmp" onChange={(e) => e.target.files && handleFile(e.target.files[0])} />
+        </label>
+      </div>
+    );
+  }
+
+  // WORKSPACE STATE
   return (
-    <div className="w-full max-w-2xl mx-auto p-6 bg-white rounded-xl shadow-sm border border-gray-200 mt-10">
+    <div className="space-y-6">
       
-      {mode && (
-        <div className="mb-4 text-center">
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
-            Active Mode: {mode.toUpperCase().replace(/-/g, " ")}
-          </span>
+      {/* Visual Preview - PERBAIKAN: bg-slate-100 di mode terang, dark:bg-slate-900 di mode gelap */}
+      <div className="w-full bg-slate-100 dark:bg-slate-900 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center p-6 relative transition-colors duration-300">
+        {previewUrl && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={previewUrl} alt="Preview" className="max-h-64 object-contain shadow-lg rounded" />
+        )}
+      </div>
+
+      {/* File Info Card */}
+      <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg flex items-center justify-between border border-slate-200 dark:border-slate-700 transition-colors duration-300">
+        <div className="flex items-center gap-3 overflow-hidden pr-4">
+           {isCurrentlyLocked ? (
+             <svg className="w-8 h-8 shrink-0 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+               <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+               <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+             </svg>
+           ) : (
+             <svg className="w-8 h-8 shrink-0 text-blue-500 dark:text-blue-400" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+             </svg>
+           )}
+           <div className="flex flex-col truncate">
+             <span className="font-semibold text-sm text-slate-800 dark:text-slate-100 truncate">{selectedFile.name}</span>
+             <span className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">{formatBytes(selectedFile.size)}</span>
+           </div>
         </div>
-      )}
+        <button onClick={handleReset} className="text-sm font-bold text-red-500 hover:text-red-600 dark:hover:text-red-400 transition-colors shrink-0">
+          Remove
+        </button>
+      </div>
 
-      {!selectedFile && (
-        <div 
-          onDragOver={handleDragOver}
-          onDragLeave={() => setIsDragging(false)}
-          onDrop={handleDrop}
-          className={`flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg transition-colors duration-200 ${
-            isDragging ? "border-blue-500 bg-blue-50/50" : "border-gray-300 bg-gray-50 hover:bg-gray-100"
-          }`}
-        >
-          <label htmlFor="file-upload" className="flex flex-col items-center justify-center w-full h-full cursor-pointer">
-            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-              <svg className={`w-10 h-10 mb-3 transition-colors ${isDragging ? "text-blue-500" : "text-gray-400"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-              </svg>
-              <p className="mb-2 text-sm text-gray-500"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-              <p className="text-xs font-bold text-blue-600">{config.text}</p>
-              <p className="text-xs text-gray-400 mt-2">Max limit: 10MB</p>
-            </div>
-            <input id="file-upload" type="file" className="hidden" accept={config.accept} onChange={handleFileChange} />
-          </label>
-        </div>
-      )}
-
-      {selectedFile && previewUrl && (
-        <div className="space-y-6">
-          <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg border border-gray-200">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={previewUrl} alt="Preview" className="max-h-64 object-contain rounded-md shadow-sm mb-4" />
-            <p className="text-sm font-medium text-gray-700">{selectedFile.name}</p>
-            <p className="text-xs text-gray-500">{formatBytes(selectedFile.size)}</p>
-          </div>
-
-          <div className="flex flex-col gap-4">
-            <div className="flex items-center justify-between gap-4">
-              <div className="flex-1">
-                <label htmlFor="format-select" className="block text-sm font-medium text-gray-700 mb-1">Convert to</label>
-                <select 
-                  id="format-select"
-                  value={targetFormat}
-                  onChange={(e) => setTargetFormat(e.target.value)}
-                  disabled={config.locked}
-                  className={`w-full border text-sm rounded-lg block p-2.5 ${
-                    config.locked 
-                      ? "bg-gray-100 border-gray-200 text-gray-500 cursor-not-allowed" 
-                      : "bg-white border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
-                  }`}
-                >
-                  <option value="image/webp">WebP</option>
-                  <option value="image/png">PNG</option>
-                  <option value="image/jpeg">JPEG</option>
-                </select>
-              </div>
-              <button 
-                onClick={handleConvert}
-                disabled={isConverting}
-                className="flex-1 mt-6 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm px-5 py-2.5 transition-colors disabled:opacity-50"
-              >
-                {isConverting ? "Converting..." : "Convert Now"}
-              </button>
-            </div>
-
-            {showQualitySlider && (
-              <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                <div className="flex justify-between items-center mb-2">
-                  <label htmlFor="quality-slider" className="text-sm font-medium text-gray-700">Image Quality</label>
-                  <span className="text-sm font-bold text-blue-600">{quality}%</span>
-                </div>
-                <input id="quality-slider" type="range" min="1" max="100" value={quality} onChange={(e) => setQuality(Number(e.target.value))} className="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-blue-600" />
-              </div>
-            )}
+      {/* Conversion Options */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="flex flex-col space-y-4">
+          <div>
+            <label htmlFor="convert-target" className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Convert to</label>
+            <select 
+              id="convert-target" 
+              value={convertTarget} 
+              onChange={(e) => {
+                setConvertTarget(e.target.value);
+                setConvertedUrl(null);
+              }} 
+              className="w-full p-2.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#0B1120] text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-medium transition-colors duration-300"
+            >
+              {currentOptions.map((opt) => (
+                <option key={opt.id} value={opt.id} disabled={opt.locked}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
           </div>
           
-          {convertedUrl && convertedSize && (
-            <div className="mt-6 pt-6 border-t border-gray-200 flex flex-col items-center">
-              <div className="w-full bg-gray-50 rounded-lg p-4 mb-6 border border-gray-200">
-                <h4 className="text-sm font-semibold text-gray-700 mb-3 text-center">Conversion Summary</h4>
-                <div className="flex justify-between items-center text-sm">
-                  <div className="text-center flex-1">
-                    <p className="text-gray-500 mb-1">Original Size</p>
-                    <p className="font-medium text-gray-900">{formatBytes(selectedFile.size)}</p>
-                  </div>
-                  <div className="text-gray-300 px-2">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                  </div>
-                  <div className="text-center flex-1">
-                    <p className="text-gray-500 mb-1">Converted Size</p>
-                    <p className="font-medium text-gray-900">{formatBytes(convertedSize)}</p>
-                  </div>
-                </div>
-                <div className="mt-3 text-center">
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${sizeDifference > 0 ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"}`}>
-                    {sizeDifference > 0 ? `Saved ${sizeDifference.toFixed(1)}%` : `${Math.abs(sizeDifference).toFixed(1)}% Larger`}
-                  </span>
-                </div>
+          {showQualitySlider && (
+            <div className="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700 transition-colors duration-300">
+              <div className="flex justify-between items-center mb-2">
+                <label htmlFor="quality-slider" className="text-xs font-bold text-slate-700 dark:text-slate-300">Compression Quality</label>
+                <span className="text-xs font-bold text-blue-600 dark:text-blue-400">{quality}%</span>
               </div>
-
-              <a href={convertedUrl} download={downloadName} className="w-full text-center bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg text-sm px-5 py-3 transition-colors flex items-center justify-center gap-2">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-                Download {getFileExtension(targetFormat).toUpperCase()}
-              </a>
+              <input 
+                id="quality-slider"
+                type="range" min="10" max="100" 
+                value={quality} 
+                onChange={(e) => { setQuality(Number(e.target.value)); setConvertedUrl(null); }} 
+                className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-600"
+              />
             </div>
           )}
-
-          <button onClick={() => { setSelectedFile(null); setPreviewUrl(null); setConvertedUrl(null); setConvertedSize(null); setTargetFormat(config.target); }} className="w-full text-sm text-gray-500 hover:text-gray-800 underline transition-colors mt-4">
-            Upload another image
-          </button>
         </div>
-      )}
+
+        <div className="flex items-end h-full mt-auto">
+          {convertedUrl ? (
+            <a 
+              href={convertedUrl} 
+              download={`${selectedFile.name.split(".")[0]}_qupa.${convertTarget}`}
+              className="w-full bg-green-600 dark:bg-green-500 text-white py-3 rounded-lg font-bold hover:bg-green-700 dark:hover:bg-green-600 transition-colors flex items-center justify-center gap-2 shadow-sm"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+              Download Converted Image
+            </a>
+          ) : (
+            <button 
+              onClick={handleConvert} 
+              disabled={isConverting || isCurrentlyLocked} 
+              className={`w-full py-3 rounded-lg font-bold transition-all flex items-center justify-center gap-2 ${
+                isCurrentlyLocked 
+                  ? "bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 cursor-not-allowed" 
+                  : "bg-blue-600 text-white hover:bg-blue-700 shadow-sm"
+              }`}
+            >
+              {isCurrentlyLocked ? (
+                <>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                  </svg>
+                  Server Required
+                </>
+              ) : isConverting ? "Processing..." : "Convert Now"}
+            </button>
+          )}
+        </div>
+      </div>
     </div>
-  );
-}
-
-// --- Wrapper ---
-function ConverterWrapper() {
-  const searchParams = useSearchParams();
-  const mode = searchParams.get("mode");
-  
-  return <ConverterContent key={mode || "default"} mode={mode} />;
-}
-
-// --- Boundary ---
-export default function ImageConverter() {
-  return (
-    <Suspense fallback={<div className="w-full max-w-2xl mx-auto p-6 mt-10 text-center font-medium text-gray-500">Loading...</div>}>
-      <ConverterWrapper />
-    </Suspense>
   );
 }

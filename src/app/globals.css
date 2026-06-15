@@ -1,1 +1,4 @@
 @import "tailwindcss";
+
+/* Memaksa Tailwind v4 untuk patuh pada sakelar tombol (class .dark) */
+@custom-variant dark (&:is(.dark *));
