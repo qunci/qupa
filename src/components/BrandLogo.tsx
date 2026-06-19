@@ -16,7 +16,7 @@ export function BrandLogo({ className = "" }: BrandLogoProps) {
       */}
       <text 
         x="100" 
-        y="90" 
+        y="80" 
         textAnchor="middle" 
         fontFamily="'AlienBlock', 'Orbitron', system-ui, sans-serif" 
         fontWeight="400" 
@@ -28,7 +28,7 @@ export function BrandLogo({ className = "" }: BrandLogoProps) {
       </text>
       <text 
         x="100" 
-        y="180" 
+        y="195" 
         textAnchor="middle" 
         fontFamily="'AlienBlock', 'Orbitron', system-ui, sans-serif" 
         fontWeight="400" 
