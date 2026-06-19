@@ -1,9 +1,8 @@
 @import "tailwindcss";
 
 @font-face {
-  font-family: 'SK Quadratica';
-  src: url('/fonts/SK-Quadratica.woff2') format('woff2'),
-       url('/fonts/SK-Quadratica.ttf') format('truetype');
+  font-family: 'Blocky';
+  src: url('/fonts/blocky.ttf') format('truetype');
   font-weight: 900;
   font-style: normal;
   font-display: swap;
