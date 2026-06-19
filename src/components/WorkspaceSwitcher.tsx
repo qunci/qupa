@@ -43,7 +43,7 @@ function WorkspaceSwitcherContent() {
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 hover:bg-slate-100 dark:hover:bg-[#1e1f20] px-2.5 py-1.5 -ml-2.5 rounded-lg transition-colors group outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
       >
-        <h1 className="text-[19px] font-bold text-slate-900 dark:text-slate-100 tracking-tight">
+        <h1 className="text-[17px] font-semibold text-slate-900 dark:text-slate-100 tracking-tight">
           {currentWorkspace.label}
         </h1>
         <div className={`w-4 h-4 flex items-center justify-center rounded bg-slate-200/60 dark:bg-[#1e1f20] group-hover:bg-slate-200 dark:group-hover:bg-slate-800 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}>
