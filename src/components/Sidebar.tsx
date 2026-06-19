@@ -24,24 +24,15 @@ function SidebarContent() {
       
       {/* Brand Logo - Garis border-b telah dihapus */}
       <Link href="/" className="h-20 flex items-center px-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors duration-300 group select-none shrink-0">
-        <div className="flex items-center">
-          <svg viewBox="0 0 100 100" className="w-9 h-9 mr-2.5 drop-shadow-md transition-all duration-500 group-hover:scale-110 group-hover:rotate-12" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="qGrad" x1="0" y1="0" x2="100" y2="100">
-                <stop offset="0%" stopColor="#3b82f6" />
-                <stop offset="100%" stopColor="#6366f1" />
-              </linearGradient>
-              <linearGradient id="qTail" x1="50" y1="50" x2="100" y2="100">
-                <stop offset="0%" stopColor="#8b5cf6" />
-                <stop offset="100%" stopColor="#d946ef" />
-              </linearGradient>
-            </defs>
-            <circle cx="45" cy="45" r="30" stroke="url(#qGrad)" strokeWidth="16" />
-            <path d="M 60 60 L 85 85" stroke="url(#qTail)" strokeWidth="16" strokeLinecap="round" />
-            <circle cx="45" cy="45" r="8" fill="#06b6d4" />
-          </svg>
-          <span className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-            Qupa
+        <div className="flex items-baseline group-hover:scale-105 transition-transform duration-500 origin-left">
+          <span className="text-[36px] font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-br from-blue-600 via-indigo-500 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-500 drop-shadow-sm leading-none">
+            Q
+          </span>
+          <span className="text-[30px] font-extrabold text-slate-900 dark:text-white tracking-tighter leading-none -ml-0.5">
+            upa
+          </span>
+          <span className="text-[30px] font-black text-blue-500 dark:text-blue-400 leading-none ml-1">
+            .
           </span>
         </div>
       </Link>
