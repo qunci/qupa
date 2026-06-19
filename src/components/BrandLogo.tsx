@@ -12,14 +12,14 @@ export function BrandLogo({ className = "" }: BrandLogoProps) {
       xmlns="http://www.w3.org/2000/svg"
     >
       {/* 
-        Logo ini dirender menggunakan font Super Blocky sebagai alternatif.
+        Logo ini dirender menggunakan font AlienBlock-Regular.
       */}
       <text 
         x="100" 
         y="90" 
         textAnchor="middle" 
-        fontFamily="'Super Blocky', 'Blocky', 'Orbitron', system-ui, sans-serif" 
-        fontWeight="900" 
+        fontFamily="'AlienBlock', 'Orbitron', system-ui, sans-serif" 
+        fontWeight="400" 
         fontSize="100" 
         fill="currentColor"
         letterSpacing="-0.02em"
@@ -30,8 +30,8 @@ export function BrandLogo({ className = "" }: BrandLogoProps) {
         x="100" 
         y="180" 
         textAnchor="middle" 
-        fontFamily="'Super Blocky', 'Blocky', 'Orbitron', system-ui, sans-serif" 
-        fontWeight="900" 
+        fontFamily="'AlienBlock', 'Orbitron', system-ui, sans-serif" 
+        fontWeight="400" 
         fontSize="100" 
         fill="currentColor"
         letterSpacing="-0.02em"

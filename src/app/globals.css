@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 @font-face {
-  font-family: 'Super Blocky';
-  src: url('/fonts/Super Blocky.ttf') format('truetype');
-  font-weight: 900;
+  font-family: 'AlienBlock';
+  src: url('/fonts/AlienBlock-Regular.ttf') format('truetype');
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
