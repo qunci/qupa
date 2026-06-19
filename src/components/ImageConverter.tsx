@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import heic2any from "heic2any";
 
 type TargetOption = { id: string; label: string; locked: boolean };
 
@@ -10,8 +11,8 @@ const IMAGE_CONVERSION_MAP: Record<string, TargetOption[]> = {
   jpeg: [{ id: "png", label: "PNG (Lossless)", locked: false }, { id: "webp", label: "WebP (Optimized)", locked: false }, { id: "gif", label: "GIF (Animated) - Coming Soon", locked: true }, { id: "svg", label: "SVG (Vector) - Coming Soon", locked: true }, { id: "pdf", label: "PDF Document - Coming Soon", locked: true }],
   png: [{ id: "jpeg", label: "JPEG (Standard)", locked: false }, { id: "webp", label: "WebP (Optimized)", locked: false }, { id: "gif", label: "GIF (Animated) - Coming Soon", locked: true }, { id: "svg", label: "SVG (Vector) - Coming Soon", locked: true }, { id: "ico", label: "ICO (Windows Icon) - Coming Soon", locked: true }],
   webp: [{ id: "jpeg", label: "JPEG (Standard)", locked: false }, { id: "png", label: "PNG (Lossless)", locked: false }, { id: "gif", label: "GIF (Animated) - Coming Soon", locked: true }],
-  heic: [{ id: "jpeg", label: "JPEG (Standard) - Coming Soon", locked: true }, { id: "png", label: "PNG (Lossless) - Coming Soon", locked: true }],
-  svg: [{ id: "png", label: "PNG (Lossless) - Coming Soon", locked: true }, { id: "jpeg", label: "JPEG (Standard) - Coming Soon", locked: true }],
+  heic: [{ id: "jpeg", label: "JPEG (Standard)", locked: false }, { id: "png", label: "PNG (Lossless)", locked: false }],
+  svg: [{ id: "png", label: "PNG (Lossless)", locked: false }, { id: "jpeg", label: "JPEG (Standard)", locked: false }],
   gif: [{ id: "mp4", label: "MP4 (Video) - Coming Soon", locked: true }, { id: "webp", label: "WebP (Animated) - Coming Soon", locked: true }]
 };
 
@@ -35,14 +36,37 @@ export default function ImageConverter() {
     return () => { if (previewUrl) URL.revokeObjectURL(previewUrl); };
   }, [previewUrl]);
 
-  const handleFile = (file: File) => {
+  const handleFile = async (file: File) => {
+    // Quality First: Prevent browser crash on massive files
+    // 20MB limit for Free/Local mode
+    if (file.size > 20 * 1024 * 1024) {
+      toast.error("Batas maksimal mode gratis adalah 20MB. Pemrosesan file raksasa (Qupa Premium) akan segera hadir! 🚀", { duration: 5000 });
+      return;
+    }
+
     const extension = file.name.split('.').pop()?.toLowerCase() || "";
     if (IMAGE_CONVERSION_MAP[extension]) {
       setFileExt(extension);
       setSelectedFile(file);
-      setPreviewUrl(URL.createObjectURL(file));
       setConvertTarget(IMAGE_CONVERSION_MAP[extension][0].id);
       setConvertedUrl(null);
+
+      // Local First: Process HEIC entirely in-browser
+      if (extension === "heic") {
+        const toastId = toast.loading("Processing HEIC format...");
+        try {
+          const convertedBlob = await heic2any({ blob: file, toType: "image/jpeg", quality: 0.9 });
+          const blobToUse = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
+          setPreviewUrl(URL.createObjectURL(blobToUse));
+          toast.success("HEIC loaded successfully", { id: toastId });
+        } catch (error) {
+          console.error(error);
+          toast.error("Failed to parse HEIC image.", { id: toastId });
+          setSelectedFile(null); // Reset
+        }
+      } else {
+        setPreviewUrl(URL.createObjectURL(file));
+      }
     } else if (file.type === "application/pdf" || file.type.includes("word")) {
       toast.error("Please use the Document Converter for this file.");
     } else {
@@ -199,7 +223,7 @@ export default function ImageConverter() {
           {convertedUrl ? (
             <a 
               href={convertedUrl} 
-              download={`${selectedFile.name.split(".")[0]}_qupa.${convertTarget}`}
+              download={`${selectedFile.name.substring(0, selectedFile.name.lastIndexOf('.')) || selectedFile.name}_qupa.${convertTarget}`}
               className="w-full bg-green-600 dark:bg-green-500 text-white py-3 rounded-lg font-bold hover:bg-green-700 dark:hover:bg-green-600 transition-colors flex items-center justify-center gap-2 shadow-sm"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
