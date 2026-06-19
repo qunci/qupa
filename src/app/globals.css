@@ -32,3 +32,14 @@
 
 /* Memaksa Tailwind v4 untuk patuh pada sakelar tombol (class .dark) */
 @custom-variant dark (&:is(.dark *));
+
+/* Utilitas untuk menyembunyikan scrollbar (agar tidak ada efek bayangan slide bar yang jelek) */
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
