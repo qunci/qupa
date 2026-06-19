@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import heic2any from "heic2any";
+import { useSettings } from "@/hooks/useSettings";
 
 type TargetOption = { id: string; label: string; locked: boolean };
 
@@ -17,6 +18,7 @@ const IMAGE_CONVERSION_MAP: Record<string, TargetOption[]> = {
 };
 
 export default function ImageConverter() {
+  const { t } = useSettings();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [fileExt, setFileExt] = useState<string>("");
   const [convertTarget, setConvertTarget] = useState<string>("");
@@ -40,7 +42,7 @@ export default function ImageConverter() {
     // Quality First: Prevent browser crash on massive files
     // 20MB limit for Free/Local mode
     if (file.size > 20 * 1024 * 1024) {
-      toast.error("Batas maksimal mode gratis adalah 20MB. Pemrosesan file raksasa (Qupa Premium) akan segera hadir! 🚀", { duration: 5000 });
+      toast.error(t("fileTooLarge"), { duration: 5000 });
       return;
     }
 
@@ -53,31 +55,31 @@ export default function ImageConverter() {
 
       // Local First: Process HEIC entirely in-browser
       if (extension === "heic") {
-        const toastId = toast.loading("Processing HEIC format...");
+        const toastId = toast.loading(t("heicProcessing"));
         try {
           const convertedBlob = await heic2any({ blob: file, toType: "image/jpeg", quality: 0.9 });
           const blobToUse = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
           setPreviewUrl(URL.createObjectURL(blobToUse));
-          toast.success("HEIC loaded successfully", { id: toastId });
+          toast.success(t("heicSuccess"), { id: toastId });
         } catch (error) {
           console.error(error);
-          toast.error("Failed to parse HEIC image.", { id: toastId });
+          toast.error(t("heicError"), { id: toastId });
           setSelectedFile(null); // Reset
         }
       } else {
         setPreviewUrl(URL.createObjectURL(file));
       }
     } else if (file.type === "application/pdf" || file.type.includes("word")) {
-      toast.error("Please use the Document Converter for this file.");
+      toast.error(t("wrongConverterDoc"));
     } else {
-      toast.error(`Unsupported image format: .${extension}`);
+      toast.error(`${t("unsupportedFormat")} .${extension}`);
     }
   };
 
   const handleConvert = () => {
     if (!selectedFile || !previewUrl) return;
     setIsConverting(true);
-    const toastId = toast.loading(`Converting to ${convertTarget.toUpperCase()}...`);
+    const toastId = toast.loading(`${t("convertingTo")} ${convertTarget.toUpperCase()}...`);
     const img = new Image();
     img.src = previewUrl;
     img.onload = () => {
@@ -94,15 +96,15 @@ export default function ImageConverter() {
         ctx.drawImage(img, 0, 0);
         const dataUrl = canvas.toDataURL(`image/${convertTarget === "jpg" ? "jpeg" : convertTarget}`, quality / 100);
         setConvertedUrl(dataUrl);
-        toast.success("Image converted successfully!", { id: toastId });
+        toast.success(t("convertSuccess"), { id: toastId });
       } catch {
-        toast.error("Error during image conversion.", { id: toastId });
+        toast.error(t("convertError"), { id: toastId });
       } finally {
         setIsConverting(false);
       }
     };
     img.onerror = () => {
-      toast.error("Failed to load image for conversion.", { id: toastId });
+      toast.error(t("convertError"), { id: toastId });
       setIsConverting(false);
     };
   };
@@ -137,7 +139,7 @@ export default function ImageConverter() {
           <svg className="w-10 h-10 text-slate-400 dark:text-slate-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
           </svg>
-          <p className="mb-2 text-sm text-slate-500 dark:text-slate-400"><span className="font-semibold text-slate-700 dark:text-slate-200">Click to upload image</span> or drag and drop</p>
+          <p className="mb-2 text-sm text-slate-500 dark:text-slate-400"><span className="font-semibold text-slate-700 dark:text-slate-200">{t("clickToUpload")}</span> {t("orDragDrop")}</p>
           <p className="text-xs font-bold text-blue-600 dark:text-blue-400">JPG, PNG, WebP, SVG, HEIC & more</p>
           <input type="file" className="hidden" accept=".jpg,.jpeg,.png,.webp,.svg,.heic,.gif,.bmp" onChange={(e) => e.target.files && handleFile(e.target.files[0])} />
         </label>
@@ -176,7 +178,7 @@ export default function ImageConverter() {
            </div>
         </div>
         <button onClick={handleReset} className="text-sm font-bold text-red-500 hover:text-red-600 dark:hover:text-red-400 transition-colors shrink-0">
-          Remove
+          {t("remove")}
         </button>
       </div>
 
@@ -184,7 +186,7 @@ export default function ImageConverter() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex flex-col space-y-4">
           <div>
-            <label htmlFor="convert-target" className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Convert to</label>
+            <label htmlFor="convert-target" className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">{t("convertTo")}</label>
             <select 
               id="convert-target" 
               value={convertTarget} 
@@ -205,7 +207,7 @@ export default function ImageConverter() {
           {showQualitySlider && (
             <div className="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700 transition-colors duration-300">
               <div className="flex justify-between items-center mb-2">
-                <label htmlFor="quality-slider" className="text-xs font-bold text-slate-700 dark:text-slate-300">Compression Quality</label>
+                <label htmlFor="quality-slider" className="text-xs font-bold text-slate-700 dark:text-slate-300">{t("compressionQuality")}</label>
                 <span className="text-xs font-bold text-blue-600 dark:text-blue-400">{quality}%</span>
               </div>
               <input 
@@ -227,7 +229,7 @@ export default function ImageConverter() {
               className="w-full bg-green-600 dark:bg-green-500 text-white py-3 rounded-lg font-bold hover:bg-green-700 dark:hover:bg-green-600 transition-colors flex items-center justify-center gap-2 shadow-sm"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-              Download Converted Image
+              {t("downloadImage")}
             </a>
           ) : (
             <button 
@@ -245,9 +247,9 @@ export default function ImageConverter() {
                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                     <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                   </svg>
-                  Server Required
+                  {t("serverRequired")}
                 </>
-              ) : isConverting ? "Processing..." : "Convert Now"}
+              ) : isConverting ? t("processing") : t("convertNow")}
             </button>
           )}
         </div>

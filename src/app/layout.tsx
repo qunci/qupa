@@ -1,6 +1,7 @@
 import "@/app/globals.css";
 import Sidebar from "@/components/Sidebar";
 import { Toaster } from "react-hot-toast";
+import { SettingsProvider } from "@/hooks/useSettings";
 
 // Metadata
 export const metadata = {
@@ -34,13 +35,14 @@ export default function RootLayout({
         />
       </head>
       <body className="flex min-h-screen bg-slate-50 dark:bg-[#0B1120] text-slate-900 dark:text-slate-100 antialiased transition-colors duration-300">
-        
-        {/* Sidebar Utama */}
-        <Sidebar />
-        
-        <div className="flex-1 flex flex-col overflow-y-auto">
-          {children}
-        </div>
+        <SettingsProvider>
+          {/* Sidebar Utama */}
+          <Sidebar />
+          
+          <div className="flex-1 flex flex-col overflow-y-auto">
+            {children}
+          </div>
+        </SettingsProvider>
         
         {/* Toast Provider */}
         <Toaster 

@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { useSettings } from "@/hooks/useSettings";
 
 export default function DocumentConverter() {
+  const { t } = useSettings();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [convertTarget, setConvertTarget] = useState<string>("png_seq");
@@ -22,7 +24,7 @@ export default function DocumentConverter() {
     if (allowedExts.includes(extension)) {
       setSelectedFile(file);
     } else {
-      toast.error(`Unsupported document format: .${extension}`);
+      toast.error(`${t("unsupportedFormat")} .${extension}`);
     }
   };
 
@@ -43,7 +45,7 @@ export default function DocumentConverter() {
           <svg className="w-10 h-10 text-slate-400 dark:text-slate-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
           </svg>
-          <p className="mb-2 text-sm text-slate-500 dark:text-slate-400"><span className="font-semibold text-slate-700 dark:text-slate-200">Click to upload</span> or drag and drop</p>
+          <p className="mb-2 text-sm text-slate-500 dark:text-slate-400"><span className="font-semibold text-slate-700 dark:text-slate-200">{t("clickToUpload")}</span> {t("orDragDrop")}</p>
           <p className="text-xs font-bold text-blue-600 dark:text-blue-400">PDF, DOCX, XLSX, PPTX, CSV, TXT</p>
           <input type="file" className="hidden" accept=".pdf,.docx,.xlsx,.pptx,.csv,.txt" onChange={(e) => e.target.files && handleFile(e.target.files[0])} />
         </label>
@@ -67,7 +69,7 @@ export default function DocumentConverter() {
           </div>
         </div>
         <button onClick={() => setSelectedFile(null)} className="text-sm font-bold text-red-500 hover:text-red-600 dark:hover:text-red-400 transition-colors shrink-0">
-          Remove
+          {t("remove")}
         </button>
       </div>
 
@@ -75,7 +77,7 @@ export default function DocumentConverter() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex flex-col space-y-4">
           <div>
-            <label htmlFor="convert-target" className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Convert to</label>
+            <label htmlFor="convert-target" className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">{t("convertTo")}</label>
             <select
               id="convert-target"
               value={convertTarget}
@@ -94,10 +96,10 @@ export default function DocumentConverter() {
 
         <div className="flex items-end h-full mt-auto">
           <button
-            onClick={() => toast.error("Client-side document conversion logic pending.")}
+            onClick={() => toast.error(t("docPending"))}
             className="w-full py-3 rounded-lg font-bold transition-all flex items-center justify-center gap-2 bg-blue-600 text-white hover:bg-blue-700 shadow-sm"
           >
-            Convert Now
+            {t("convertNow")}
           </button>
         </div>
       </div>
