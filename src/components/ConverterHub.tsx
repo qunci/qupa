@@ -14,7 +14,12 @@ export default function ConverterHub() {
       
       {/* Header Tabs */}
       <div className="border-b border-slate-200 dark:border-slate-800 px-10 w-full transition-colors duration-300">
-        <div className="w-full max-w-7xl h-16 flex items-end">
+        <div className="w-full max-w-7xl">
+          <div className="h-16 flex items-center">
+            <h1 className="text-xl font-bold text-slate-800 dark:text-white tracking-tight">
+              {t("fileConverters")}
+            </h1>
+          </div>
           <nav className="flex space-x-8 overflow-x-auto no-scrollbar">
             <button 
               onClick={() => setActiveTab("image")}

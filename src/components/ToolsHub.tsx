@@ -10,7 +10,7 @@ export default function ToolsHub() {
       
       {/* Header Tabs */}
       <div className="bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 px-10 w-full transition-colors duration-300">
-        <div className="w-full max-w-7xl h-16 flex items-end pb-3">
+        <div className="w-full max-w-7xl h-16 flex items-center">
           <nav className="flex space-x-8 overflow-x-auto no-scrollbar">
             <button 
               onClick={() => setActiveTab("document")}
