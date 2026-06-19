@@ -45,6 +45,7 @@ export default function ConverterHub() {
           </nav>
         </div>
       </div>
+    </div>
 
       {/* Workspace Area */}
       <div className="flex-1 p-10 w-full overflow-y-auto">

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useSettings } from "@/hooks/use-settings";
+import { useSettings } from "@/hooks/useSettings";
 
 export default function ToolsHub() {
   const [activeTab, setActiveTab] = useState<"document" | "image">("document");

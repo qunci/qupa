@@ -23,6 +23,7 @@ export default function SettingsHub() {
           </h1>
         </div>
       </div>
+    </div>
 
       {/* WORKSPACE AREA */}
       <div className="flex-1 p-10 w-full overflow-y-auto">
