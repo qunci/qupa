@@ -54,7 +54,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     // If we want to strictly avoid hydration mismatch for language switch, 
     // we could return english until mounted, but standard React handles text changes fine.
     const currentLang = mounted ? language : "en";
-    return translations[currentLang][key] || key;
+    return translations[currentLang][key] || String(key);
   };
 
   return (
