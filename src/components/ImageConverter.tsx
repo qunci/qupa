@@ -194,7 +194,7 @@ export default function ImageConverter() {
                 setConvertTarget(e.target.value);
                 setConvertedUrl(null);
               }} 
-              className="w-full p-2.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#0B1120] text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-medium transition-colors duration-300"
+              className="w-full p-2.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-medium transition-colors duration-300"
             >
               {currentOptions.map((opt) => (
                 <option key={opt.id} value={opt.id} disabled={opt.locked}>

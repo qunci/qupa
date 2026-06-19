@@ -21,7 +21,7 @@ function SidebarContent() {
   };
 
   return (
-    <aside className="w-64 bg-white dark:bg-[#0B1120] flex flex-col h-screen sticky top-0 transition-colors duration-300 shrink-0">
+    <aside className="w-64 bg-white dark:bg-slate-950 flex flex-col h-screen sticky top-0 transition-colors duration-300 shrink-0">
       
       {/* Brand Logo */}
       <Link href="/" className="h-20 flex items-center px-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors duration-300 group select-none shrink-0">
@@ -66,7 +66,7 @@ function SidebarContent() {
 
 export default function Sidebar() {
   return (
-    <Suspense fallback={<div className="w-64 bg-white dark:bg-[#0B1120] h-screen transition-colors duration-300 shrink-0" />}>
+    <Suspense fallback={<div className="w-64 bg-white dark:bg-slate-950 h-screen transition-colors duration-300 shrink-0" />}>
       <SidebarContent />
     </Suspense>
   );

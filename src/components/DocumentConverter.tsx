@@ -82,7 +82,7 @@ export default function DocumentConverter() {
               id="convert-target"
               value={convertTarget}
               onChange={(e) => setConvertTarget(e.target.value)}
-              className="w-full p-2.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#0B1120] text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-medium transition-colors duration-300"
+              className="w-full p-2.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-medium transition-colors duration-300"
             >
               <option value="png_seq">PNG (Image sequence)</option>
               <option value="jpeg_seq">JPEG (Image sequence)</option>
