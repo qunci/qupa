@@ -24,14 +24,22 @@ function SidebarContent() {
       
       {/* Brand Logo */}
       <Link href="/" className="h-20 flex items-center px-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors duration-300 group select-none shrink-0">
-        <div className="flex items-baseline group-hover:scale-105 transition-transform duration-500 origin-left select-none">
-          <span className="inline-block text-[40px] font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-br from-blue-600 via-indigo-500 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-500 drop-shadow-sm leading-none px-2 -mx-2 py-1">
-            Q
-          </span>
-          <span className="inline-block text-[28px] font-extrabold text-slate-900 dark:text-white tracking-tight leading-none ml-1 -translate-y-[8px]">
-            upa
-          </span>
-        </div>
+        <svg viewBox="130 50 420 300" className="h-9 w-auto drop-shadow-sm transition-transform duration-500 group-hover:scale-105 origin-left" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="qGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#A855F7" />
+              <stop offset="50%" stopColor="#3B82F6" />
+              <stop offset="100%" stopColor="#0EA5E9" />
+            </linearGradient>
+            <mask id="tail-gap">
+              <rect width="800" height="400" fill="white" />
+              <circle cx="220" cy="200" r="82" fill="black" />
+            </mask>
+          </defs>
+          <circle cx="220" cy="200" r="60" fill="none" stroke="url(#qGrad)" strokeWidth="30" />
+          <polygon points="270,195 330,275 230,275" fill="url(#qGrad)" mask="url(#tail-gap)" />
+          <text x="310 390 470" y="200" fontFamily="Montserrat, Inter, 'Arial Black', sans-serif" fontWeight="900" fontSize="110" className="fill-slate-900 dark:fill-white" dominantBaseline="central">upa</text>
+        </svg>
       </Link>
 
       {/* Navigation */}
