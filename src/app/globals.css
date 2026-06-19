@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'SK Quadratica';
+  src: url('/fonts/SK-Quadratica.woff2') format('woff2'),
+       url('/fonts/SK-Quadratica.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   /* GitHub Neutral Palette (Mapped to Slate) */
   --color-slate-50: #f6f8fa;
