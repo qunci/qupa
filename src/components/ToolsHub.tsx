@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useSettings } from "@/hooks/useSettings";
+import WorkspaceSwitcher from "./WorkspaceSwitcher";
 
 export default function ToolsHub() {
   const [activeTab, setActiveTab] = useState<"document" | "image">("document");
@@ -16,9 +17,7 @@ export default function ToolsHub() {
         {/* Title Bar (Visible only when sidebar is closed) */}
         <div className={`w-full px-10 transition-all duration-300 overflow-hidden bg-white dark:bg-[#131314] ${isSidebarOpen ? 'h-0 opacity-0' : 'h-16 opacity-100'}`}>
           <div className="w-full max-w-7xl h-full flex items-center">
-            <h1 className="text-[19px] font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2 tracking-tight">
-              {t("advancedTools")}
-            </h1>
+            <WorkspaceSwitcher />
           </div>
         </div>
 

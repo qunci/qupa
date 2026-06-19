@@ -1,6 +1,7 @@
 "use client";
 
 import { useSettings } from "@/hooks/useSettings";
+import WorkspaceSwitcher from "./WorkspaceSwitcher";
 
 export default function SettingsHub() {
   const { language, setLanguage, theme, setTheme, t, isSidebarOpen } = useSettings();
@@ -14,9 +15,7 @@ export default function SettingsHub() {
         {/* Title Bar */}
         <div className="w-full px-10 transition-all duration-300 bg-white dark:bg-[#131314] h-16 border-b border-slate-200 dark:border-slate-800">
           <div className="w-full max-w-7xl h-full flex items-center">
-            <h1 className="text-[19px] font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2 tracking-tight">
-              {t("settingsTitle")}
-            </h1>
+            <WorkspaceSwitcher />
           </div>
         </div>
     </div>
