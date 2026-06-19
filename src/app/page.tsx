@@ -5,6 +5,8 @@ import { Suspense } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 
+import ThemeToggle from "@/components/ThemeToggle";
+
 const ConverterHub = dynamic(() => import("@/components/ConverterHub"), { ssr: false });
 const ToolsHub = dynamic(() => import("@/components/ToolsHub"), { ssr: false });
 const SettingsHub = dynamic(() => import("@/components/SettingsHub"), { ssr: false });
@@ -31,7 +33,8 @@ function HomeContent() {
   return (
     <main className="flex-1 flex flex-col min-h-screen w-full relative transition-colors duration-300">
       
-      <header className="h-16 w-full flex items-center justify-end px-8 shrink-0 sticky top-0 z-10 transition-colors duration-300">
+      <header className="h-16 w-full flex items-center justify-end px-10 shrink-0 sticky top-0 z-10 transition-colors duration-300">
+        <ThemeToggle />
       </header>
 
       {!hub ? <HeroLanding /> : hub === "tools" ? <ToolsHub /> : hub === "settings" ? <SettingsHub /> : <ConverterHub />}

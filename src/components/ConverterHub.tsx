@@ -13,7 +13,7 @@ export default function ConverterHub() {
     <div className="flex flex-col w-full h-full animate-in fade-in duration-500">
       
       {/* Header Tabs */}
-      <div className="bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 px-10 w-full transition-colors duration-300 pt-4">
+      <div className="border-b border-slate-200 dark:border-slate-800 px-10 w-full transition-colors duration-300">
         <div className="w-full max-w-7xl">
           <nav className="flex space-x-8 overflow-x-auto no-scrollbar">
             <button 
