@@ -16,10 +16,9 @@ export default function ConverterHub() {
       <div className="w-full flex flex-col transition-colors duration-300">
         
         {/* Title Bar (Visible only when sidebar is closed) */}
-        <div className={`w-full px-10 transition-all duration-300 overflow-hidden ${isSidebarOpen ? 'h-0 opacity-0' : 'h-14 opacity-100 bg-white dark:bg-[#131314]'}`}>
-          <div className="w-full max-w-7xl h-full flex items-end pb-3">
-            <h1 className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-500/70"></span>
+        <div className={`w-full px-10 transition-all duration-300 overflow-hidden bg-white dark:bg-[#131314] ${isSidebarOpen ? 'h-0 opacity-0' : 'h-16 opacity-100'}`}>
+          <div className="w-full max-w-7xl h-full flex items-center">
+            <h1 className="text-[19px] font-semibold text-slate-900 dark:text-slate-100 tracking-tight">
               {t("fileConverters")}
             </h1>
           </div>
@@ -28,7 +27,7 @@ export default function ConverterHub() {
         {/* Tabs Bar */}
         <div className={`w-full px-10 border-b border-slate-200 dark:border-slate-800 transition-all duration-300 bg-white dark:bg-[#131314] ${isSidebarOpen ? 'h-16 flex items-end' : 'flex items-end'}`}>
           <div className="w-full max-w-7xl">
-            <nav className="flex space-x-8 overflow-x-auto no-scrollbar">
+            <nav className="flex space-x-6 overflow-x-auto no-scrollbar">
             <button 
               onClick={() => setActiveTab("image")}
               className={`pb-3 text-sm font-semibold border-b-2 transition-colors flex items-center gap-2 whitespace-nowrap ${activeTab === "image" ? "border-blue-600 text-slate-900 dark:text-white" : "border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"}`}
