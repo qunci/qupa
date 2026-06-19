@@ -15,7 +15,7 @@ export default function ToolsHub() {
       <div className="w-full flex flex-col transition-colors duration-300">
         
         {/* Title Bar (Visible only when sidebar is closed) */}
-        <div className={`w-full px-10 transition-all duration-300 overflow-hidden bg-white dark:bg-[#131314] ${isSidebarOpen ? 'h-0 opacity-0' : 'h-16 opacity-100'}`}>
+        <div className={`w-full px-10 transition-all duration-300 bg-white dark:bg-[#131314] ${isSidebarOpen ? 'h-0 opacity-0 pointer-events-none' : 'h-16 opacity-100'}`}>
           <div className="w-full max-w-7xl h-full flex items-center">
             <WorkspaceSwitcher />
           </div>
