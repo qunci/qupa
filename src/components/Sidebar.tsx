@@ -24,15 +24,12 @@ function SidebarContent() {
       
       {/* Brand Logo - Garis border-b telah dihapus */}
       <Link href="/" className="h-20 flex items-center px-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors duration-300 group select-none shrink-0">
-        <div className="flex items-baseline group-hover:scale-105 transition-transform duration-500 origin-left">
-          <span className="text-[36px] font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-br from-blue-600 via-indigo-500 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-500 drop-shadow-sm leading-none">
+        <div className="flex items-baseline group-hover:scale-105 transition-transform duration-500 origin-left select-none">
+          <span className="text-[38px] font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-br from-blue-600 via-indigo-500 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-500 drop-shadow-sm leading-none">
             Q
           </span>
-          <span className="text-[30px] font-extrabold text-slate-900 dark:text-white tracking-tighter leading-none -ml-0.5">
+          <span className="text-[28px] font-extrabold text-slate-900 dark:text-white tracking-tight leading-none ml-1 -translate-y-1">
             upa
-          </span>
-          <span className="text-[30px] font-black text-blue-500 dark:text-blue-400 leading-none ml-1">
-            .
           </span>
         </div>
       </Link>
