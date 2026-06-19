@@ -53,19 +53,18 @@ function SidebarContent() {
               />
             </svg>
           ) : (
-            <BrandLogo className="w-8 h-8 drop-shadow-sm transition-transform duration-500 hover:scale-105" />
+            <BrandLogo className="w-[22px] h-[22px] drop-shadow-sm transition-transform duration-500 hover:scale-105" />
           )}
         </button>
       </div>
 
       {/* Navigation */}
-      <nav className={`flex-1 space-y-1 overflow-y-auto scrollbar-hide ${isOpen ? 'px-3 py-2' : 'py-4'}`}>
+      <nav className={`flex-1 space-y-1 overflow-y-auto scrollbar-hide px-3 py-2`}>
         {isOpen && (
           <p className="px-4 text-[11px] font-semibold tracking-wide text-slate-500 dark:text-slate-400 mb-2 mt-1 transition-colors duration-300">
             {t("coreWorkspaces")}
           </p>
         )}
-        {!isOpen && <div className="mt-4" />}
 
         <Link href="/?hub=converters" className={getMenuClass("converters")} title={!isOpen ? t("fileConverters") : undefined}>
           <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
