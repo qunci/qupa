@@ -122,7 +122,7 @@ export default function ImageConverter() {
   const isCurrentlyLocked = selectedOptionObj ? selectedOptionObj.locked : true;
   const showQualitySlider = (convertTarget === "jpeg" || convertTarget === "webp") && !isCurrentlyLocked;
 
-  // UPLOAD STATE
+  // Upload State
   if (!selectedFile) {
     return (
       <div 
@@ -147,11 +147,11 @@ export default function ImageConverter() {
     );
   }
 
-  // WORKSPACE STATE
+  // Workspace State
   return (
     <div className="space-y-6">
       
-      {/* Visual Preview - PERBAIKAN: bg-slate-100 di mode terang, dark:bg-slate-900 di mode gelap */}
+      {/* Visual Preview */}
       <div className="w-full bg-slate-100 dark:bg-slate-900 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center p-6 relative transition-colors duration-300">
         {previewUrl && (
           // eslint-disable-next-line @next/next/no-img-element

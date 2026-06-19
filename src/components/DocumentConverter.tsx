@@ -17,7 +17,7 @@ export default function DocumentConverter() {
   };
 
   const handleFile = (file: File) => {
-    // Validasi sederhana
+    // Basic validation
     const extension = file.name.split('.').pop()?.toLowerCase() || "";
     const allowedExts = ["pdf", "docx", "xlsx", "pptx", "csv", "txt"];
     
@@ -28,7 +28,7 @@ export default function DocumentConverter() {
     }
   };
 
-  // UPLOAD STATE (SUDAH FULL DARK MODE)
+  // Upload State
   if (!selectedFile) {
     return (
       <div
@@ -53,7 +53,7 @@ export default function DocumentConverter() {
     );
   }
 
-  // WORKSPACE STATE (SUDAH FULL DARK MODE)
+  // Workspace State
   return (
     <div className="space-y-6">
       

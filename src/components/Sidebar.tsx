@@ -22,7 +22,7 @@ function SidebarContent() {
   return (
     <aside className="w-64 bg-white dark:bg-[#0B1120] flex flex-col h-screen sticky top-0 transition-colors duration-300 shrink-0">
       
-      {/* Brand Logo - Garis border-b telah dihapus */}
+      {/* Brand Logo */}
       <Link href="/" className="h-20 flex items-center px-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors duration-300 group select-none shrink-0">
         <div className="flex items-baseline group-hover:scale-105 transition-transform duration-500 origin-left select-none">
           <span className="text-[38px] font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-br from-blue-600 via-indigo-500 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-500 drop-shadow-sm leading-none pl-1">
@@ -56,7 +56,7 @@ function SidebarContent() {
         </Link>
       </nav>
 
-      {/* Settings at the bottom */}
+      {/* Settings */}
       <div className="p-4 border-t border-slate-200 dark:border-slate-800 transition-colors duration-300">
         <Link href="/?hub=settings" className={getMenuClass("settings")}>
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -31,9 +31,7 @@ function HomeContent() {
   return (
     <main className="flex-1 flex flex-col min-h-screen bg-slate-50 dark:bg-[#0B1120] w-full relative transition-colors duration-300">
       
-      {/* PERBAIKAN: border-b dan warna border dihapus di tag header ini */}
       <header className="h-16 w-full bg-white dark:bg-[#0B1120] flex items-center justify-end px-10 shrink-0 sticky top-0 z-10 transition-colors duration-300">
-        {/* ThemeToggle has been moved to Settings Hub */}
       </header>
 
       {!hub ? <HeroLanding /> : hub === "tools" ? <ToolsHub /> : hub === "settings" ? <SettingsHub /> : <ConverterHub />}
