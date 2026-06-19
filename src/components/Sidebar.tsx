@@ -25,11 +25,23 @@ function SidebarContent() {
       {/* Brand Logo - Garis border-b telah dihapus */}
       <Link href="/" className="h-20 flex items-center px-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors duration-300 group select-none shrink-0">
         <div className="flex items-center">
-          <span className="text-[44px] font-black text-blue-600 dark:text-blue-500 tracking-tight leading-none transition-transform duration-500 group-hover:scale-105">
-            Q
-          </span>
-          <span className="text-[26px] font-extrabold text-slate-900 dark:text-white tracking-tight leading-none ml-0.5 -translate-y-px">
-            upa
+          <svg viewBox="0 0 100 100" className="w-9 h-9 mr-2.5 drop-shadow-md transition-all duration-500 group-hover:scale-110 group-hover:rotate-12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="qGrad" x1="0" y1="0" x2="100" y2="100">
+                <stop offset="0%" stopColor="#3b82f6" />
+                <stop offset="100%" stopColor="#6366f1" />
+              </linearGradient>
+              <linearGradient id="qTail" x1="50" y1="50" x2="100" y2="100">
+                <stop offset="0%" stopColor="#8b5cf6" />
+                <stop offset="100%" stopColor="#d946ef" />
+              </linearGradient>
+            </defs>
+            <circle cx="45" cy="45" r="30" stroke="url(#qGrad)" strokeWidth="16" />
+            <path d="M 60 60 L 85 85" stroke="url(#qTail)" strokeWidth="16" strokeLinecap="round" />
+            <circle cx="45" cy="45" r="8" fill="#06b6d4" />
+          </svg>
+          <span className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+            Qupa
           </span>
         </div>
       </Link>
