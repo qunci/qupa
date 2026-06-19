@@ -33,8 +33,10 @@ function HomeContent() {
   return (
     <main className="flex-1 flex flex-col min-h-screen w-full relative transition-colors duration-300">
       
-      <header className="h-16 w-full flex items-center justify-end px-10 shrink-0 sticky top-0 z-10 transition-colors duration-300">
-        <ThemeToggle />
+      <header className="absolute top-0 right-0 w-full h-16 flex items-center justify-end px-10 z-20 pointer-events-none">
+        <div className="pointer-events-auto">
+          <ThemeToggle />
+        </div>
       </header>
 
       {!hub ? <HeroLanding /> : hub === "tools" ? <ToolsHub /> : hub === "settings" ? <SettingsHub /> : <ConverterHub />}
