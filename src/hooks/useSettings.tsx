@@ -11,6 +11,8 @@ interface SettingsContextType {
   theme: Theme;
   setTheme: (theme: Theme) => void;
   t: (key: keyof typeof translations['en']) => string;
+  isSidebarOpen: boolean;
+  setIsSidebarOpen: (isOpen: boolean) => void;
 }
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -18,6 +20,7 @@ const SettingsContext = createContext<SettingsContextType | undefined>(undefined
 export function SettingsProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<Language>("en");
   const [theme, setThemeState] = useState<Theme>("light");
+  const [isSidebarOpenState, setIsSidebarOpenState] = useState<boolean>(true);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -25,6 +28,11 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     if (savedLang && (savedLang === "en" || savedLang === "id")) {
       // eslint-disable-next-line
       setLanguageState(savedLang);
+    }
+
+    const savedSidebar = localStorage.getItem("sidebarOpen");
+    if (savedSidebar !== null) {
+      setIsSidebarOpenState(savedSidebar === "true");
     }
 
     const isDark = document.documentElement.classList.contains("dark");
@@ -49,16 +57,19 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const setIsSidebarOpen = (isOpen: boolean) => {
+    setIsSidebarOpenState(isOpen);
+    localStorage.setItem("sidebarOpen", String(isOpen));
+  };
+
   // Safe translation function
   const t = (key: keyof typeof translations['en']): string => {
-    // If we want to strictly avoid hydration mismatch for language switch, 
-    // we could return english until mounted, but standard React handles text changes fine.
     const currentLang = mounted ? language : "en";
     return translations[currentLang][key] || String(key);
   };
 
   return (
-    <SettingsContext.Provider value={{ language, setLanguage, theme, setTheme, t }}>
+    <SettingsContext.Provider value={{ language, setLanguage, theme, setTheme, t, isSidebarOpen: isSidebarOpenState, setIsSidebarOpen }}>
       {children}
     </SettingsContext.Provider>
   );

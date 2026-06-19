@@ -7,20 +7,27 @@ import { useSettings } from "@/hooks/useSettings";
 
 export default function ConverterHub() {
   const [activeTab, setActiveTab] = useState<"image" | "document">("image");
-  const { t } = useSettings();
+  const { t, isSidebarOpen } = useSettings();
 
   return (
     <div className="flex flex-col w-full h-full animate-in fade-in duration-500">
       
-      {/* Header Tabs */}
-      <div className="border-b border-slate-200 dark:border-slate-800 px-10 w-full transition-colors duration-300">
-        <div className="w-full max-w-7xl">
-          <div className="h-16 flex items-center">
+      {/* Header Section */}
+      <div className="w-full flex flex-col transition-colors duration-300">
+        
+        {/* Title Bar (Visible only when sidebar is closed) */}
+        <div className={`w-full px-10 transition-all duration-300 overflow-hidden ${isSidebarOpen ? 'h-0 opacity-0' : 'h-16 opacity-100 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-[#131314]'}`}>
+          <div className="w-full max-w-7xl h-full flex items-center">
             <h1 className="text-xl font-bold text-slate-800 dark:text-white tracking-tight">
               {t("fileConverters")}
             </h1>
           </div>
-          <nav className="flex space-x-8 overflow-x-auto no-scrollbar">
+        </div>
+
+        {/* Tabs Bar */}
+        <div className={`w-full px-10 border-b border-slate-200 dark:border-slate-800 transition-all duration-300 ${isSidebarOpen ? 'h-16 flex items-end' : 'pt-2 flex items-end bg-slate-50/50 dark:bg-slate-900/40'}`}>
+          <div className="w-full max-w-7xl">
+            <nav className="flex space-x-8 overflow-x-auto no-scrollbar">
             <button 
               onClick={() => setActiveTab("image")}
               className={`pb-3 text-sm font-semibold border-b-2 transition-colors flex items-center gap-2 whitespace-nowrap ${activeTab === "image" ? "border-blue-600 text-slate-900 dark:text-white" : "border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"}`}

@@ -9,8 +9,7 @@ import { useSettings } from "@/hooks/useSettings";
 function SidebarContent() {
   const searchParams = useSearchParams();
   const currentHub = searchParams.get("hub") || "converters";
-  const { t } = useSettings();
-  const [isOpen, setIsOpen] = useState(true);
+  const { t, isSidebarOpen: isOpen, setIsSidebarOpen: setIsOpen } = useSettings();
 
   const getMenuClass = (hubName: string) => {
     const isActive = currentHub === hubName;
