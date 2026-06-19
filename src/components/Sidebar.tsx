@@ -24,8 +24,9 @@ function SidebarContent() {
     <aside className="w-64 bg-white dark:bg-slate-950 flex flex-col h-screen sticky top-0 transition-colors duration-300 shrink-0">
       
       {/* Brand Logo */}
-      <Link href="/" className="h-20 flex items-center px-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors duration-300 group select-none shrink-0">
+      <Link href="/" className="h-20 flex items-center gap-3 px-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors duration-300 group select-none shrink-0">
         <BrandLogo className="h-8 w-auto drop-shadow-sm transition-transform duration-500 group-hover:scale-105 origin-left" />
+        <span className="font-bold text-lg text-slate-900 dark:text-white">Dashboard</span>
       </Link>
 
       {/* Navigation */}
