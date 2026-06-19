@@ -40,9 +40,14 @@ function SidebarContent() {
           className={`p-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-500 dark:text-slate-400 shrink-0`}
           title={isOpen ? "Tutup sidebar" : "Buka sidebar"}
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
+          {isOpen ? (
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" strokeWidth="2" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 3v18M15 15l-3-3 3-3" />
+            </svg>
+          ) : (
+            <BrandLogo className="w-8 h-8 drop-shadow-sm transition-transform duration-500 hover:scale-105" />
+          )}
         </button>
       </div>
 
