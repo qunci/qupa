@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @font-face {
-  font-family: 'Blocky';
-  src: url('/fonts/blocky.ttf') format('truetype');
+  font-family: 'Super Blocky';
+  src: url('/fonts/Super Blocky.ttf') format('truetype');
   font-weight: 900;
   font-style: normal;
   font-display: swap;

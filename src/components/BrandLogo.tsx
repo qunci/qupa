@@ -12,13 +12,13 @@ export function BrandLogo({ className = "" }: BrandLogoProps) {
       xmlns="http://www.w3.org/2000/svg"
     >
       {/* 
-        Logo ini dirender menggunakan font Blocky (karya Maria Mamonova) sebagai alternatif gratis.
+        Logo ini dirender menggunakan font Super Blocky sebagai alternatif.
       */}
       <text 
         x="100" 
         y="90" 
         textAnchor="middle" 
-        fontFamily="'Blocky', 'Orbitron', system-ui, sans-serif" 
+        fontFamily="'Super Blocky', 'Blocky', 'Orbitron', system-ui, sans-serif" 
         fontWeight="900" 
         fontSize="100" 
         fill="currentColor"
@@ -30,7 +30,7 @@ export function BrandLogo({ className = "" }: BrandLogoProps) {
         x="100" 
         y="180" 
         textAnchor="middle" 
-        fontFamily="'Blocky', 'Orbitron', system-ui, sans-serif" 
+        fontFamily="'Super Blocky', 'Blocky', 'Orbitron', system-ui, sans-serif" 
         fontWeight="900" 
         fontSize="100" 
         fill="currentColor"
