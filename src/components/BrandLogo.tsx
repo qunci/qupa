@@ -24,7 +24,7 @@ export function BrandLogo({ className = "" }: BrandLogoProps) {
         fill="currentColor"
         letterSpacing="-0.02em"
       >
-        Q U
+        QU
       </text>
       <text 
         x="100" 
@@ -36,7 +36,7 @@ export function BrandLogo({ className = "" }: BrandLogoProps) {
         fill="currentColor"
         letterSpacing="-0.02em"
       >
-        P A
+        PA
       </text>
     </svg>
   );
