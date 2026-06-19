@@ -24,7 +24,7 @@ export function BrandLogo({ className = "" }: BrandLogoProps) {
         fill="currentColor"
         letterSpacing="-0.02em"
       >
-        Qu
+        qu
       </text>
       <text 
         x="100" 
