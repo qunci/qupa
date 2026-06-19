@@ -27,23 +27,23 @@ function SidebarContent() {
     <aside className={`bg-white dark:bg-slate-950 flex flex-col h-screen sticky top-0 transition-all duration-300 ease-in-out shrink-0 ${isOpen ? 'w-64' : 'w-20'}`}>
       
       {/* Brand Logo Header Area */}
-      <div className={`h-20 flex items-center shrink-0 ${isOpen ? 'px-6' : 'px-0 justify-center'}`}>
-        <button 
-          onClick={() => setIsOpen(!isOpen)}
-          className={`p-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-500 dark:text-slate-400 shrink-0 ${isOpen ? 'mr-3' : ''}`}
-          title="Toggle Sidebar"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-
+      <div className={`h-20 flex items-center shrink-0 ${isOpen ? 'px-6 justify-between w-full' : 'px-0 justify-center'}`}>
         <div className={`overflow-hidden transition-all duration-300 ${isOpen ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>
           <Link href="/" className="flex items-center gap-3 group select-none outline-none transition-opacity hover:opacity-80 rounded-md focus-visible:ring-2 focus-visible:ring-blue-500 whitespace-nowrap">
             <BrandLogo className="h-8 w-auto drop-shadow-sm transition-transform duration-500 group-hover:scale-105 origin-left" />
             <span className="font-bold text-lg text-slate-900 dark:text-white">Dashboard</span>
           </Link>
         </div>
+
+        <button 
+          onClick={() => setIsOpen(!isOpen)}
+          className={`p-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-500 dark:text-slate-400 shrink-0`}
+          title={isOpen ? "Tutup sidebar" : "Buka sidebar"}
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
       </div>
 
       {/* Navigation */}
