@@ -29,9 +29,9 @@ function HomeContent() {
   const hub = searchParams.get("hub");
 
   return (
-    <main className="flex-1 flex flex-col min-h-screen bg-slate-50 dark:bg-slate-950 w-full relative transition-colors duration-300">
+    <main className="flex-1 flex flex-col min-h-screen w-full relative transition-colors duration-300">
       
-      <header className="h-16 w-full bg-white dark:bg-slate-950 flex items-center justify-end px-10 shrink-0 sticky top-0 z-10 transition-colors duration-300">
+      <header className="h-16 w-full flex items-center justify-end px-8 shrink-0 sticky top-0 z-10 transition-colors duration-300">
       </header>
 
       {!hub ? <HeroLanding /> : hub === "tools" ? <ToolsHub /> : hub === "settings" ? <SettingsHub /> : <ConverterHub />}

@@ -34,7 +34,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="flex min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased transition-colors duration-300">
+      <body className="flex min-h-screen bg-white dark:bg-[#131314] text-slate-900 dark:text-slate-100 antialiased transition-colors duration-300">
         <SettingsProvider>
           {/* Main Sidebar */}
           <Sidebar />
