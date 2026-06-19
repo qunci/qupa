@@ -15,28 +15,48 @@ export function BrandLogo({ className = "" }: BrandLogoProps) {
         Logo ini dirender menggunakan font AlienBlock-Regular.
       */}
       <text 
-        x="100" 
+        x="96" 
         y="95" 
-        textAnchor="middle" 
+        textAnchor="end" 
         fontFamily="'AlienBlock', 'Orbitron', system-ui, sans-serif" 
         fontWeight="400" 
         fontSize="100" 
         fill="currentColor"
-        letterSpacing="-0.02em"
       >
-        QU
+        Q
       </text>
       <text 
-        x="100" 
-        y="175" 
-        textAnchor="middle" 
+        x="104" 
+        y="95" 
+        textAnchor="start" 
         fontFamily="'AlienBlock', 'Orbitron', system-ui, sans-serif" 
         fontWeight="400" 
         fontSize="100" 
         fill="currentColor"
-        letterSpacing="-0.02em"
       >
-        PA
+        U
+      </text>
+      <text 
+        x="96" 
+        y="175" 
+        textAnchor="end" 
+        fontFamily="'AlienBlock', 'Orbitron', system-ui, sans-serif" 
+        fontWeight="400" 
+        fontSize="100" 
+        fill="currentColor"
+      >
+        P
+      </text>
+      <text 
+        x="104" 
+        y="175" 
+        textAnchor="start" 
+        fontFamily="'AlienBlock', 'Orbitron', system-ui, sans-serif" 
+        fontWeight="400" 
+        fontSize="100" 
+        fill="currentColor"
+      >
+        A
       </text>
     </svg>
   );
