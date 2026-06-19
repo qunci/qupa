@@ -17,8 +17,9 @@ export default function ConverterHub() {
         
         {/* Title Bar (Visible only when sidebar is closed) */}
         <div className={`w-full px-10 transition-all duration-300 overflow-hidden ${isSidebarOpen ? 'h-0 opacity-0' : 'h-14 opacity-100 bg-white dark:bg-[#131314]'}`}>
-          <div className="w-full max-w-7xl h-full flex items-end pb-2">
-            <h1 className="text-lg font-medium text-slate-500 dark:text-slate-400 tracking-tight">
+          <div className="w-full max-w-7xl h-full flex items-end pb-3">
+            <h1 className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-500/70"></span>
               {t("fileConverters")}
             </h1>
           </div>
