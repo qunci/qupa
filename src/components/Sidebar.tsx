@@ -25,7 +25,7 @@ function SidebarContent() {
       
       {/* Brand Logo */}
       <Link href="/" className="h-20 flex items-center px-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors duration-300 group select-none shrink-0">
-        <BrandLogo className="h-11 w-auto drop-shadow-sm transition-transform duration-500 group-hover:scale-105 origin-left" />
+        <BrandLogo className="h-8 w-auto drop-shadow-sm transition-transform duration-500 group-hover:scale-105 origin-left" />
       </Link>
 
       {/* Navigation */}
