@@ -16,16 +16,16 @@ export default function ConverterHub() {
       <div className="w-full flex flex-col transition-colors duration-300">
         
         {/* Title Bar (Visible only when sidebar is closed) */}
-        <div className={`w-full px-10 transition-all duration-300 overflow-hidden ${isSidebarOpen ? 'h-0 opacity-0' : 'h-16 opacity-100 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-[#131314]'}`}>
-          <div className="w-full max-w-7xl h-full flex items-center">
-            <h1 className="text-xl font-bold text-slate-800 dark:text-white tracking-tight">
+        <div className={`w-full px-10 transition-all duration-300 overflow-hidden ${isSidebarOpen ? 'h-0 opacity-0' : 'h-14 opacity-100 bg-white dark:bg-[#131314]'}`}>
+          <div className="w-full max-w-7xl h-full flex items-end pb-2">
+            <h1 className="text-lg font-medium text-slate-500 dark:text-slate-400 tracking-tight">
               {t("fileConverters")}
             </h1>
           </div>
         </div>
 
         {/* Tabs Bar */}
-        <div className={`w-full px-10 border-b border-slate-200 dark:border-slate-800 transition-all duration-300 ${isSidebarOpen ? 'h-16 flex items-end' : 'pt-2 flex items-end bg-slate-50/50 dark:bg-slate-900/40'}`}>
+        <div className={`w-full px-10 border-b border-slate-200 dark:border-slate-800 transition-all duration-300 bg-white dark:bg-[#131314] ${isSidebarOpen ? 'h-16 flex items-end' : 'flex items-end'}`}>
           <div className="w-full max-w-7xl">
             <nav className="flex space-x-8 overflow-x-auto no-scrollbar">
             <button 
