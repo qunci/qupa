@@ -8,7 +8,7 @@ import * as pdfjsLib from "pdfjs-dist";
 
 // Initialize PDF.js worker
 if (typeof window !== "undefined") {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
+  pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
 }
 
 type SplitMode = "extract" | "burst_pdf" | "burst_img";
@@ -102,16 +102,17 @@ export default function SplitPdfTool({ onBack }: { onBack: () => void }) {
     try {
       const arrayBuffer = await newFile.arrayBuffer();
       
+      // Load with pdfjs-dist for rendering thumbnails FIRST to catch worker errors early
+      const loadedPdfJs = await pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
+      
       // Load with pdf-lib to get basic info
       const pdf = await PDFDocument.load(arrayBuffer);
       const numPages = pdf.getPageCount();
+      
+      setPdfJsDoc(loadedPdfJs);
       setTotalPages(numPages);
       setFile(newFile);
       setRangeInput(`1-${numPages}`);
-
-      // Load with pdfjs-dist for rendering thumbnails
-      const loadedPdfJs = await pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
-      setPdfJsDoc(loadedPdfJs);
 
       toast.success("PDF loaded successfully!", { id: toastId });
     } catch (error) {
