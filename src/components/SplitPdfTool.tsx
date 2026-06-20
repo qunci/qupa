@@ -96,7 +96,7 @@ export default function SplitPdfTool({ onBack }: { onBack: () => void }) {
         copiedPages.forEach((page) => newPdf.addPage(page));
         
         const pdfBytes = await newPdf.save();
-        triggerDownload(new Blob([pdfBytes], { type: "application/pdf" }), `${baseName}_extracted.pdf`);
+        triggerDownload(new Blob([pdfBytes as any], { type: "application/pdf" }), `${baseName}_extracted.pdf`);
       
       } else if (mode === "burst_pdf") {
         const zip = new JSZip();
