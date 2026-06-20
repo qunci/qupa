@@ -311,7 +311,7 @@ export default function SplitPdfTool() {
           {/* Sidebar Tools Area */}
           <div className="w-full lg:w-80 space-y-6 shrink-0">
             <div>
-              <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 flex justify-between">
+              <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 flex justify-between -mt-1.5">
                 <span>Selected Pages</span>
                 <span className="text-blue-600 dark:text-blue-400">{selectedPagesSet.size} selected</span>
               </label>
