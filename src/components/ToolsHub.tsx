@@ -51,21 +51,23 @@ export default function ToolsHub() {
                 <div className="flex items-center gap-3">
                   <div className="shrink-0 flex items-center justify-center">
                     {activeTool === "merge-pdf" ? (
-                      <svg className="w-7 h-7 text-amber-500 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
+                      <svg className="w-10 h-10 text-amber-500 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.25">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
                       </svg>
                     ) : (
-                      <svg className="w-7 h-7 text-rose-500 dark:text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
+                      <svg className="w-10 h-10 text-rose-500 dark:text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.25">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
                       </svg>
                     )}
                   </div>
                   <div className="flex flex-col justify-center">
-                    <h2 className="text-lg font-bold text-slate-900 dark:text-white leading-tight tracking-tight">
+                    <h2 className="text-[17px] font-bold text-slate-900 dark:text-white leading-none tracking-tight">
                       {activeTool === "merge-pdf" ? "Merge PDF" : "Split PDF"}
                     </h2>
-                    <p className="text-[12px] text-slate-500 dark:text-slate-400 leading-none mt-1">
-                      {activeTool === "merge-pdf" ? "Combine multiple PDF files into one clean document sequence effortlessly." : "Extract pages or burst documents into individual files."}
+                    <p className="text-[13px] text-slate-500 dark:text-slate-400 mt-1.5 leading-none">
+                      {activeTool === "merge-pdf" 
+                        ? "Combine multiple PDF files into one sequence."
+                        : "Extract pages or burst large PDF into single sheets."}
                     </p>
                   </div>
                 </div>
