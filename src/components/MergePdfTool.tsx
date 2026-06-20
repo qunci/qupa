@@ -87,7 +87,7 @@ export default function MergePdfTool({ onBack }: { onBack: () => void }) {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-6 animate-in fade-in duration-500">
+    <div className="w-full max-w-5xl mx-auto space-y-6 animate-in fade-in duration-500">
       
       <div className="flex items-center gap-4 mb-6">
         <button 

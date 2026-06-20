@@ -30,31 +30,33 @@ export default function DocumentConverter() {
   // Upload State
   if (!selectedFile) {
     return (
-      <div
-        onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
-        onDragLeave={() => setIsDragging(false)}
-        onDrop={(e) => { e.preventDefault(); setIsDragging(false); if (e.dataTransfer.files) handleFile(e.dataTransfer.files[0]); }}
-        className={`w-full h-64 border-2 border-dashed rounded-xl flex flex-col items-center justify-center transition-colors cursor-pointer ${
-          isDragging
-            ? "border-blue-500 bg-blue-50 dark:bg-blue-500/10 dark:border-blue-400"
-            : "border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50"
-        }`}
-      >
-        <label className="cursor-pointer flex flex-col items-center justify-center w-full h-full">
-          <svg className="w-10 h-10 text-slate-400 dark:text-slate-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-          </svg>
-          <p className="mb-2 text-sm text-slate-500 dark:text-slate-400"><span className="font-semibold text-slate-700 dark:text-slate-200">{t("clickToUpload")}</span> {t("orDragDrop")}</p>
-          <p className="text-xs font-bold text-blue-600 dark:text-blue-400">PDF, DOCX, XLSX, PPTX, CSV, TXT</p>
-          <input type="file" className="hidden" accept=".pdf,.docx,.xlsx,.pptx,.csv,.txt" onChange={(e) => e.target.files && handleFile(e.target.files[0])} />
-        </label>
+      <div className="w-full max-w-5xl mx-auto animate-in fade-in duration-500">
+        <div
+          onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+          onDragLeave={() => setIsDragging(false)}
+          onDrop={(e) => { e.preventDefault(); setIsDragging(false); if (e.dataTransfer.files) handleFile(e.dataTransfer.files[0]); }}
+          className={`w-full h-64 border-2 border-dashed rounded-xl flex flex-col items-center justify-center transition-colors cursor-pointer ${
+            isDragging
+              ? "border-blue-500 bg-blue-50 dark:bg-blue-500/10 dark:border-blue-400"
+              : "border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50"
+          }`}
+        >
+          <label className="cursor-pointer flex flex-col items-center justify-center w-full h-full">
+            <svg className="w-10 h-10 text-slate-400 dark:text-slate-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+            </svg>
+            <p className="mb-2 text-sm text-slate-500 dark:text-slate-400"><span className="font-semibold text-slate-700 dark:text-slate-200">{t("clickToUpload")}</span> {t("orDragDrop")}</p>
+            <p className="text-xs font-bold text-blue-600 dark:text-blue-400">PDF, DOCX, XLSX, PPTX, CSV, TXT</p>
+            <input type="file" className="hidden" accept=".pdf,.docx,.xlsx,.pptx,.csv,.txt" onChange={(e) => e.target.files && handleFile(e.target.files[0])} />
+          </label>
+        </div>
       </div>
     );
   }
 
   // Workspace State
   return (
-    <div className="space-y-6">
+    <div className="w-full max-w-5xl mx-auto space-y-6 animate-in fade-in duration-500">
       
       {/* File Info Card */}
       <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg flex items-center justify-between border border-slate-200 dark:border-slate-700 transition-colors duration-300">
