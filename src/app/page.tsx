@@ -13,11 +13,10 @@ const ConverterHub = dynamic(() => import("@/components/ConverterHub"), { ssr: f
 const ToolsHub = dynamic(() => import("@/components/ToolsHub"), { ssr: false });
 const SettingsHub = dynamic(() => import("@/components/SettingsHub"), { ssr: false });
 
-import WelcomeDashboard from "@/components/WelcomeDashboard";
 
 function HomeContent() {
   const searchParams = useSearchParams();
-  const hub = searchParams.get("hub");
+  const hub = searchParams.get("hub") || "converters";
 
   return (
     <main className="flex-1 flex flex-col min-h-screen w-full relative transition-colors duration-300">
@@ -29,9 +28,7 @@ function HomeContent() {
       </header>
 
       <AnimatePresence mode="wait">
-        {!hub ? (
-          <WelcomeDashboard key="welcome" />
-        ) : hub === "tools" ? (
+        {hub === "tools" ? (
           <motion.div key="tools" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} transition={{ duration: 0.3 }} className="w-full h-full flex flex-col">
             <ToolsHub />
           </motion.div>
