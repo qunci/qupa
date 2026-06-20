@@ -44,6 +44,7 @@ export default function ImageCompressorTool() {
     
     setFile(newFile);
     setOriginalSize(newFile.size);
+    setSliderPos(50); // Reset slider position to center
     
     if (originalUrl) URL.revokeObjectURL(originalUrl);
     const newOriginalUrl = URL.createObjectURL(newFile);
@@ -187,36 +188,39 @@ export default function ImageCompressorTool() {
 
             <div className="bg-slate-100 dark:bg-[#18181B] rounded-2xl p-4 border border-slate-200 dark:border-slate-800/60 shadow-inner flex-1 min-h-[400px] flex items-center justify-center relative overflow-hidden">
               {originalUrl && compressedUrl ? (
-                <div className="relative w-full max-w-3xl aspect-[4/3] sm:aspect-video rounded-xl overflow-hidden shadow-md select-none group bg-checkered dark:bg-checkered-dark">
+                <div className="relative w-full max-w-3xl aspect-[4/3] sm:aspect-video select-none group">
                   
-                  {/* Base Image (After) */}
-                  <img src={compressedUrl} className="absolute inset-0 w-full h-full object-contain pointer-events-none" alt="Compressed" />
-                  
-                  {/* Clipped Image (Before) */}
-                  <div 
-                    className="absolute inset-0 w-full h-full overflow-hidden"
-                    style={{ clipPath: `inset(0 ${100 - sliderPos}% 0 0)` }}
-                  >
-                    <img src={originalUrl} className="absolute inset-0 w-full h-full object-contain pointer-events-none" alt="Original" />
+                  {/* Images Container (Hidden overflow to prevent image spill, but leaves slider handle visible outside bounds) */}
+                  <div className="absolute inset-0 rounded-xl overflow-hidden shadow-md bg-checkered dark:bg-checkered-dark pointer-events-none">
+                    {/* Base Image (After) */}
+                    <img src={compressedUrl} className="absolute inset-0 w-full h-full object-contain pointer-events-none" alt="Compressed" />
+                    
+                    {/* Clipped Image (Before) */}
+                    <div 
+                      className="absolute inset-0 w-full h-full overflow-hidden"
+                      style={{ clipPath: `inset(0 ${100 - sliderPos}% 0 0)` }}
+                    >
+                      <img src={originalUrl} className="absolute inset-0 w-full h-full object-contain pointer-events-none" alt="Original" />
+                    </div>
                   </div>
 
-                  {/* Slider Control */}
+                  {/* Slider Control (Outside overflow-hidden so handle doesn't clip) */}
                   <div 
-                    className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize shadow-[0_0_10px_rgba(0,0,0,0.5)] z-20"
-                    style={{ left: `${sliderPos}%` }}
+                    className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize shadow-[0_0_10px_rgba(0,0,0,0.5)] z-20 pointer-events-none"
+                    style={{ left: `clamp(0%, ${sliderPos}%, 100%)` }}
                   >
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-9 h-9 bg-white rounded-full flex items-center justify-center shadow-lg border border-slate-200 text-slate-500">
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-9 h-9 bg-white rounded-full flex items-center justify-center shadow-lg border border-slate-200 text-slate-500 pointer-events-auto">
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4" transform="rotate(90 12 12)"/></svg>
                     </div>
                   </div>
 
-                  {/* Invisible Range Input Overlay */}
+                  {/* Invisible Range Input Overlay (Reduced height to allow mobile scrolling above/below) */}
                   <input 
                     type="range" 
                     min="0" max="100" 
                     value={sliderPos}
                     onChange={(e) => setSliderPos(Number(e.target.value))}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-30 m-0"
+                    className="absolute top-[30%] bottom-[30%] h-[40%] w-full opacity-0 cursor-ew-resize z-30 m-0 touch-pan-y"
                   />
 
                   {/* Labels */}
