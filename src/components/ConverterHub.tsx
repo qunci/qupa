@@ -5,6 +5,7 @@ import ImageConverter from "./ImageConverter";
 import DocumentConverter from "./DocumentConverter";
 import { useSettings } from "@/hooks/useSettings";
 import WorkspaceSwitcher from "./WorkspaceSwitcher";
+import MobileHeaderToggle from "./MobileHeaderToggle";
 
 export default function ConverterHub() {
   const [activeTool, setActiveTool] = useState<"image" | "document" | null>(null);
@@ -16,15 +17,16 @@ export default function ConverterHub() {
       {/* Header Section */}
       <div className="w-full flex flex-col transition-colors duration-300">
         
-        {/* Title Bar (Visible only when sidebar is closed) */}
-        <div className={`w-full px-6 transition-all duration-300 bg-white/80 dark:bg-[#131314]/80 backdrop-blur-xl sticky top-0 z-20 ${isSidebarOpen ? 'h-0 opacity-0 pointer-events-none' : 'h-16 opacity-100'}`}>
+        {/* Title Bar (Visible only when sidebar is closed on desktop) */}
+        <div className={`w-full px-4 md:px-6 transition-all duration-300 bg-white/80 dark:bg-[#131314]/80 backdrop-blur-xl sticky top-0 z-20 flex items-center h-16 ${isSidebarOpen ? 'md:h-0 md:opacity-0 md:pointer-events-none' : ''}`}>
+          <MobileHeaderToggle />
           <div className="w-full h-full flex items-center">
             <WorkspaceSwitcher />
           </div>
         </div>
 
         {/* Tabs Bar / Tool Header */}
-        <div className={`w-full px-6 border-b border-slate-200 dark:border-slate-800 transition-all duration-300 bg-white dark:bg-[#131314] ${isSidebarOpen || activeTool ? 'h-16' : 'h-12'}`}>
+        <div className={`w-full px-4 md:px-6 border-b border-slate-200 dark:border-slate-800 transition-all duration-300 bg-white dark:bg-[#131314] ${activeTool ? 'h-16' : (isSidebarOpen ? 'h-12 md:h-16' : 'h-12')}`}>
           <div className="w-full h-full flex items-center">
             {!activeTool ? (
               <nav className="flex space-x-6 overflow-x-auto no-scrollbar h-full">
