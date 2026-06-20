@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import toast from "react-hot-toast";
 import { PDFDocument } from "pdf-lib";
 
-export default function MergePdfTool({ onBack }: { onBack: () => void }) {
+export default function MergePdfTool() {
   const [files, setFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -89,21 +89,6 @@ export default function MergePdfTool({ onBack }: { onBack: () => void }) {
   return (
     <div className="w-full max-w-5xl mx-auto space-y-6 animate-in fade-in duration-500">
       
-      <div className="flex items-center gap-4 mb-6">
-        <button 
-          onClick={onBack}
-          className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-        </button>
-        <div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-            <span className="text-2xl">🗂️</span> Merge PDF
-          </h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400">Combine multiple PDF files in the order you want.</p>
-        </div>
-      </div>
-
       <div 
         onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
         onDragLeave={() => setIsDragging(false)}
