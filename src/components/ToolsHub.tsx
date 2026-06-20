@@ -67,7 +67,7 @@ export default function ToolsHub() {
         </div>
       </div>
 
-      <div className="flex-1 p-8 w-full overflow-y-auto">
+      <div className="flex-1 p-10 w-full overflow-y-auto">
         <div className="w-full">
           
           {activeTool === "merge-pdf" && <MergePdfTool />}
