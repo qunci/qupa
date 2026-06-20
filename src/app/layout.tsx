@@ -1,6 +1,6 @@
 import "@/app/globals.css";
 import Sidebar from "@/components/Sidebar";
-import { Toaster } from "react-hot-toast";
+import { Toaster } from "sonner";
 import { SettingsProvider } from "@/hooks/useSettings";
 
 
@@ -45,16 +45,7 @@ export default function RootLayout({
         </SettingsProvider>
         
         {/* Toast Provider */}
-        <Toaster 
-          position="bottom-right" 
-          toastOptions={{
-            style: {
-              background: '#333',
-              color: '#fff',
-              fontSize: '14px',
-            },
-          }} 
-        />
+        <Toaster position="bottom-right" theme="system" richColors closeButton />
       </body>
     </html>
   );

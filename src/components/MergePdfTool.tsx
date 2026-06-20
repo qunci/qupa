@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useRef } from "react";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
+import { motion, AnimatePresence } from "framer-motion";
 import { PDFDocument } from "pdf-lib";
 
 export default function MergePdfTool() {
@@ -21,7 +22,10 @@ export default function MergePdfTool() {
     if (validFiles.length < newFiles.length) {
       toast.error("Some files were skipped. Only PDF files are supported.");
     }
-    setFiles(prev => [...prev, ...validFiles]);
+    if (validFiles.length > 0) {
+      setFiles(prev => [...prev, ...validFiles]);
+      toast.success(`${validFiles.length} file(s) added successfully`);
+    }
   };
 
   const moveUp = (index: number) => {
@@ -88,27 +92,43 @@ export default function MergePdfTool() {
 
   return (
     <div className="w-full space-y-6 animate-in fade-in duration-500">
-      
-      <div 
-        onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
-        onDragLeave={() => setIsDragging(false)}
-        onDrop={(e) => { e.preventDefault(); setIsDragging(false); if (e.dataTransfer.files) handleFiles(e.dataTransfer.files); }}
-        className={`w-full p-8 border-2 border-dashed rounded-xl flex flex-col items-center justify-center transition-colors cursor-pointer ${
-          isDragging 
-            ? "border-blue-500 bg-blue-50 dark:bg-blue-500/10 dark:border-blue-400" 
-            : "border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50"
-        }`}
-        onClick={() => fileInputRef.current?.click()}
-      >
-        <svg className="w-10 h-10 text-slate-400 dark:text-slate-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
-        </svg>
-        <p className="mb-2 text-sm text-slate-500 dark:text-slate-400"><span className="font-semibold text-slate-700 dark:text-slate-200">Click to add PDFs</span> or drag and drop</p>
-        <input ref={fileInputRef} type="file" className="hidden" accept=".pdf" multiple onChange={(e) => e.target.files && handleFiles(e.target.files)} />
-      </div>
+      <AnimatePresence mode="popLayout">
+        {files.length === 0 && (
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95, filter: "blur(4px)" }}
+            transition={{ duration: 0.3 }}
+            onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+            onDragLeave={() => setIsDragging(false)}
+            onDrop={(e) => { e.preventDefault(); setIsDragging(false); if (e.dataTransfer.files) handleFiles(e.dataTransfer.files); }}
+            className={`w-full p-12 border-2 border-dashed rounded-2xl flex flex-col items-center justify-center transition-all cursor-pointer ${
+              isDragging 
+                ? "border-blue-500 bg-blue-50 dark:bg-blue-500/10 dark:border-blue-400 scale-[1.02]" 
+                : "border-slate-300 dark:border-slate-700/60 hover:bg-slate-50 dark:hover:bg-slate-800/40"
+            }`}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4">
+              <svg className="w-8 h-8 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200 mb-1">Upload PDFs to Merge</h3>
+            <p className="text-sm text-slate-500 dark:text-slate-400">Drag and drop your files here, or click to browse</p>
+            <input ref={fileInputRef} type="file" className="hidden" accept=".pdf" multiple onChange={(e) => e.target.files && handleFiles(e.target.files)} />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
+      <AnimatePresence mode="popLayout">
       {files.length > 0 && (
-        <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden transition-colors duration-300">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          className="bg-white/80 dark:bg-[#1C1C1E]/80 backdrop-blur-xl border border-slate-200/50 dark:border-slate-700/50 rounded-2xl overflow-hidden shadow-sm"
+        >
           <div className="p-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/80">
             <h3 className="font-semibold text-slate-800 dark:text-slate-200">Files to Merge ({files.length})</h3>
             <button 
@@ -147,21 +167,22 @@ export default function MergePdfTool() {
               </li>
             ))}
           </ul>
-          <div className="p-4 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80">
+          <div className="p-4 border-t border-slate-200/50 dark:border-slate-700/50 bg-slate-50/50 dark:bg-[#18181A]/50 backdrop-blur-md">
             <button 
               onClick={handleMerge}
               disabled={files.length < 2 || isProcessing}
-              className={`w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${
+              className={`w-full py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${
                 files.length < 2 || isProcessing
-                  ? "bg-slate-200 dark:bg-slate-700 text-slate-400 dark:text-slate-500 cursor-not-allowed"
-                  : "bg-blue-600 text-white hover:bg-blue-700 hover:shadow-md"
+                  ? "bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed"
+                  : "bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:shadow-lg hover:shadow-blue-500/25 hover:-translate-y-0.5"
               }`}
             >
-              {isProcessing ? "Merging..." : "Merge PDFs Now"}
+              {isProcessing ? "Merging your PDFs..." : "Merge PDFs Now"}
             </button>
           </div>
-        </div>
+        </motion.div>
       )}
+      </AnimatePresence>
 
     </div>
   );

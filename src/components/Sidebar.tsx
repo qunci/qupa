@@ -23,7 +23,7 @@ function SidebarContent() {
   };
 
   return (
-    <aside className={`bg-[#f0f4f9] dark:bg-[#1e1f20] flex flex-col h-screen sticky top-0 transition-all duration-300 ease-in-out shrink-0 ${isOpen ? 'w-[260px]' : 'w-[68px]'}`}>
+    <aside className={`bg-[#f0f4f9]/80 dark:bg-[#1e1f20]/80 backdrop-blur-2xl border-r border-slate-200/50 dark:border-slate-800/50 flex flex-col h-screen sticky top-0 transition-all duration-300 ease-in-out shrink-0 z-50 ${isOpen ? 'w-[260px]' : 'w-[68px]'}`}>
       
       {/* Brand Logo Header Area */}
       <div className={`h-16 flex items-center shrink-0 ${isOpen ? 'px-5 justify-between w-full' : 'px-0 justify-center'}`}>
@@ -96,7 +96,7 @@ function SidebarContent() {
 
 export default function Sidebar() {
   return (
-    <Suspense fallback={<div className="w-[260px] bg-[#f0f4f9] dark:bg-[#1e1f20] h-screen transition-colors duration-300 shrink-0" />}>
+    <Suspense fallback={<div className="w-[260px] bg-[#f0f4f9]/80 dark:bg-[#1e1f20]/80 backdrop-blur-2xl border-r border-slate-200/50 dark:border-slate-800/50 h-screen transition-colors duration-300 shrink-0" />}>
       <SidebarContent />
     </Suspense>
   );

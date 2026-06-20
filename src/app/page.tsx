@@ -7,24 +7,13 @@ import dynamic from "next/dynamic";
 
 import ThemeToggle from "@/components/ThemeToggle";
 
+import { AnimatePresence, motion } from "framer-motion";
+
 const ConverterHub = dynamic(() => import("@/components/ConverterHub"), { ssr: false });
 const ToolsHub = dynamic(() => import("@/components/ToolsHub"), { ssr: false });
 const SettingsHub = dynamic(() => import("@/components/SettingsHub"), { ssr: false });
 
-function HeroLanding() {
-  return (
-    <div className="flex-1 flex flex-col items-center justify-center p-8 text-center animate-in fade-in duration-700">
-      <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6 max-w-2xl mt-10 transition-colors duration-300">
-        The Ultimate <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-600 to-cyan-500">Client-Side</span> Workspace.
-      </h1>
-      <div className="flex flex-col sm:flex-row gap-4 justify-center">
-        <Link href="/?hub=converters" className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-lg transition-all hover:-translate-y-0.5">
-          Open File Converters
-        </Link>
-      </div>
-    </div>
-  );
-}
+import WelcomeDashboard from "@/components/WelcomeDashboard";
 
 function HomeContent() {
   const searchParams = useSearchParams();
@@ -39,7 +28,23 @@ function HomeContent() {
         </div>
       </header>
 
-      {!hub ? <HeroLanding /> : hub === "tools" ? <ToolsHub /> : hub === "settings" ? <SettingsHub /> : <ConverterHub />}
+      <AnimatePresence mode="wait">
+        {!hub ? (
+          <WelcomeDashboard key="welcome" />
+        ) : hub === "tools" ? (
+          <motion.div key="tools" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} transition={{ duration: 0.3 }} className="w-full h-full flex flex-col">
+            <ToolsHub />
+          </motion.div>
+        ) : hub === "settings" ? (
+          <motion.div key="settings" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} transition={{ duration: 0.3 }} className="w-full h-full flex flex-col">
+            <SettingsHub />
+          </motion.div>
+        ) : (
+          <motion.div key="converters" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} transition={{ duration: 0.3 }} className="w-full h-full flex flex-col">
+            <ConverterHub />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </main>
   );
 }

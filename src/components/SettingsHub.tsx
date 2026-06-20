@@ -12,7 +12,7 @@ export default function SettingsHub() {
       <div className="w-full flex flex-col transition-colors duration-300">
         
         {/* Title Bar */}
-        <div className="w-full px-6 transition-all duration-300 bg-white dark:bg-[#131314] h-16 border-b border-slate-200 dark:border-slate-800">
+        <div className="w-full px-6 transition-all duration-300 bg-white/80 dark:bg-[#131314]/80 backdrop-blur-xl sticky top-0 z-20 h-16 border-b border-slate-200/50 dark:border-slate-800/50">
           <div className="w-full h-full flex items-center">
             <h1 className="text-[17px] font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2 tracking-tight">
               {t("settingsTitle")}
