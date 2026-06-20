@@ -21,7 +21,7 @@ function HomeContent() {
   return (
     <main className="flex-1 flex flex-col min-h-screen w-full relative transition-colors duration-300">
       
-      <header className="absolute top-0 right-0 w-full h-16 flex items-center justify-end px-6 z-20 pointer-events-none">
+      <header className="absolute top-0 right-0 w-full h-16 flex items-center justify-end px-4 md:px-6 z-30 pointer-events-none">
         <div className="pointer-events-auto">
           <ThemeToggle />
         </div>
