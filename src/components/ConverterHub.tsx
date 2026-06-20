@@ -61,7 +61,7 @@ export default function ConverterHub() {
                     <h2 className="text-[15px] font-bold text-slate-900 dark:text-white leading-none tracking-tight">
                       {activeTool === "image" ? t("imageConverter") : t("documentConverter")}
                     </h2>
-                    <p className="text-[12px] text-slate-500 dark:text-slate-400 mt-1 leading-none">
+                    <p className="text-[12px] text-slate-500 dark:text-slate-400 mt-1 leading-snug hidden md:block">
                       {activeTool === "image" 
                         ? "Convert between JPG, PNG, WebP, SVG, and more effortlessly."
                         : "Convert PDF, DOCX, XLSX, and CSV with advanced layout retention."}

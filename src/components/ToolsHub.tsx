@@ -69,7 +69,7 @@ export default function ToolsHub() {
                     <h2 className="text-[15px] font-bold text-slate-900 dark:text-white leading-none tracking-tight">
                       {activeTool === "merge-pdf" ? "Merge PDF" : "Split PDF"}
                     </h2>
-                    <p className="text-[12px] text-slate-500 dark:text-slate-400 mt-1 leading-none">
+                    <p className="text-[12px] text-slate-500 dark:text-slate-400 mt-1 leading-none hidden md:block">
                       {activeTool === "merge-pdf" 
                         ? "Combine multiple PDF files into one sequence."
                         : "Extract pages or burst large PDF into single sheets."}
