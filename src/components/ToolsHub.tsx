@@ -6,10 +6,11 @@ import WorkspaceSwitcher from "./WorkspaceSwitcher";
 import MobileHeaderToggle from "./MobileHeaderToggle";
 import MergePdfTool from "./MergePdfTool";
 import SplitPdfTool from "./SplitPdfTool";
+import ImageCompressorTool from "./ImageCompressorTool";
 
 export default function ToolsHub() {
   const [activeTab, setActiveTab] = useState<"document" | "image">("document");
-  const [activeTool, setActiveTool] = useState<"merge-pdf" | "split-pdf" | null>(null);
+  const [activeTool, setActiveTool] = useState<"merge-pdf" | "split-pdf" | "compress-image" | null>(null);
   const { isSidebarOpen } = useSettings();
 
   return (
@@ -47,10 +48,10 @@ export default function ToolsHub() {
                 </button>
               </nav>
             ) : (
-              <div className="flex items-center gap-4 w-full">
+              <div className="flex items-center w-full">
                 <button 
                   onClick={() => setActiveTool(null)}
-                  className="p-2 -ml-3 mr-3 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                  className="p-2 -ml-2 -mr-1 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
                 >  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
                 </button>
                 <div className="flex items-center gap-3">
@@ -59,20 +60,26 @@ export default function ToolsHub() {
                       <svg className="w-7 h-7 text-amber-500 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
                       </svg>
-                    ) : (
+                    ) : activeTool === "split-pdf" ? (
                       <svg className="w-7 h-7 text-rose-500 dark:text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
+                      </svg>
+                    ) : (
+                      <svg className="w-7 h-7 text-emerald-500 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
                     )}
                   </div>
                   <div className="flex flex-col justify-center">
                     <h2 className="text-[15px] font-bold text-slate-900 dark:text-white leading-none tracking-tight">
-                      {activeTool === "merge-pdf" ? "Merge PDF" : "Split PDF"}
+                      {activeTool === "merge-pdf" ? "Merge PDF" : activeTool === "split-pdf" ? "Split PDF" : "Image Compressor"}
                     </h2>
                     <p className="text-[12px] text-slate-500 dark:text-slate-400 mt-1 leading-none hidden md:block">
                       {activeTool === "merge-pdf" 
                         ? "Combine multiple PDF files into one sequence."
-                        : "Extract pages or burst large PDF into single sheets."}
+                        : activeTool === "split-pdf"
+                          ? "Extract pages or burst large PDF into single sheets."
+                          : "Compress and resize images with real-time visual comparison."}
                     </p>
                   </div>
                 </div>
@@ -87,6 +94,7 @@ export default function ToolsHub() {
           
           {activeTool === "merge-pdf" && <MergePdfTool />}
           {activeTool === "split-pdf" && <SplitPdfTool />}
+          {activeTool === "compress-image" && <ImageCompressorTool />}
 
           {!activeTool && activeTab === "document" && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -123,6 +131,19 @@ export default function ToolsHub() {
           {!activeTool && activeTab === "image" && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
               
+              <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col transition-colors duration-300 shadow-sm hover:shadow-md">
+                <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-lg flex items-center justify-center mb-3 shadow-sm shadow-teal-500/20 ring-1 ring-teal-500/30">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-1.5">Image Compressor</h3>
+                <p className="text-[13px] leading-relaxed text-slate-500 dark:text-slate-400 mb-5 flex-1">Compress JPG, WebP, and PNG sizes while maintaining stunning visual quality.</p>
+                <button onClick={() => setActiveTool("compress-image")} className="w-full py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition-colors">
+                  Open Workspace
+                </button>
+              </div>
+
               <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col transition-colors duration-300 shadow-sm">
                 <div className="w-10 h-10 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center mb-3 text-slate-700 dark:text-slate-300">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
