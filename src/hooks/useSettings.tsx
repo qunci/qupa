@@ -26,6 +26,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     const savedSidebar = localStorage.getItem("sidebarOpen");
     if (savedSidebar !== null) {
       setIsSidebarOpenState(savedSidebar === "true");
+    } else {
+      setIsSidebarOpenState(window.innerWidth >= 1024);
     }
 
     const isDark = document.documentElement.classList.contains("dark");
