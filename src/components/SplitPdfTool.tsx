@@ -13,9 +13,73 @@ if (typeof window !== "undefined") {
 
 type SplitMode = "extract" | "burst_pdf" | "burst_img";
 
+function pagesToRangeString(pages: number[]): string {
+  if (pages.length === 0) return "";
+  const sorted = [...pages].sort((a, b) => a - b);
+  let ranges = [];
+  let start = sorted[0];
+  let end = sorted[0];
+  for (let i = 1; i < sorted.length; i++) {
+    if (sorted[i] === end + 1) {
+      end = sorted[i];
+    } else {
+      ranges.push(start === end ? `${start}` : `${start}-${end}`);
+      start = sorted[i];
+      end = sorted[i];
+    }
+  }
+  ranges.push(start === end ? `${start}` : `${start}-${end}`);
+  return ranges.join(", ");
+}
+
+const PageThumbnail = ({ pdf, pageNum, isSelected, onToggle }: { pdf: any, pageNum: number, isSelected: boolean, onToggle: () => void }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    let renderTask: any;
+    let isActive = true;
+
+    pdf.getPage(pageNum).then((page: any) => {
+      if (!isActive) return;
+      const viewport = page.getViewport({ scale: 0.4 });
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      const ctx = canvas.getContext("2d");
+      
+      renderTask = page.render({ canvasContext: ctx, viewport, canvas } as any);
+    }).catch(console.error);
+
+    return () => {
+      isActive = false;
+      if (renderTask) renderTask.cancel();
+    };
+  }, [pdf, pageNum]);
+
+  return (
+    <div 
+      onClick={onToggle} 
+      className={`relative cursor-pointer transition-all duration-200 rounded-lg overflow-hidden border-4 aspect-[1/1.4] bg-white ${isSelected ? 'border-blue-600 shadow-lg scale-95' : 'border-transparent shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-600'}`}
+    >
+      <canvas ref={canvasRef} className="w-full h-full object-contain" />
+      <div className="absolute bottom-1 right-1 bg-black/60 text-white text-xs px-2 py-1 rounded shadow-sm font-semibold">
+        {pageNum}
+      </div>
+      {isSelected && (
+        <div className="absolute top-2 right-2 w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-white shadow-md">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+        </div>
+      )}
+    </div>
+  );
+};
+
 export default function SplitPdfTool({ onBack }: { onBack: () => void }) {
   const [file, setFile] = useState<File | null>(null);
   const [totalPages, setTotalPages] = useState<number>(0);
+  const [pdfJsDoc, setPdfJsDoc] = useState<any>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [mode, setMode] = useState<SplitMode>("extract");
@@ -37,10 +101,18 @@ export default function SplitPdfTool({ onBack }: { onBack: () => void }) {
     const toastId = toast.loading("Analyzing PDF...");
     try {
       const arrayBuffer = await newFile.arrayBuffer();
+      
+      // Load with pdf-lib to get basic info
       const pdf = await PDFDocument.load(arrayBuffer);
-      setTotalPages(pdf.getPageCount());
+      const numPages = pdf.getPageCount();
+      setTotalPages(numPages);
       setFile(newFile);
-      setRangeInput(`1-${pdf.getPageCount()}`);
+      setRangeInput(`1-${numPages}`);
+
+      // Load with pdfjs-dist for rendering thumbnails
+      const loadedPdfJs = await pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
+      setPdfJsDoc(loadedPdfJs);
+
       toast.success("PDF loaded successfully!", { id: toastId });
     } catch (error) {
       console.error(error);
@@ -73,12 +145,22 @@ export default function SplitPdfTool({ onBack }: { onBack: () => void }) {
     return Array.from(pages).sort((a, b) => a - b);
   };
 
+  const togglePage = (pageNum: number) => {
+    const currentPages = new Set(parseRange(rangeInput, totalPages));
+    if (currentPages.has(pageNum)) {
+      currentPages.delete(pageNum);
+    } else {
+      currentPages.add(pageNum);
+    }
+    setRangeInput(pagesToRangeString(Array.from(currentPages)));
+  };
+
   const handleProcess = async () => {
     if (!file) return;
 
     const targetPages = parseRange(rangeInput, totalPages);
     if (targetPages.length === 0) {
-      toast.error("Please enter a valid page range.");
+      toast.error("Please enter a valid page range or select pages.");
       return;
     }
 
@@ -113,13 +195,9 @@ export default function SplitPdfTool({ onBack }: { onBack: () => void }) {
 
       } else if (mode === "burst_img") {
         const zip = new JSZip();
-        
-        // Use PDF.js to render pages to images
-        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-        
         for (const pageNum of targetPages) {
-          const page = await pdf.getPage(pageNum);
-          const viewport = page.getViewport({ scale: 2.0 }); // High quality scale
+          const page = await pdfJsDoc.getPage(pageNum);
+          const viewport = page.getViewport({ scale: 2.0 }); 
           
           const canvas = document.createElement("canvas");
           const ctx = canvas.getContext("2d");
@@ -130,7 +208,6 @@ export default function SplitPdfTool({ onBack }: { onBack: () => void }) {
           
           await page.render({ canvasContext: ctx, viewport, canvas } as any).promise;
           
-          // Convert to JPEG blob
           const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.9));
           if (blob) {
             zip.file(`${baseName}_page_${pageNum}.jpg`, blob);
@@ -161,8 +238,10 @@ export default function SplitPdfTool({ onBack }: { onBack: () => void }) {
     URL.revokeObjectURL(url);
   };
 
+  const selectedPagesSet = new Set(parseRange(rangeInput, totalPages));
+
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-6 animate-in fade-in duration-500">
+    <div className="w-full max-w-5xl mx-auto space-y-6 animate-in fade-in duration-500">
       
       <div className="flex items-center gap-4 mb-6">
         <button 
@@ -198,77 +277,98 @@ export default function SplitPdfTool({ onBack }: { onBack: () => void }) {
           <input ref={fileInputRef} type="file" className="hidden" accept=".pdf" onChange={(e) => e.target.files && e.target.files[0] && handleFile(e.target.files[0])} />
         </div>
       ) : (
-        <div className="space-y-6">
-          <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg flex items-center justify-between border border-slate-200 dark:border-slate-700 transition-colors duration-300">
-            <div className="flex items-center gap-3 overflow-hidden pr-4">
-              <div className="w-10 h-10 bg-red-100 dark:bg-red-500/10 rounded-lg flex items-center justify-center text-red-600 dark:text-red-400 font-bold text-xs shrink-0">
-                PDF
-              </div>
-              <div className="flex flex-col truncate">
-                <span className="font-semibold text-sm text-slate-800 dark:text-slate-100 truncate">{file.name}</span>
-                <span className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">{formatBytes(file.size)} &bull; {totalPages} pages</span>
-              </div>
-            </div>
-            <button onClick={() => setFile(null)} className="text-sm font-bold text-red-500 hover:text-red-600 dark:hover:text-red-400 transition-colors shrink-0">
-              Remove
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Pages to Process</label>
-                <input 
-                  type="text" 
-                  value={rangeInput}
-                  onChange={(e) => setRangeInput(e.target.value)}
-                  placeholder={`e.g., 1, 3, 5-${totalPages}`}
-                  className="w-full p-3 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-300"
-                />
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">Enter page numbers separated by commas or dashes.</p>
-              </div>
-
-              <div>
-                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Operation Mode</label>
-                <div className="space-y-2">
-                  <label className="flex items-center p-3 border border-slate-200 dark:border-slate-700 rounded-lg cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                    <input type="radio" name="mode" checked={mode === "extract"} onChange={() => setMode("extract")} className="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500" />
-                    <div className="ml-3">
-                      <span className="block text-sm font-semibold text-slate-900 dark:text-white">Extract to Single PDF</span>
-                      <span className="block text-xs text-slate-500 dark:text-slate-400">Creates one PDF containing only the selected pages.</span>
-                    </div>
-                  </label>
-                  <label className="flex items-center p-3 border border-slate-200 dark:border-slate-700 rounded-lg cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                    <input type="radio" name="mode" checked={mode === "burst_pdf"} onChange={() => setMode("burst_pdf")} className="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500" />
-                    <div className="ml-3">
-                      <span className="block text-sm font-semibold text-slate-900 dark:text-white">Burst to Individual PDFs</span>
-                      <span className="block text-xs text-slate-500 dark:text-slate-400">Downloads a ZIP with each page as a separate PDF file.</span>
-                    </div>
-                  </label>
-                  <label className="flex items-center p-3 border border-slate-200 dark:border-slate-700 rounded-lg cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                    <input type="radio" name="mode" checked={mode === "burst_img"} onChange={() => setMode("burst_img")} className="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500" />
-                    <div className="ml-3">
-                      <span className="block text-sm font-semibold text-slate-900 dark:text-white">Convert to Images (ZIP)</span>
-                      <span className="block text-xs text-slate-500 dark:text-slate-400">Downloads a ZIP with each page as a high-quality JPG.</span>
-                    </div>
-                  </label>
+        <div className="flex flex-col lg:flex-row gap-6">
+          
+          {/* Main Visual Selection Area */}
+          <div className="flex-1 space-y-4">
+            <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg flex items-center justify-between border border-slate-200 dark:border-slate-700 transition-colors duration-300">
+              <div className="flex items-center gap-3 overflow-hidden pr-4">
+                <div className="w-10 h-10 bg-red-100 dark:bg-red-500/10 rounded-lg flex items-center justify-center text-red-600 dark:text-red-400 font-bold text-xs shrink-0">
+                  PDF
+                </div>
+                <div className="flex flex-col truncate">
+                  <span className="font-semibold text-sm text-slate-800 dark:text-slate-100 truncate">{file.name}</span>
+                  <span className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">{formatBytes(file.size)} &bull; {totalPages} pages</span>
                 </div>
               </div>
-            </div>
-
-            <div className="flex flex-col justify-end">
-              <button 
-                onClick={handleProcess}
-                disabled={isProcessing}
-                className={`w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all ${
-                  isProcessing
-                    ? "bg-slate-200 dark:bg-slate-700 text-slate-400 dark:text-slate-500 cursor-not-allowed"
-                    : "bg-blue-600 text-white hover:bg-blue-700 hover:shadow-md"
-                }`}
-              >
-                {isProcessing ? "Processing..." : mode === "extract" ? "Extract PDF" : "Process & Download ZIP"}
+              <button onClick={() => { setFile(null); setPdfJsDoc(null); }} className="text-sm font-bold text-red-500 hover:text-red-600 dark:hover:text-red-400 transition-colors shrink-0">
+                Remove
               </button>
             </div>
+
+            <div className="bg-slate-100 dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800 h-[500px] overflow-y-auto">
+              {pdfJsDoc ? (
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                  {Array.from({ length: totalPages }).map((_, i) => (
+                    <PageThumbnail 
+                      key={i + 1} 
+                      pdf={pdfJsDoc} 
+                      pageNum={i + 1} 
+                      isSelected={selectedPagesSet.has(i + 1)}
+                      onToggle={() => togglePage(i + 1)}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-slate-500">
+                  Loading previews...
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Sidebar Tools Area */}
+          <div className="w-full lg:w-80 space-y-6 shrink-0">
+            <div>
+              <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 flex justify-between">
+                <span>Selected Pages</span>
+                <span className="text-blue-600 dark:text-blue-400">{selectedPagesSet.size} selected</span>
+              </label>
+              <input 
+                type="text" 
+                value={rangeInput}
+                onChange={(e) => setRangeInput(e.target.value)}
+                placeholder={`e.g., 1, 3, 5-${totalPages}`}
+                className="w-full p-3 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-300"
+              />
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">Click pages on the left or type numbers manually (e.g. 1-3, 5).</p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Operation Mode</label>
+              <div className="space-y-2">
+                <label className="flex items-center p-3 border border-slate-200 dark:border-slate-700 rounded-lg cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                  <input type="radio" name="mode" checked={mode === "extract"} onChange={() => setMode("extract")} className="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500" />
+                  <div className="ml-3">
+                    <span className="block text-sm font-semibold text-slate-900 dark:text-white">Extract to Single PDF</span>
+                  </div>
+                </label>
+                <label className="flex items-center p-3 border border-slate-200 dark:border-slate-700 rounded-lg cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                  <input type="radio" name="mode" checked={mode === "burst_pdf"} onChange={() => setMode("burst_pdf")} className="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500" />
+                  <div className="ml-3">
+                    <span className="block text-sm font-semibold text-slate-900 dark:text-white">Burst to Individual PDFs</span>
+                  </div>
+                </label>
+                <label className="flex items-center p-3 border border-slate-200 dark:border-slate-700 rounded-lg cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                  <input type="radio" name="mode" checked={mode === "burst_img"} onChange={() => setMode("burst_img")} className="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500" />
+                  <div className="ml-3">
+                    <span className="block text-sm font-semibold text-slate-900 dark:text-white">Convert to Images (ZIP)</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <button 
+              onClick={handleProcess}
+              disabled={isProcessing || selectedPagesSet.size === 0}
+              className={`w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-all shadow-md ${
+                isProcessing || selectedPagesSet.size === 0
+                  ? "bg-slate-200 dark:bg-slate-700 text-slate-400 dark:text-slate-500 cursor-not-allowed"
+                  : "bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg"
+              }`}
+            >
+              {isProcessing ? "Processing..." : mode === "extract" ? "Extract PDF" : "Download ZIP"}
+            </button>
           </div>
         </div>
       )}
