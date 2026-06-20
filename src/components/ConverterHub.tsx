@@ -38,10 +38,10 @@ export default function ConverterHub() {
                 </button>
               </nav>
             ) : (
-              <div className="flex items-center w-full">
+              <div className="flex items-center gap-1 w-full">
                 <button 
                   onClick={() => setActiveTool(null)} 
-                  className="p-2 -ml-2 -mr-1 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                  className="p-2 -ml-2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
                 </button>
