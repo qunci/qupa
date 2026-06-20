@@ -102,9 +102,12 @@ export default function SplitPdfTool({ onBack }: { onBack: () => void }) {
     try {
       const arrayBuffer = await newFile.arrayBuffer();
       
+      // Copy the buffer for pdfjs-dist because sending it to the Web Worker detaches the original ArrayBuffer
+      const pdfJsBuffer = arrayBuffer.slice(0);
+      
       // Load with pdfjs-dist for rendering thumbnails FIRST to catch worker errors early
       const loadedPdfJs = await pdfjsLib.getDocument({ 
-        data: new Uint8Array(arrayBuffer),
+        data: new Uint8Array(pdfJsBuffer),
         standardFontDataUrl: `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/standard_fonts/`,
       }).promise;
       
