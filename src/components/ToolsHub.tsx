@@ -3,10 +3,13 @@
 import { useState } from "react";
 import { useSettings } from "@/hooks/useSettings";
 import WorkspaceSwitcher from "./WorkspaceSwitcher";
+import MergePdfTool from "./MergePdfTool";
+import SplitPdfTool from "./SplitPdfTool";
 
 export default function ToolsHub() {
   const [activeTab, setActiveTab] = useState<"document" | "image">("document");
-  const { t, isSidebarOpen } = useSettings();
+  const [activeTool, setActiveTool] = useState<"merge-pdf" | "split-pdf" | null>(null);
+  const { isSidebarOpen } = useSettings();
 
   return (
     <div className="flex flex-col w-full h-full animate-in fade-in duration-500">
@@ -21,8 +24,7 @@ export default function ToolsHub() {
           </div>
         </div>
 
-        {/* Tabs Bar */}
-        <div className={`w-full px-10 border-b border-slate-200 dark:border-slate-800 transition-all duration-300 bg-white dark:bg-[#131314] ${isSidebarOpen ? 'h-16' : 'h-12'}`}>
+        <div className={`w-full px-10 border-b border-slate-200 dark:border-slate-800 transition-all duration-300 bg-white dark:bg-[#131314] ${isSidebarOpen ? 'h-16' : 'h-12'} ${activeTool ? 'hidden' : ''}`}>
           <div className="w-full max-w-7xl h-full">
             <nav className="flex space-x-6 overflow-x-auto no-scrollbar h-full">
               <button 
@@ -44,44 +46,43 @@ export default function ToolsHub() {
         </div>
       </div>
 
-      {/* Workspace Area */}
       <div className="flex-1 p-8 w-full overflow-y-auto">
         <div className="w-full max-w-7xl">
           
-          {activeTab === "document" && (
+          {activeTool === "merge-pdf" && <MergePdfTool onBack={() => setActiveTool(null)} />}
+          {activeTool === "split-pdf" && <SplitPdfTool onBack={() => setActiveTool(null)} />}
+
+          {!activeTool && activeTab === "document" && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
               
-              {/* Card 1: Merge PDF */}
               <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col transition-colors duration-300 shadow-sm hover:shadow-md">
                 <div className="w-10 h-10 bg-yellow-100 dark:bg-yellow-500/20 rounded-lg flex items-center justify-center mb-3">
                   <span className="text-xl">🗂️</span>
                 </div>
                 <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-1.5">Merge PDF</h3>
                 <p className="text-[13px] leading-relaxed text-slate-500 dark:text-slate-400 mb-5 flex-1">Combine multiple PDF files into one clean document sequence effortlessly.</p>
-                <button className="w-full py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition-colors">
+                <button onClick={() => setActiveTool("merge-pdf")} className="w-full py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition-colors">
                   Open Workspace
                 </button>
               </div>
 
-              {/* Card 2: Split PDF */}
-              <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col transition-colors duration-300 shadow-sm">
+              <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col transition-colors duration-300 shadow-sm hover:shadow-md">
                 <div className="w-10 h-10 bg-red-100 dark:bg-red-500/20 rounded-lg flex items-center justify-center mb-3">
                   <span className="text-xl">✂️</span>
                 </div>
                 <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-1.5">Split PDF</h3>
                 <p className="text-[13px] leading-relaxed text-slate-500 dark:text-slate-400 mb-5 flex-1">Extract specific pages or burst large PDF into single sheets.</p>
-                <button disabled className="w-full py-1.5 text-sm bg-slate-100 dark:bg-slate-800/80 text-slate-400 dark:text-slate-500 rounded-md font-medium cursor-not-allowed transition-colors border border-transparent dark:border-slate-700">
-                  Coming Soon
+                <button onClick={() => setActiveTool("split-pdf")} className="w-full py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition-colors">
+                  Open Workspace
                 </button>
               </div>
 
             </div>
           )}
 
-          {activeTab === "image" && (
+          {!activeTool && activeTab === "image" && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
               
-              {/* Card 1: Protect Image */}
               <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col transition-colors duration-300 shadow-sm">
                 <div className="w-10 h-10 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center mb-3 text-slate-700 dark:text-slate-300">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
