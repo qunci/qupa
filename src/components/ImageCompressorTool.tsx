@@ -161,10 +161,11 @@ export default function ImageCompressorTool() {
           <input ref={fileInputRef} type="file" className="hidden" accept="image/*" onChange={(e) => e.target.files && e.target.files[0] && handleFile(e.target.files[0])} />
         </div>
       ) : (
-        <div className="flex flex-col xl:flex-row gap-6">
-          
-          {/* Main Visual Comparison Area */}
-          <div className="flex-1 space-y-4">
+        <div className="w-full">
+          <div className="flex flex-col xl:flex-row gap-6">
+            
+            {/* Main Visual Comparison Area */}
+            <div className="flex-1 space-y-4 flex flex-col">
             <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between border border-slate-200 dark:border-slate-700 gap-4">
               <div className="flex flex-col">
                 <span className="font-semibold text-slate-800 dark:text-slate-100 truncate max-w-sm">{file.name}</span>
@@ -184,7 +185,7 @@ export default function ImageCompressorTool() {
               </button>
             </div>
 
-            <div className="bg-slate-100 dark:bg-[#18181B] rounded-2xl p-4 border border-slate-200 dark:border-slate-800/60 shadow-inner min-h-[400px] flex items-center justify-center relative overflow-hidden">
+            <div className="bg-slate-100 dark:bg-[#18181B] rounded-2xl p-4 border border-slate-200 dark:border-slate-800/60 shadow-inner flex-1 min-h-[400px] flex items-center justify-center relative overflow-hidden">
               {originalUrl && compressedUrl ? (
                 <div className="relative w-full max-w-3xl aspect-[4/3] sm:aspect-video rounded-xl overflow-hidden shadow-md select-none group bg-checkered dark:bg-checkered-dark">
                   
@@ -240,7 +241,6 @@ export default function ImageCompressorTool() {
                 </div>
               ) : null}
             </div>
-            <p className="text-center text-sm text-slate-500 font-medium">Slide to compare Original vs Compressed</p>
           </div>
 
           {/* Control Panel */}
@@ -315,8 +315,15 @@ export default function ImageCompressorTool() {
               </button>
             </div>
           </div>
-
         </div>
+        
+        <div className="flex flex-col xl:flex-row gap-6 mt-4">
+          <div className="flex-1">
+            <p className="text-center text-sm text-slate-500 font-medium">Slide to compare Original vs Compressed</p>
+          </div>
+          <div className="w-full xl:w-80 shrink-0 hidden xl:block"></div>
+        </div>
+      </div>
       )}
     </div>
   );
