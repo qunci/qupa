@@ -128,7 +128,7 @@ export default function SplitPdfTool({ onBack }: { onBack: () => void }) {
           canvas.width = viewport.width;
           canvas.height = viewport.height;
           
-          await page.render({ canvasContext: ctx, viewport }).promise;
+          await page.render({ canvasContext: ctx, viewport, canvas } as any).promise;
           
           // Convert to JPEG blob
           const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.9));
