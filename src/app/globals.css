@@ -30,10 +30,10 @@
   --color-blue-800: #033d8b;
 }
 
-/* Memaksa Tailwind v4 untuk patuh pada sakelar tombol (class .dark) */
+/* Force Tailwind v4 dark mode toggle */
 @custom-variant dark (&:is(.dark *));
 
-/* Utilitas untuk menyembunyikan scrollbar (agar tidak ada efek bayangan slide bar yang jelek) */
+/* Hide scrollbar utility */
 @layer utilities {
   .scrollbar-hide::-webkit-scrollbar {
     display: none;

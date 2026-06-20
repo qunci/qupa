@@ -1,4 +1,4 @@
-export type Language = 'en' | 'id';
+export type Language = 'en';
 
 type Translations = {
   [key in Language]: {
@@ -49,48 +49,5 @@ export const translations: Translations = {
     heicSuccess: "HEIC loaded successfully",
     heicError: "Failed to parse HEIC image.",
     docPending: "Client-side document conversion logic pending."
-  },
-  id: {
-    // Sidebar
-    coreWorkspaces: "Ruang Kerja Utama",
-    fileConverters: "Konverter File",
-    advancedTools: "Alat Lanjutan",
-    settings: "Pengaturan",
-
-    // Settings Hub
-    settingsTitle: "Preferensi",
-    language: "Bahasa",
-    languageDesc: "Pilih bahasa antarmuka yang Anda inginkan.",
-    theme: "Tema",
-    themeDesc: "Sesuaikan tampilan ruang kerja Anda.",
-    light: "Terang",
-    dark: "Gelap",
-
-    // Converters
-    imageConverter: "Konverter Gambar",
-    documentConverter: "Konverter Dokumen",
-    clickToUpload: "Klik untuk mengunggah",
-    orDragDrop: "atau seret dan lepas",
-    remove: "Hapus",
-    convertTo: "Ubah ke",
-    compressionQuality: "Kualitas Kompresi",
-    downloadImage: "Unduh Gambar",
-    serverRequired: "Butuh Server",
-    processing: "Memproses...",
-    convertNow: "Konversi Sekarang",
-    comingSoon: "Segera Hadir",
-
-    // Toasts
-    fileTooLarge: "Batas maksimal mode gratis adalah 20MB. Pemrosesan file raksasa (Qupa Premium) akan segera hadir! 🚀",
-    wrongConverterDoc: "Harap gunakan Konverter Dokumen untuk file ini.",
-    wrongConverterImg: "Harap gunakan Konverter Gambar untuk file ini.",
-    unsupportedFormat: "Format tidak didukung:",
-    convertingTo: "Mengubah ke",
-    convertSuccess: "Berhasil dikonversi!",
-    convertError: "Terjadi kesalahan saat konversi.",
-    heicProcessing: "Memproses format HEIC...",
-    heicSuccess: "HEIC berhasil dimuat",
-    heicError: "Gagal memproses gambar HEIC.",
-    docPending: "Logika konversi dokumen client-side belum tersedia."
   }
 };

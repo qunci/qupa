@@ -25,25 +25,7 @@ export default function SettingsHub() {
       <div className="flex-1 p-10 w-full overflow-y-auto">
         <div className="w-full max-w-2xl space-y-8">
           
-          {/* Language Setting */}
-          <div className="p-6 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl transition-colors duration-300">
-            <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-1">{t("language")}</h3>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">{t("languageDesc")}</p>
-            <div className="flex gap-3">
-              <button 
-                onClick={() => setLanguage("en")}
-                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${language === "en" ? "bg-blue-600 text-white" : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"}`}
-              >
-                English
-              </button>
-              <button 
-                onClick={() => setLanguage("id")}
-                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${language === "id" ? "bg-blue-600 text-white" : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"}`}
-              >
-                Bahasa Indonesia
-              </button>
-            </div>
-          </div>
+
 
           {/* Theme Setting */}
           <div className="p-6 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl transition-colors duration-300">

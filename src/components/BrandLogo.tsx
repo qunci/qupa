@@ -11,9 +11,7 @@ export function BrandLogo({ className = "" }: BrandLogoProps) {
       className={`text-slate-900 dark:text-white ${className}`} 
       xmlns="http://www.w3.org/2000/svg"
     >
-      {/* 
-        Logo ini dirender menggunakan font AlienBlock-Regular.
-      */}
+
       <text 
         x="96" 
         y="95" 

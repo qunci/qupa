@@ -17,7 +17,6 @@ export default function DocumentConverter() {
   };
 
   const handleFile = (file: File) => {
-    // Basic validation
     const extension = file.name.split('.').pop()?.toLowerCase() || "";
     const allowedExts = ["pdf", "docx", "xlsx", "pptx", "csv", "txt"];
     

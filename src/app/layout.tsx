@@ -3,13 +3,13 @@ import Sidebar from "@/components/Sidebar";
 import { Toaster } from "react-hot-toast";
 import { SettingsProvider } from "@/hooks/useSettings";
 
-// Metadata
+
 export const metadata = {
   title: "Qupa - The Ultimate File Converter",
   description: "Secure client-side file converter",
 };
 
-// Render
+
 export default function RootLayout({
   children,
 }: {

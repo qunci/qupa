@@ -39,8 +39,6 @@ export default function ImageConverter() {
   }, [previewUrl]);
 
   const handleFile = async (file: File) => {
-    // Quality First: Prevent browser crash on massive files
-    // 20MB limit for Free/Local mode
     if (file.size > 20 * 1024 * 1024) {
       toast.error(t("fileTooLarge"), { duration: 5000 });
       return;
@@ -53,7 +51,6 @@ export default function ImageConverter() {
       setConvertTarget(IMAGE_CONVERSION_MAP[extension][0].id);
       setConvertedUrl(null);
 
-      // Local First: Process HEIC entirely in-browser
       if (extension === "heic") {
         const toastId = toast.loading(t("heicProcessing"));
         try {
@@ -64,7 +61,7 @@ export default function ImageConverter() {
         } catch (error) {
           console.error(error);
           toast.error(t("heicError"), { id: toastId });
-          setSelectedFile(null); // Reset
+          setSelectedFile(null);
         }
       } else {
         setPreviewUrl(URL.createObjectURL(file));
