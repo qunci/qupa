@@ -18,13 +18,13 @@ export default function ToolsHub() {
       <div className="w-full flex flex-col transition-colors duration-300">
         
         {/* Title Bar (Visible only when sidebar is closed) */}
-        <div className={`w-full px-10 transition-all duration-300 bg-white dark:bg-[#131314] ${isSidebarOpen ? 'h-0 opacity-0 pointer-events-none' : 'h-16 opacity-100'}`}>
+        <div className={`w-full px-6 transition-all duration-300 bg-white dark:bg-[#131314] ${isSidebarOpen ? 'h-0 opacity-0 pointer-events-none' : 'h-20 opacity-100'}`}>
           <div className="w-full h-full flex items-center">
             <WorkspaceSwitcher />
           </div>
         </div>
 
-        <div className={`w-full px-10 border-b border-slate-200 dark:border-slate-800 transition-all duration-300 bg-white dark:bg-[#131314] ${isSidebarOpen || activeTool ? 'h-16' : 'h-12'}`}>
+        <div className={`w-full px-6 border-b border-slate-200 dark:border-slate-800 transition-all duration-300 bg-white dark:bg-[#131314] ${isSidebarOpen ? 'h-20' : (activeTool ? 'h-20' : 'h-14')}`}>
           <div className="w-full h-full flex items-center">
             {!activeTool ? (
               <nav className="flex space-x-6 overflow-x-auto no-scrollbar h-full">
@@ -67,7 +67,7 @@ export default function ToolsHub() {
         </div>
       </div>
 
-      <div className="flex-1 p-10 w-full overflow-y-auto">
+      <div className="flex-1 p-6 w-full overflow-y-auto">
         <div className="w-full">
           
           {activeTool === "merge-pdf" && <MergePdfTool />}
