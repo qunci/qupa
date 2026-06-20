@@ -30,7 +30,7 @@ export default function DocumentConverter() {
   // Upload State
   if (!selectedFile) {
     return (
-      <div className="w-full max-w-5xl mx-auto animate-in fade-in duration-500">
+      <div className="w-full space-y-6 animate-in fade-in duration-500">
         <div
           onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
           onDragLeave={() => setIsDragging(false)}
@@ -56,7 +56,7 @@ export default function DocumentConverter() {
 
   // Workspace State
   return (
-    <div className="w-full max-w-5xl mx-auto space-y-6 animate-in fade-in duration-500">
+    <div className="w-full space-y-6 animate-in fade-in duration-500">
       
       {/* File Info Card */}
       <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg flex items-center justify-between border border-slate-200 dark:border-slate-700 transition-colors duration-300">

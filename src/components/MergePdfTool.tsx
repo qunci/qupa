@@ -87,7 +87,7 @@ export default function MergePdfTool() {
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto space-y-6 animate-in fade-in duration-500">
+    <div className="w-full space-y-6 animate-in fade-in duration-500">
       
       <div 
         onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}

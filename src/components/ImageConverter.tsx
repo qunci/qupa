@@ -122,7 +122,7 @@ export default function ImageConverter() {
   // Upload State
   if (!selectedFile) {
     return (
-      <div className="w-full max-w-5xl mx-auto animate-in fade-in duration-500">
+      <div className="w-full space-y-6 animate-in fade-in duration-500">
         <div 
           onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
           onDragLeave={() => setIsDragging(false)}
@@ -148,7 +148,7 @@ export default function ImageConverter() {
 
   // Workspace State
   return (
-    <div className="w-full max-w-5xl mx-auto space-y-6 animate-in fade-in duration-500">
+    <div className="w-full space-y-6 animate-in fade-in duration-500">
       
       {/* Visual Preview */}
       <div className="w-full bg-slate-100 dark:bg-slate-900 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center p-6 relative transition-colors duration-300">
