@@ -244,10 +244,10 @@ export default function ImageCompressorTool() {
           </div>
 
           {/* Control Panel */}
-          <div className="w-full xl:w-80 space-y-6 shrink-0 bg-white dark:bg-[#1C1C1E] p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm h-fit sticky top-6">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Compression Settings</h3>
+          <div className="w-full xl:w-80 flex flex-col shrink-0 bg-white dark:bg-[#1C1C1E] p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">Compression Settings</h3>
             
-            <div className="space-y-5">
+            <div className="space-y-5 flex-1">
               <div>
                 <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Output Format</label>
                 <div className="grid grid-cols-3 gap-2">
@@ -298,20 +298,22 @@ export default function ImageCompressorTool() {
               </div>
             </div>
 
-            <hr className="border-slate-200 dark:border-slate-800" />
+            <div className="mt-6 space-y-6">
+              <hr className="border-slate-200 dark:border-slate-800" />
 
-            <button 
-              onClick={handleDownload}
-              disabled={isCompressing || !compressedUrl}
-              className={`w-full py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${
-                isCompressing || !compressedUrl
-                  ? "bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed"
-                  : "bg-blue-600 text-white hover:bg-blue-700 shadow-md hover:shadow-lg hover:-translate-y-0.5"
-              }`}
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-              Download Image
-            </button>
+              <button 
+                onClick={handleDownload}
+                disabled={isCompressing || !compressedUrl}
+                className={`w-full py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${
+                  isCompressing || !compressedUrl
+                    ? "bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed"
+                    : "bg-blue-600 text-white hover:bg-blue-700 shadow-md hover:shadow-lg hover:-translate-y-0.5"
+                }`}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                Download Image
+              </button>
+            </div>
           </div>
 
         </div>
