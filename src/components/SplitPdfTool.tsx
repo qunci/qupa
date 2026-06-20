@@ -8,7 +8,7 @@ import * as pdfjsLib from "pdfjs-dist";
 
 // Initialize PDF.js worker
 if (typeof window !== "undefined") {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
+  pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
 }
 
 type SplitMode = "extract" | "burst_pdf" | "burst_img";
@@ -103,7 +103,10 @@ export default function SplitPdfTool({ onBack }: { onBack: () => void }) {
       const arrayBuffer = await newFile.arrayBuffer();
       
       // Load with pdfjs-dist for rendering thumbnails FIRST to catch worker errors early
-      const loadedPdfJs = await pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
+      const loadedPdfJs = await pdfjsLib.getDocument({ 
+        data: new Uint8Array(arrayBuffer),
+        standardFontDataUrl: `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/standard_fonts/`,
+      }).promise;
       
       // Load with pdf-lib to get basic info
       const pdf = await PDFDocument.load(arrayBuffer);
@@ -115,9 +118,9 @@ export default function SplitPdfTool({ onBack }: { onBack: () => void }) {
       setRangeInput(`1-${numPages}`);
 
       toast.success("PDF loaded successfully!", { id: toastId });
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      toast.error("Failed to read PDF file.", { id: toastId });
+      toast.error(`Failed to read PDF file: ${error?.message || "Unknown error"}`, { id: toastId });
     }
   };
 
