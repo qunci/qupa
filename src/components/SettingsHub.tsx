@@ -3,7 +3,7 @@
 import { useSettings } from "@/hooks/useSettings";
 
 export default function SettingsHub() {
-  const { language, setLanguage, theme, setTheme, t, isSidebarOpen } = useSettings();
+  const { theme, setTheme, t, isSidebarOpen } = useSettings();
 
   return (
     <div className="flex flex-col w-full h-full animate-in fade-in duration-500">
