@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og';
 import fs from 'fs';
 import path from 'path';
 
-export const size = { width: 64, height: 64 };
+export const size = { width: 128, height: 128 };
 export const contentType = 'image/png';
 
 export default function Icon() {
@@ -22,18 +22,18 @@ export default function Icon() {
           justifyContent: 'center',
           background: 'transparent',
           fontFamily: '"AlienBlock"',
-          fontSize: 32,
-          color: '#161b22', // slate-900
+          fontSize: 64,
+          color: '#0969da', // GitHub Accent Blue (visible on dark and light)
           lineHeight: 1,
         }}
       >
         <div style={{ display: 'flex' }}>
-          <div style={{ display: 'flex', width: 30, justifyContent: 'flex-end', paddingRight: 2 }}>Q</div>
-          <div style={{ display: 'flex', width: 30, justifyContent: 'flex-start', paddingLeft: 2 }}>U</div>
+          <div style={{ display: 'flex', width: 60, justifyContent: 'flex-end', paddingRight: 4 }}>Q</div>
+          <div style={{ display: 'flex', width: 60, justifyContent: 'flex-start', paddingLeft: 4 }}>U</div>
         </div>
-        <div style={{ display: 'flex', marginTop: -2 }}>
-          <div style={{ display: 'flex', width: 30, justifyContent: 'flex-end', paddingRight: 2 }}>P</div>
-          <div style={{ display: 'flex', width: 30, justifyContent: 'flex-start', paddingLeft: 2 }}>A</div>
+        <div style={{ display: 'flex', marginTop: -4 }}>
+          <div style={{ display: 'flex', width: 60, justifyContent: 'flex-end', paddingRight: 4 }}>P</div>
+          <div style={{ display: 'flex', width: 60, justifyContent: 'flex-start', paddingLeft: 4 }}>A</div>
         </div>
       </div>
     ),
