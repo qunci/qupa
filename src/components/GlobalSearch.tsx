@@ -285,9 +285,14 @@ export default function GlobalSearch() {
                               </div>
                               <span className="font-medium text-[15px]">{item.name}</span>
                             </div>
-                            {isSelected && (
-                              <CornerDownLeft className="w-4 h-4 text-blue-500 dark:text-blue-400" />
-                            )}
+                            <div className="flex items-center gap-3">
+                              <span className={`text-[11px] font-medium tracking-wide ${isSelected ? 'text-blue-400/80 dark:text-blue-300/70' : 'text-slate-400/70 dark:text-slate-500/70'}`}>
+                                {item.category}
+                              </span>
+                              {isSelected && (
+                                <CornerDownLeft className="w-4 h-4 text-blue-500 dark:text-blue-400" />
+                              )}
+                            </div>
                           </button>
                         );
                       })}
