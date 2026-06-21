@@ -30,10 +30,10 @@ function HomeContent() {
           {/* Mobile Search Button */}
           <button
             onClick={openSearch}
-            className="md:hidden flex items-center justify-center w-[32px] h-[32px] bg-slate-100/80 hover:bg-slate-200/80 dark:bg-slate-800/80 dark:hover:bg-slate-700/80 text-slate-500 dark:text-slate-400 rounded-full transition-colors ring-1 ring-slate-200/50 dark:ring-slate-700/50 shadow-sm backdrop-blur-md"
+            className="md:hidden flex items-center justify-center w-[28px] h-[28px] bg-slate-100/80 hover:bg-slate-200/80 dark:bg-slate-800/80 dark:hover:bg-slate-700/80 text-slate-500 dark:text-slate-400 rounded-full transition-colors ring-1 ring-slate-200/50 dark:ring-slate-700/50 shadow-sm backdrop-blur-md"
             title="Search tools"
           >
-            <Search className="w-4 h-4" />
+            <Search className="w-3.5 h-3.5" />
           </button>
           
           {/* Desktop Search Button */}
