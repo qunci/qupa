@@ -195,7 +195,7 @@ export default function FileEncryptionTool({ mode }: { mode: "encrypt" | "decryp
   return (
     <div className="w-full space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col xl:flex-row gap-6">
-        <div className="flex-1 space-y-4">
+        <div className="flex-1 flex flex-col space-y-4">
           
           {!file ? (
             <div 
@@ -203,7 +203,7 @@ export default function FileEncryptionTool({ mode }: { mode: "encrypt" | "decryp
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
               onClick={() => fileInputRef.current?.click()}
-              className={`w-full h-64 border-2 border-dashed rounded-xl flex flex-col items-center justify-center transition-colors cursor-pointer ${
+              className={`w-full flex-1 min-h-[16rem] border-2 border-dashed rounded-xl flex flex-col items-center justify-center transition-colors cursor-pointer ${
                 isDragging 
                   ? dragActiveClasses
                   : "border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50 bg-white dark:bg-[#18181B]"
@@ -250,7 +250,7 @@ export default function FileEncryptionTool({ mode }: { mode: "encrypt" | "decryp
         </div>
 
         {/* Action Controls */}
-        <div className="w-full xl:w-80 flex flex-col shrink-0 bg-white dark:bg-[#1C1C1E] p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm h-fit">
+        <div className="w-full xl:w-80 flex flex-col shrink-0 bg-white dark:bg-[#1C1C1E] p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">Security Settings</h3>
           
           <div className="space-y-4">
@@ -280,7 +280,7 @@ export default function FileEncryptionTool({ mode }: { mode: "encrypt" | "decryp
             </div>
           </div>
 
-          <div className="mt-8">
+          <div className="mt-auto pt-8">
             <button 
               onClick={isEncrypt ? encryptFile : decryptFile}
               disabled={!file || !password || isProcessing}

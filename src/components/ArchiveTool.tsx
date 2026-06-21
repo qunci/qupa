@@ -274,14 +274,14 @@ export default function ArchiveTool({ mode }: { mode: "compress" | "extract" }) 
     <div className="w-full space-y-6 animate-in fade-in duration-500">
       {mode === "compress" ? (
         <div className="flex flex-col xl:flex-row gap-6">
-          <div className="flex-1 space-y-4">
+          <div className="flex-1 flex flex-col space-y-4">
             
             <div 
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleCompressDrop}
               onClick={() => filesToZip.length === 0 && fileInputRef.current?.click()}
-              className={`w-full h-48 border-2 border-dashed rounded-xl flex flex-col items-center justify-center transition-colors ${filesToZip.length === 0 ? 'cursor-pointer' : ''} ${
+              className={`w-full flex-1 min-h-[12rem] border-2 border-dashed rounded-xl flex flex-col items-center justify-center transition-colors ${filesToZip.length === 0 ? 'cursor-pointer' : ''} ${
                 isDragging 
                   ? "border-blue-500 bg-blue-50 dark:bg-blue-500/10 dark:border-blue-400" 
                   : "border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50 bg-white dark:bg-[#18181B]"
@@ -337,7 +337,7 @@ export default function ArchiveTool({ mode }: { mode: "compress" | "extract" }) 
               </div>
             </div>
 
-            <div className="mt-8 space-y-3">
+            <div className="mt-auto pt-8 space-y-3">
               {isZipping && (
                 <div className="mb-4">
                   <div className="flex justify-between text-xs font-bold text-slate-600 dark:text-slate-400 mb-1">
@@ -367,7 +367,7 @@ export default function ArchiveTool({ mode }: { mode: "compress" | "extract" }) 
         </div>
       ) : (
         <div className="flex flex-col xl:flex-row gap-6">
-          <div className="flex-1 space-y-4">
+          <div className="flex-1 flex flex-col space-y-4">
             
             {!zipFile ? (
               <div 
@@ -375,7 +375,7 @@ export default function ArchiveTool({ mode }: { mode: "compress" | "extract" }) 
                 onDragLeave={handleDragLeave}
                 onDrop={handleExtractDrop}
                 onClick={() => zipInputRef.current?.click()}
-                className={`w-full h-64 border-2 border-dashed rounded-xl flex flex-col items-center justify-center transition-colors cursor-pointer ${
+                className={`w-full flex-1 min-h-[16rem] border-2 border-dashed rounded-xl flex flex-col items-center justify-center transition-colors cursor-pointer ${
                   isDragging 
                     ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10 dark:border-indigo-400" 
                     : "border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50 bg-white dark:bg-[#18181B]"
@@ -429,7 +429,7 @@ export default function ArchiveTool({ mode }: { mode: "compress" | "extract" }) 
 
           {/* Extract Controls */}
           {zipFile && (
-            <div className="w-full xl:w-80 flex flex-col shrink-0 bg-white dark:bg-[#1C1C1E] p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm h-fit">
+            <div className="w-full xl:w-80 flex flex-col shrink-0 bg-white dark:bg-[#1C1C1E] p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
               <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">Extraction Details</h3>
               
               <div className="space-y-4">
@@ -457,7 +457,7 @@ export default function ArchiveTool({ mode }: { mode: "compress" | "extract" }) 
                 </div>
               </div>
 
-              <div className="mt-8 space-y-3">
+              <div className="mt-auto pt-8 space-y-3">
                 {isExtracting && (
                   <div className="mb-4">
                     <div className="flex justify-between text-xs font-bold text-slate-600 dark:text-slate-400 mb-1">
