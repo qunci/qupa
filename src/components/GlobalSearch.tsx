@@ -178,54 +178,56 @@ export default function GlobalSearch() {
                 </button>
               </div>
 
-              {/* Results List */}
-              <div 
-                ref={listRef}
-                className="overflow-y-auto p-2 pb-4 scrollbar-hide flex-1"
-              >
-                {flatFilteredItems.length === 0 ? (
-                  <div className="py-14 text-center text-slate-500 dark:text-slate-400">
-                    <p>No results found for "{query}"</p>
-                  </div>
-                ) : (
-                  Object.entries(groupedItems).map(([category, items]) => (
-                    <div key={category} className="mb-2 last:mb-0">
-                      <div className="px-3 py-1.5 text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-                        {category}
-                      </div>
-                      <div className="space-y-0.5">
-                        {items.map((item) => {
-                          const globalIndex = flatFilteredItems.findIndex(i => i.id === item.id);
-                          const isSelected = globalIndex === selectedIndex;
-                          
-                          return (
-                            <button
-                              key={item.id}
-                              data-selected={isSelected}
-                              onClick={() => handleSelect(item.href)}
-                              onMouseEnter={() => setSelectedIndex(globalIndex)}
-                              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl transition-colors ${
-                                isSelected 
-                                  ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300" 
-                                  : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5"
-                              }`}
-                            >
-                              <div className="flex items-center gap-3">
-                                <div className={`p-1.5 rounded-lg ${isSelected ? 'bg-white dark:bg-blue-900/50 shadow-sm' : 'bg-slate-100 dark:bg-slate-800'}`}>
-                                  {item.icon}
-                                </div>
-                                <span className="font-medium text-[15px]">{item.name}</span>
-                              </div>
-                              {isSelected && (
-                                <CornerDownLeft className="w-4 h-4 text-blue-500 dark:text-blue-400" />
-                              )}
-                            </button>
-                          );
-                        })}
-                      </div>
+              {/* Results List Wrapper */}
+              <div className="flex-1 overflow-hidden p-2 flex flex-col">
+                <div 
+                  ref={listRef}
+                  className="overflow-y-auto scrollbar-hide flex-1 space-y-1"
+                >
+                  {flatFilteredItems.length === 0 ? (
+                    <div className="py-14 text-center text-slate-500 dark:text-slate-400">
+                      <p>No results found for "{query}"</p>
                     </div>
-                  ))
-                )}
+                  ) : (
+                    Object.entries(groupedItems).map(([category, items]) => (
+                      <div key={category} className="mb-2 last:mb-0">
+                        <div className="px-3 py-1.5 text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+                          {category}
+                        </div>
+                        <div className="space-y-0.5">
+                          {items.map((item) => {
+                            const globalIndex = flatFilteredItems.findIndex(i => i.id === item.id);
+                            const isSelected = globalIndex === selectedIndex;
+                            
+                            return (
+                              <button
+                                key={item.id}
+                                data-selected={isSelected}
+                                onClick={() => handleSelect(item.href)}
+                                onMouseEnter={() => setSelectedIndex(globalIndex)}
+                                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl transition-colors ${
+                                  isSelected 
+                                    ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300" 
+                                    : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5"
+                                }`}
+                              >
+                                <div className="flex items-center gap-3">
+                                  <div className={`p-1.5 rounded-lg ${isSelected ? 'bg-white dark:bg-blue-900/50 shadow-sm' : 'bg-slate-100 dark:bg-slate-800'}`}>
+                                    {item.icon}
+                                  </div>
+                                  <span className="font-medium text-[15px]">{item.name}</span>
+                                </div>
+                                {isSelected && (
+                                  <CornerDownLeft className="w-4 h-4 text-blue-500 dark:text-blue-400" />
+                                )}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
               </div>
 
               {/* Footer */}
