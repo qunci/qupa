@@ -10,6 +10,7 @@ export const translations: Translations = {
   en: {
     // Sidebar
     coreWorkspaces: "Workspace",
+    dashboard: "Dashboard",
     fileConverters: "File Converters",
     advancedTools: "Advanced Tools",
     settings: "Settings",
@@ -48,6 +49,16 @@ export const translations: Translations = {
     heicProcessing: "Processing HEIC format...",
     heicSuccess: "HEIC loaded successfully",
     heicError: "Failed to parse HEIC image.",
-    docPending: "Client-side document conversion logic pending."
+    docPending: "Client-side document conversion logic pending.",
+
+    // Dashboard & Batch
+    pinnedTools: "Pinned Tools",
+    noPinnedTools: "You haven't pinned any tools yet. Explore Converters or Tools to pin your favorites.",
+    pinTool: "Pin to Dashboard",
+    unpinTool: "Unpin from Dashboard",
+    compressAll: "Compress All",
+    downloadAll: "Download All",
+    downloadZip: "Download as ZIP",
+    clearAll: "Clear All"
   }
 };

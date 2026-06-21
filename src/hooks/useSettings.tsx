@@ -12,6 +12,8 @@ interface SettingsContextType {
   t: (key: keyof typeof translations['en']) => string;
   isSidebarOpen: boolean;
   setIsSidebarOpen: (isOpen: boolean) => void;
+  pinnedTools: string[];
+  togglePinTool: (toolId: string) => void;
 }
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
@@ -20,6 +22,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const [language] = useState<Language>("en");
   const [theme, setThemeState] = useState<Theme>("light");
   const [isSidebarOpenState, setIsSidebarOpenState] = useState<boolean>(true);
+  const [pinnedTools, setPinnedToolsState] = useState<string[]>([]);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -28,6 +31,15 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       setIsSidebarOpenState(savedSidebar === "true");
     } else {
       setIsSidebarOpenState(window.innerWidth >= 1024);
+    }
+
+    const savedPinnedTools = localStorage.getItem("pinnedTools");
+    if (savedPinnedTools) {
+      try {
+        setPinnedToolsState(JSON.parse(savedPinnedTools));
+      } catch (e) {
+        console.error("Failed to parse pinned tools from localStorage", e);
+      }
     }
 
     const isDark = document.documentElement.classList.contains("dark");
@@ -53,13 +65,22 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     localStorage.setItem("sidebarOpen", String(isOpen));
   };
 
+  const togglePinTool = (toolId: string) => {
+    setPinnedToolsState(prev => {
+      const isPinned = prev.includes(toolId);
+      const newPinned = isPinned ? prev.filter(id => id !== toolId) : [...prev, toolId];
+      localStorage.setItem("pinnedTools", JSON.stringify(newPinned));
+      return newPinned;
+    });
+  };
+
   const t = (key: keyof typeof translations['en']): string => {
     const currentLang = mounted ? language : "en";
     return translations[currentLang][key] || String(key);
   };
 
   return (
-    <SettingsContext.Provider value={{ language, theme, setTheme, t, isSidebarOpen: isSidebarOpenState, setIsSidebarOpen }}>
+    <SettingsContext.Provider value={{ language, theme, setTheme, t, isSidebarOpen: isSidebarOpenState, setIsSidebarOpen, pinnedTools, togglePinTool }}>
       {children}
     </SettingsContext.Provider>
   );

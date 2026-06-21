@@ -11,7 +11,7 @@ import ImageCompressorTool from "./ImageCompressorTool";
 export default function ToolsHub() {
   const [activeTab, setActiveTab] = useState<"document" | "image">("document");
   const [activeTool, setActiveTool] = useState<"merge-pdf" | "split-pdf" | "compress-image" | null>(null);
-  const { isSidebarOpen } = useSettings();
+  const { isSidebarOpen, pinnedTools, togglePinTool, t } = useSettings();
 
   return (
     <div className="flex flex-col w-full h-full animate-in fade-in duration-500">
@@ -99,7 +99,14 @@ export default function ToolsHub() {
           {!activeTool && activeTab === "document" && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
               
-              <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col transition-colors duration-300 shadow-sm hover:shadow-md">
+              <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col transition-colors duration-300 shadow-sm hover:shadow-md relative group">
+                <button
+                  onClick={(e) => { e.stopPropagation(); togglePinTool("merge-pdf"); }}
+                  className={`absolute top-4 right-4 p-1.5 rounded-md transition-all z-10 ${pinnedTools.includes("merge-pdf") ? 'text-amber-500 opacity-100' : 'text-slate-400 opacity-0 group-hover:opacity-100 hover:text-amber-500'}`}
+                  title={pinnedTools.includes("merge-pdf") ? t("unpinTool") : t("pinTool")}
+                >
+                  <svg className="w-5 h-5" fill={pinnedTools.includes("merge-pdf") ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+                </button>
                 <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-lg flex items-center justify-center mb-3 shadow-sm shadow-orange-500/20 ring-1 ring-orange-500/30">
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
@@ -112,7 +119,14 @@ export default function ToolsHub() {
                 </button>
               </div>
 
-              <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col transition-colors duration-300 shadow-sm hover:shadow-md">
+              <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col transition-colors duration-300 shadow-sm hover:shadow-md relative group">
+                <button
+                  onClick={(e) => { e.stopPropagation(); togglePinTool("split-pdf"); }}
+                  className={`absolute top-4 right-4 p-1.5 rounded-md transition-all z-10 ${pinnedTools.includes("split-pdf") ? 'text-amber-500 opacity-100' : 'text-slate-400 opacity-0 group-hover:opacity-100 hover:text-amber-500'}`}
+                  title={pinnedTools.includes("split-pdf") ? t("unpinTool") : t("pinTool")}
+                >
+                  <svg className="w-5 h-5" fill={pinnedTools.includes("split-pdf") ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+                </button>
                 <div className="w-10 h-10 bg-gradient-to-br from-rose-400 to-red-500 rounded-lg flex items-center justify-center mb-3 shadow-sm shadow-red-500/20 ring-1 ring-red-500/30">
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
@@ -131,7 +145,14 @@ export default function ToolsHub() {
           {!activeTool && activeTab === "image" && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
               
-              <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col transition-colors duration-300 shadow-sm hover:shadow-md">
+              <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col transition-colors duration-300 shadow-sm hover:shadow-md relative group">
+                <button
+                  onClick={(e) => { e.stopPropagation(); togglePinTool("compress-image"); }}
+                  className={`absolute top-4 right-4 p-1.5 rounded-md transition-all z-10 ${pinnedTools.includes("compress-image") ? 'text-amber-500 opacity-100' : 'text-slate-400 opacity-0 group-hover:opacity-100 hover:text-amber-500'}`}
+                  title={pinnedTools.includes("compress-image") ? t("unpinTool") : t("pinTool")}
+                >
+                  <svg className="w-5 h-5" fill={pinnedTools.includes("compress-image") ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+                </button>
                 <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-lg flex items-center justify-center mb-3 shadow-sm shadow-teal-500/20 ring-1 ring-teal-500/30">
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
