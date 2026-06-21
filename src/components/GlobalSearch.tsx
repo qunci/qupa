@@ -37,8 +37,8 @@ export default function GlobalSearch() {
 
   // Filter and sort items based on query relevance
   const filteredItems = searchData
-    .map((item) => {
-      if (!query) return { item, score: 1 };
+    .map((item, index) => {
+      if (!query) return { item, score: 0, index };
       
       const searchStr = query.toLowerCase();
       const nameLower = item.name.toLowerCase();
@@ -46,23 +46,41 @@ export default function GlobalSearch() {
       
       let score = 0;
       
+      // Exact and substring matches
       if (nameLower === searchStr) score += 100;
       else if (nameLower.startsWith(searchStr)) score += 50;
       else if (nameLower.includes(` ${searchStr}`)) score += 30;
       else if (nameLower.includes(searchStr)) score += 10;
       
+      // Category matches
       if (categoryLower === searchStr) score += 8;
       else if (categoryLower.startsWith(searchStr)) score += 4;
       else if (categoryLower.includes(` ${searchStr}`)) score += 2;
       else if (categoryLower.includes(searchStr)) score += 1;
 
-      return { item, score };
+      // Fuzzy subsequence match (e.g. "se" in "Split PDF")
+      let fuzzyIdx = 0;
+      for (let i = 0; i < nameLower.length; i++) {
+        if (nameLower[i] === searchStr[fuzzyIdx]) {
+          fuzzyIdx++;
+          if (fuzzyIdx === searchStr.length) {
+            score += 5; // Give a small bonus for matching subsequence
+            break;
+          }
+        }
+      }
+
+      return { item, score, index };
     })
-    .filter((x) => x.score > 0)
-    .sort((a, b) => b.score - a.score)
+    // Do NOT filter out items. Keep everything, just sort.
+    .sort((a, b) => {
+      if (!query) return a.index - b.index;
+      if (b.score !== a.score) return b.score - a.score;
+      return a.index - b.index;
+    })
     .map((x) => x.item);
 
-  // Group by category
+  // Group by category (only visually useful when query is empty)
   const groupedItems = filteredItems.reduce((acc, item) => {
     if (!acc[item.category]) acc[item.category] = [];
     acc[item.category].push(item);
@@ -70,7 +88,7 @@ export default function GlobalSearch() {
   }, {} as Record<string, ToolItem[]>);
 
   // Flatten for keyboard navigation
-  const flatFilteredItems = Object.values(groupedItems).flat();
+  const flatFilteredItems = query ? filteredItems : Object.values(groupedItems).flat();
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -205,7 +223,8 @@ export default function GlobalSearch() {
                     <div className="py-14 text-center text-slate-500 dark:text-slate-400">
                       <p>No results found for "{query}"</p>
                     </div>
-                  ) : (
+                  ) : !query ? (
+                    // Grouped view when NOT searching
                     Object.entries(groupedItems).map(([category, items]) => (
                       <div key={category} className="mb-2 last:mb-0">
                         <div className="px-3 py-1.5 text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
@@ -243,6 +262,36 @@ export default function GlobalSearch() {
                         </div>
                       </div>
                     ))
+                  ) : (
+                    // Flat sorted view when searching
+                    <div className="space-y-0.5">
+                      {flatFilteredItems.map((item, globalIndex) => {
+                        const isSelected = globalIndex === selectedIndex;
+                        return (
+                          <button
+                            key={item.id}
+                            data-selected={isSelected}
+                            onClick={() => handleSelect(item.href)}
+                            onMouseEnter={() => setSelectedIndex(globalIndex)}
+                            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl transition-colors ${
+                              isSelected 
+                                ? "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300" 
+                                : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5"
+                            }`}
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className={`p-1.5 rounded-lg ${isSelected ? 'bg-white dark:bg-blue-900/50 shadow-sm' : 'bg-slate-100 dark:bg-slate-800'}`}>
+                                {item.icon}
+                              </div>
+                              <span className="font-medium text-[15px]">{item.name}</span>
+                            </div>
+                            {isSelected && (
+                              <CornerDownLeft className="w-4 h-4 text-blue-500 dark:text-blue-400" />
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
                   )}
                 </div>
               </div>
