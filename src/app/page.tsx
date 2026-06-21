@@ -39,13 +39,13 @@ function HomeContent() {
           {/* Desktop Search Button */}
           <button
             onClick={openSearch}
-            className="hidden md:flex items-center gap-3 px-3 py-1.5 bg-slate-100/80 hover:bg-slate-200/80 dark:bg-slate-800/80 dark:hover:bg-slate-700/80 text-slate-500 dark:text-slate-400 rounded-full text-sm font-medium transition-colors ring-1 ring-slate-200/50 dark:ring-slate-700/50 shadow-sm backdrop-blur-md"
+            className="hidden md:flex items-center gap-2.5 px-3 py-1 bg-slate-100/80 hover:bg-slate-200/80 dark:bg-slate-800/80 dark:hover:bg-slate-700/80 text-slate-500 dark:text-slate-400 rounded-full text-[13px] font-medium transition-colors ring-1 ring-slate-200/50 dark:ring-slate-700/50 shadow-sm backdrop-blur-md"
           >
-            <Search className="w-4 h-4" />
+            <Search className="w-3.5 h-3.5" />
             <span className="text-slate-400 dark:text-slate-500">Search tools...</span>
-            <div className="flex items-center gap-0.5 opacity-60">
-              <kbd className="font-sans text-xs font-bold bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300">⌘</kbd>
-              <kbd className="font-sans text-xs font-bold bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300">K</kbd>
+            <div className="flex items-center gap-0.5 opacity-60 ml-1">
+              <kbd className="font-sans text-[10px] font-bold bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300">⌘</kbd>
+              <kbd className="font-sans text-[10px] font-bold bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300">K</kbd>
             </div>
           </button>
         </div>
