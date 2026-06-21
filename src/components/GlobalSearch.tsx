@@ -63,10 +63,18 @@ export default function GlobalSearch() {
       for (let i = 0; i < nameLower.length; i++) {
         if (nameLower[i] === searchStr[fuzzyIdx]) {
           fuzzyIdx++;
+          score += 2; // points for sequence progression
           if (fuzzyIdx === searchStr.length) {
-            score += 5; // Give a small bonus for matching subsequence
+            score += 5; // Bonus for full subsequence match
             break;
           }
+        }
+      }
+
+      // Character overlap score (fallback for partial non-sequential matches)
+      for (const char of searchStr) {
+        if (nameLower.includes(char)) {
+          score += 1;
         }
       }
 
