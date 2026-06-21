@@ -47,7 +47,7 @@ function WorkspaceSwitcherContent() {
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-1 w-56 bg-white dark:bg-[#131314] border border-slate-200 dark:border-slate-800 rounded-xl shadow-lg z-50 py-1.5 animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="absolute top-full -left-3 mt-1 w-56 bg-white dark:bg-[#131314] border border-slate-200 dark:border-slate-800 rounded-xl shadow-lg z-50 py-1.5 animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="px-3 py-2 text-xs font-bold text-slate-500 dark:text-slate-400 tracking-wider uppercase mb-1">
             Workspaces
           </div>
