@@ -170,7 +170,22 @@ export default function FileEncryptionTool({ mode }: { mode: "encrypt" | "decryp
   };
 
   const isEncrypt = mode === "encrypt";
-  const themeColor = isEncrypt ? "emerald" : "sky";
+  
+  const dragActiveClasses = isEncrypt 
+    ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-500/10 dark:border-emerald-400" 
+    : "border-sky-500 bg-sky-50 dark:bg-sky-500/10 dark:border-sky-400";
+    
+  const iconWrapperClasses = isEncrypt
+    ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400"
+    : "bg-sky-100 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400";
+    
+  const inputFocusClasses = isEncrypt
+    ? "focus:ring-emerald-500 focus:border-emerald-500"
+    : "focus:ring-sky-500 focus:border-sky-500";
+    
+  const buttonActiveClasses = isEncrypt
+    ? "bg-emerald-600 text-white hover:bg-emerald-700 shadow-md hover:shadow-lg"
+    : "bg-sky-600 text-white hover:bg-sky-700 shadow-md hover:shadow-lg";
   const icon = isEncrypt ? (
     <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
   ) : (
@@ -190,11 +205,11 @@ export default function FileEncryptionTool({ mode }: { mode: "encrypt" | "decryp
               onClick={() => fileInputRef.current?.click()}
               className={`w-full h-64 border-2 border-dashed rounded-xl flex flex-col items-center justify-center transition-colors cursor-pointer ${
                 isDragging 
-                  ? \`border-\${themeColor}-500 bg-\${themeColor}-50 dark:bg-\${themeColor}-500/10 dark:border-\${themeColor}-400\`
+                  ? dragActiveClasses
                   : "border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50 bg-white dark:bg-[#18181B]"
               }`}
             >
-              <div className={`w-16 h-16 bg-${themeColor}-100 dark:bg-${themeColor}-900/30 text-${themeColor}-600 dark:text-${themeColor}-400 rounded-full flex items-center justify-center mb-4`}>
+              <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 ${iconWrapperClasses}`}>
                 {icon}
               </div>
               <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200">
@@ -215,7 +230,7 @@ export default function FileEncryptionTool({ mode }: { mode: "encrypt" | "decryp
             <div className="bg-white dark:bg-[#18181B] border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4 overflow-hidden">
-                  <div className={`w-12 h-12 shrink-0 bg-${themeColor}-100 dark:bg-${themeColor}-900/30 text-${themeColor}-600 dark:text-${themeColor}-400 rounded-lg flex items-center justify-center`}>
+                  <div className={`w-12 h-12 shrink-0 rounded-lg flex items-center justify-center ${iconWrapperClasses}`}>
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
                   </div>
                   <div className="overflow-hidden">
@@ -248,7 +263,7 @@ export default function FileEncryptionTool({ mode }: { mode: "encrypt" | "decryp
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
-                className={`w-full p-2.5 border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-${themeColor}-500 focus:border-${themeColor}-500 transition-colors`}
+                className={`w-full p-2.5 border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white rounded-lg focus:ring-2 transition-colors ${inputFocusClasses}`}
                 disabled={isProcessing}
               />
             </div>
@@ -269,7 +284,7 @@ export default function FileEncryptionTool({ mode }: { mode: "encrypt" | "decryp
               className={`w-full py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${
                 !file || !password || isProcessing
                   ? "bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed"
-                  : \`bg-\${themeColor}-600 text-white hover:bg-\${themeColor}-700 shadow-md hover:shadow-lg\`
+                  : buttonActiveClasses
               }`}
             >
               {isProcessing ? (
