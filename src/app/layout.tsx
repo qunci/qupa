@@ -10,13 +10,13 @@ export const metadata = {
   icons: [
     {
       rel: 'icon',
-      url: '/api/icon/light?v=3',
-      media: '(prefers-color-scheme: light)',
+      url: '/api/icon/dark?v=4',
+      media: '(prefers-color-scheme: dark)',
     },
     {
       rel: 'icon',
-      url: '/api/icon/dark?v=3',
-      media: '(prefers-color-scheme: dark)',
+      url: '/api/icon/light?v=4',
+      media: '(prefers-color-scheme: light)',
     },
   ]
 };
