@@ -25,17 +25,17 @@ function HomeContent() {
   return (
     <main className="flex-1 flex flex-col min-h-screen w-full relative transition-colors duration-300">
       
-      <header className="absolute top-0 right-0 w-full h-16 flex items-center justify-end px-4 md:px-6 z-30 pointer-events-none gap-3">
+      <header className="absolute top-0 right-0 w-full h-16 flex items-center justify-end px-4 md:px-6 z-30 pointer-events-none gap-2.5">
         <div className="pointer-events-auto hidden md:flex">
           <button
             onClick={openSearch}
-            className="flex items-center gap-3 px-3 py-1.5 bg-slate-100/80 hover:bg-slate-200/80 dark:bg-slate-800/80 dark:hover:bg-slate-700/80 text-slate-500 dark:text-slate-400 rounded-full text-sm font-medium transition-colors ring-1 ring-slate-200/50 dark:ring-slate-700/50 shadow-sm backdrop-blur-md"
+            className="flex items-center gap-2 px-2.5 h-[26px] bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 rounded-full text-[12px] font-medium transition-colors border-2 border-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
           >
-            <Search className="w-4 h-4" />
-            <span>Search tools...</span>
-            <div className="flex items-center gap-0.5 opacity-60">
-              <kbd className="font-sans text-[10px] font-bold bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300">⌘</kbd>
-              <kbd className="font-sans text-[10px] font-bold bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300">K</kbd>
+            <Search className="w-3.5 h-3.5" />
+            <span>Search...</span>
+            <div className="flex items-center gap-0.5 opacity-70 ml-0.5">
+              <kbd className="font-sans text-[9px] font-bold bg-white dark:bg-slate-950 px-1 py-0.5 rounded text-slate-500 dark:text-slate-400">⌘</kbd>
+              <kbd className="font-sans text-[9px] font-bold bg-white dark:bg-slate-950 px-1 py-0.5 rounded text-slate-500 dark:text-slate-400">K</kbd>
             </div>
           </button>
         </div>
