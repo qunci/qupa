@@ -11,6 +11,7 @@ interface SettingsContextType {
   setTheme: (theme: Theme) => void;
   isSidebarOpen: boolean;
   setIsSidebarOpen: (isOpen: boolean) => void;
+  t: (key: keyof typeof translations['en']) => string;
 }
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
