@@ -95,10 +95,10 @@ function SidebarContent() {
           <div className="mt-6">
             <button 
               onClick={() => setIsRecentOpen(!isRecentOpen)}
-              className="w-full flex items-center justify-between px-3 py-1.5 text-[11px] font-semibold tracking-wide text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors group"
+              className="w-full flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold tracking-wide text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors group"
             >
               <span className="uppercase">{t("recentTools")}</span>
-              <svg className={`w-3.5 h-3.5 transition-transform duration-200 ${isRecentOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" /></svg>
+              <svg className={`w-3 h-3 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-200 ${isRecentOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" /></svg>
             </button>
             
             <div className={`mt-1 space-y-0.5 overflow-hidden transition-all duration-300 ${isRecentOpen ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'}`}>
