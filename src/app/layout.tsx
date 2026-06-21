@@ -1,8 +1,8 @@
 import "@/app/globals.css";
 import Sidebar from "@/components/Sidebar";
+import GlobalSearch from "@/components/GlobalSearch";
 import { Toaster } from "sonner";
 import { SettingsProvider } from "@/hooks/useSettings";
-
 
 export const metadata = {
   title: "Qupa",
@@ -55,6 +55,9 @@ export default function RootLayout({
             {children}
           </div>
         </SettingsProvider>
+        
+        {/* Global Modal/Overlays */}
+        <GlobalSearch />
         
         {/* Toast Provider */}
         <Toaster position="bottom-right" theme="system" richColors closeButton />

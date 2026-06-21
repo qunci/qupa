@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSettings } from "@/hooks/useSettings";
+import { Search } from "lucide-react";
 import WorkspaceSwitcher from "./WorkspaceSwitcher";
 import MobileHeaderToggle from "./MobileHeaderToggle";
 import MergePdfTool from "./MergePdfTool";
@@ -39,6 +40,10 @@ export default function ToolsHub() {
     }
   };
 
+  const openSearch = () => {
+    window.dispatchEvent(new CustomEvent("open-global-search"));
+  };
+
   return (
     <div className="flex flex-col w-full h-full animate-in fade-in duration-500">
       
@@ -48,38 +53,53 @@ export default function ToolsHub() {
         {/* Title Bar (Visible only when sidebar is closed on desktop) */}
         <div className={`w-full px-4 md:px-6 transition-all duration-300 bg-white/80 dark:bg-[#131314]/80 backdrop-blur-xl sticky top-0 z-20 flex items-center h-16 ${isSidebarOpen ? 'md:h-0 md:opacity-0 md:pointer-events-none' : ''}`}>
           <MobileHeaderToggle />
-          <div className="w-full h-full flex items-center">
+          <div className="w-full h-full flex items-center justify-between">
             <WorkspaceSwitcher />
           </div>
         </div>
 
         {/* Tabs Bar / Tool Header */}
         <div className={`w-full px-4 md:px-6 border-b border-slate-200 dark:border-slate-800 transition-all duration-300 bg-white dark:bg-[#131314] ${activeTool ? 'h-16' : (isSidebarOpen ? 'h-12 md:h-16' : 'h-12')}`}>
-          <div className="w-full h-full flex items-center">
+          <div className="w-full h-full flex items-center justify-between">
             {!activeTool ? (
-              <nav className="flex space-x-6 overflow-x-auto no-scrollbar h-full">
-                <button 
-                  onClick={() => setActiveTab("document")}
-                  className={`h-full text-sm font-medium border-b-2 transition-colors flex items-center gap-2 whitespace-nowrap ${activeTab === "document" ? "border-blue-600 text-slate-900 dark:text-white" : "border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"}`}
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" /></svg>
-                  Document Tools
-                </button>
-                <button 
-                  onClick={() => setActiveTab("image")}
-                  className={`h-full text-sm font-medium border-b-2 transition-colors flex items-center gap-2 whitespace-nowrap ${activeTab === "image" ? "border-blue-600 text-slate-900 dark:text-white" : "border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"}`}
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                  Image Tools
-                </button>
-                <button 
-                  onClick={() => setActiveTab("file")}
-                  className={`h-full text-sm font-medium border-b-2 transition-colors flex items-center gap-2 whitespace-nowrap ${activeTab === "file" ? "border-blue-600 text-slate-900 dark:text-white" : "border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"}`}
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg>
-                  File Utilities
-                </button>
-              </nav>
+              <>
+                <nav className="flex space-x-6 overflow-x-auto no-scrollbar h-full">
+                  <button 
+                    onClick={() => setActiveTab("document")}
+                    className={`h-full text-sm font-medium border-b-2 transition-colors flex items-center gap-2 whitespace-nowrap ${activeTab === "document" ? "border-blue-600 text-slate-900 dark:text-white" : "border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"}`}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" /></svg>
+                    Document Tools
+                  </button>
+                  <button 
+                    onClick={() => setActiveTab("image")}
+                    className={`h-full text-sm font-medium border-b-2 transition-colors flex items-center gap-2 whitespace-nowrap ${activeTab === "image" ? "border-blue-600 text-slate-900 dark:text-white" : "border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"}`}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                    Image Tools
+                  </button>
+                  <button 
+                    onClick={() => setActiveTab("file")}
+                    className={`h-full text-sm font-medium border-b-2 transition-colors flex items-center gap-2 whitespace-nowrap ${activeTab === "file" ? "border-blue-600 text-slate-900 dark:text-white" : "border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"}`}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg>
+                    File Utilities
+                  </button>
+                </nav>
+                <div className="hidden md:flex items-center">
+                  <button
+                    onClick={openSearch}
+                    className="flex items-center gap-3 px-3 py-1.5 bg-slate-100/80 hover:bg-slate-200/80 dark:bg-slate-800/80 dark:hover:bg-slate-700/80 text-slate-500 dark:text-slate-400 rounded-full text-sm font-medium transition-colors ring-1 ring-slate-200/50 dark:ring-slate-700/50 shadow-sm"
+                  >
+                    <Search className="w-4 h-4" />
+                    <span>Search tools...</span>
+                    <div className="flex items-center gap-0.5 opacity-60">
+                      <kbd className="font-sans text-xs bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded">⌘</kbd>
+                      <kbd className="font-sans text-xs bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded">K</kbd>
+                    </div>
+                  </button>
+                </div>
+              </>
             ) : (
               <div className="flex items-center gap-1 w-full">
                 <button 
