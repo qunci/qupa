@@ -8,10 +8,11 @@ import MergePdfTool from "./MergePdfTool";
 import SplitPdfTool from "./SplitPdfTool";
 import ImageCompressorTool from "./ImageCompressorTool";
 import ArchiveTool from "./ArchiveTool";
+import FileEncryptionTool from "./FileEncryptionTool";
 
 export default function ToolsHub() {
   const [activeTab, setActiveTab] = useState<"document" | "image" | "file">("document");
-  const [activeTool, setActiveTool] = useState<"merge-pdf" | "split-pdf" | "compress-image" | "compress-file" | "extract-archive" | null>(null);
+  const [activeTool, setActiveTool] = useState<"merge-pdf" | "split-pdf" | "compress-image" | "compress-file" | "extract-archive" | "encrypt-file" | "decrypt-file" | null>(null);
   const { isSidebarOpen, t } = useSettings();
 
   return (
@@ -80,6 +81,14 @@ export default function ToolsHub() {
                       <svg className="w-7 h-7 text-fuchsia-500 dark:text-fuchsia-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
                       </svg>
+                    ) : activeTool === "encrypt-file" ? (
+                      <svg className="w-7 h-7 text-emerald-500 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                      </svg>
+                    ) : activeTool === "decrypt-file" ? (
+                      <svg className="w-7 h-7 text-sky-500 dark:text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                      </svg>
                     ) : (
                       <svg className="w-7 h-7 text-emerald-500 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -88,7 +97,7 @@ export default function ToolsHub() {
                   </div>
                   <div className="flex flex-col justify-center">
                     <h2 className="text-[15px] font-bold text-slate-900 dark:text-white leading-none tracking-tight">
-                      {activeTool === "merge-pdf" ? "Merge PDF" : activeTool === "split-pdf" ? "Split PDF" : activeTool === "compress-file" ? t("compressFile") : activeTool === "extract-archive" ? t("extractArchive") : "Image Compressor"}
+                      {activeTool === "merge-pdf" ? "Merge PDF" : activeTool === "split-pdf" ? "Split PDF" : activeTool === "compress-file" ? t("compressFile") : activeTool === "extract-archive" ? t("extractArchive") : activeTool === "encrypt-file" ? t("encryptFile") : activeTool === "decrypt-file" ? t("decryptFile") : "Image Compressor"}
                     </h2>
                     <p className="text-[12px] text-slate-500 dark:text-slate-400 mt-1 leading-none hidden md:block">
                       {activeTool === "merge-pdf" 
@@ -99,7 +108,11 @@ export default function ToolsHub() {
                             ? "Compress multiple files into a single ZIP archive."
                             : activeTool === "extract-archive"
                               ? "Extract files securely from ZIP, RAR, 7Z directly in browser."
-                              : "Compress and resize images with real-time visual comparison."}
+                              : activeTool === "encrypt-file"
+                                ? "Lock any file securely with AES-GCM encryption."
+                                : activeTool === "decrypt-file"
+                                  ? "Unlock files protected by Qupa Encryption."
+                                  : "Compress and resize images with real-time visual comparison."}
                     </p>
                   </div>
                 </div>
@@ -117,6 +130,8 @@ export default function ToolsHub() {
           {activeTool === "compress-image" && <ImageCompressorTool />}
           {activeTool === "compress-file" && <ArchiveTool key="compress" mode="compress" />}
           {activeTool === "extract-archive" && <ArchiveTool key="extract" mode="extract" />}
+          {activeTool === "encrypt-file" && <FileEncryptionTool key="encrypt" mode="encrypt" />}
+          {activeTool === "decrypt-file" && <FileEncryptionTool key="decrypt" mode="decrypt" />}
 
           {!activeTool && activeTab === "document" && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -205,6 +220,32 @@ export default function ToolsHub() {
                 <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-1.5">{t("extractArchive")}</h3>
                 <p className="text-[13px] leading-relaxed text-slate-500 dark:text-slate-400 mb-5 flex-1">Extract files from ZIP, RAR, 7Z, TAR directly in your browser.</p>
                 <button onClick={() => setActiveTool("extract-archive")} className="w-full py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition-colors">
+                  Open Workspace
+                </button>
+              </div>
+
+              <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col transition-colors duration-300 shadow-sm hover:shadow-md">
+                <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-lg flex items-center justify-center mb-3 shadow-sm shadow-emerald-500/20 ring-1 ring-emerald-500/30">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                </div>
+                <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-1.5">{t("encryptFile")}</h3>
+                <p className="text-[13px] leading-relaxed text-slate-500 dark:text-slate-400 mb-5 flex-1">Lock any file securely with AES-GCM encryption.</p>
+                <button onClick={() => setActiveTool("encrypt-file")} className="w-full py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition-colors">
+                  Open Workspace
+                </button>
+              </div>
+
+              <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col transition-colors duration-300 shadow-sm hover:shadow-md">
+                <div className="w-10 h-10 bg-gradient-to-br from-sky-400 to-sky-600 rounded-lg flex items-center justify-center mb-3 shadow-sm shadow-sky-500/20 ring-1 ring-sky-500/30">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-1.5">{t("decryptFile")}</h3>
+                <p className="text-[13px] leading-relaxed text-slate-500 dark:text-slate-400 mb-5 flex-1">Unlock files protected by Qupa Encryption.</p>
+                <button onClick={() => setActiveTool("decrypt-file")} className="w-full py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition-colors">
                   Open Workspace
                 </button>
               </div>
