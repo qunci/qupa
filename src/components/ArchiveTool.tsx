@@ -4,6 +4,11 @@ import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
 import { useSettings } from "@/hooks/useSettings";
 import { ZipReader, ZipWriter, BlobReader, BlobWriter } from "@zip.js/zip.js";
+import { Archive } from "libarchive.js/main.js";
+
+Archive.init({
+  workerUrl: "/libarchive.js/worker-bundle.js"
+});
 
 interface ZipEntryInfo {
   filename: string;
@@ -11,7 +16,9 @@ interface ZipEntryInfo {
   uncompressedSize: number;
   encrypted: boolean;
   directory: boolean;
-  entry: any; // the actual zip.js Entry object
+  entry: any; // the actual zip.js Entry object or libarchive CompressedFile
+  isWasm?: boolean;
+  archiveObj?: any; // reference to Archive instance for password
 }
 
 export default function ArchiveTool() {
@@ -68,31 +75,57 @@ export default function ArchiveTool() {
   };
 
   const loadZipFile = async (file: File) => {
-    if (!file.name.endsWith(".zip") && !file.type.includes("zip")) {
-      toast.error("Please upload a valid .zip file");
+    const isZip = file.name.toLowerCase().endsWith(".zip") || file.type.includes("zip");
+    const allowedExtensions = [".zip", ".rar", ".7z", ".tar", ".gz", ".bz2"];
+    const ext = file.name.toLowerCase().match(/\.[a-z0-9]+$/)?.[0];
+    
+    if (!ext || !allowedExtensions.includes(ext)) {
+      toast.error("Please upload a supported archive file (.zip, .rar, .7z, .tar, .gz)");
       return;
     }
+
     setZipFile(file);
     setExtractPassword("");
     try {
-      const zipReader = new ZipReader(new BlobReader(file));
-      const entries = await zipReader.getEntries();
-      
-      const parsedEntries: ZipEntryInfo[] = entries.map(e => ({
-        filename: e.filename,
-        compressedSize: e.compressedSize,
-        uncompressedSize: e.uncompressedSize,
-        encrypted: e.encrypted,
-        directory: e.directory,
-        entry: e
-      }));
-      
-      setZipEntries(parsedEntries);
-      setNeedsPassword(parsedEntries.some(e => e.encrypted));
-      await zipReader.close();
+      if (isZip) {
+        const zipReader = new ZipReader(new BlobReader(file));
+        const entries = await zipReader.getEntries();
+        
+        const parsedEntries: ZipEntryInfo[] = entries.map(e => ({
+          filename: e.filename,
+          compressedSize: e.compressedSize,
+          uncompressedSize: e.uncompressedSize,
+          encrypted: e.encrypted,
+          directory: e.directory,
+          entry: e
+        }));
+        
+        setZipEntries(parsedEntries);
+        setNeedsPassword(parsedEntries.some(e => e.encrypted));
+        await zipReader.close();
+      } else {
+        // WASM libarchive handling
+        const archive = await Archive.open(file);
+        const isEncrypted = await archive.hasEncryptedData();
+        setNeedsPassword(isEncrypted === true);
+
+        const fileArray = await archive.getFilesArray();
+        const parsedEntries: ZipEntryInfo[] = fileArray.map((item: any) => ({
+          filename: item.path + item.file.name,
+          compressedSize: 0,
+          uncompressedSize: item.file.size || 0,
+          encrypted: isEncrypted === true,
+          directory: false, // getFilesArray only returns files
+          entry: item.file,
+          isWasm: true,
+          archiveObj: archive
+        }));
+        
+        setZipEntries(parsedEntries);
+      }
     } catch (error) {
       console.error(error);
-      toast.error("Failed to read the ZIP file. It might be corrupted.");
+      toast.error("Failed to read the archive file. It might be corrupted.");
       setZipFile(null);
       setZipEntries([]);
     }
@@ -174,10 +207,18 @@ export default function ArchiveTool() {
         const item = filesToExtract[i];
         
         try {
-          const blobWriter = new BlobWriter();
-          const blob = await item.entry.getData(blobWriter, {
-            password: extractPassword || undefined
-          });
+          let blob: Blob;
+          if (item.isWasm) {
+            if (needsPassword && extractPassword) {
+              await item.archiveObj.usePassword(extractPassword);
+            }
+            blob = await item.entry.extract(); // Returns a File object which is a Blob
+          } else {
+            const blobWriter = new BlobWriter();
+            blob = await item.entry.getData(blobWriter, {
+              password: extractPassword || undefined
+            });
+          }
 
           if (dirHandle) {
             // create subdirectories if needed
@@ -245,7 +286,7 @@ export default function ArchiveTool() {
           onClick={() => setMode("extract")}
           className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${mode === 'extract' ? 'bg-white dark:bg-[#18181B] text-indigo-600 dark:text-indigo-400 shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
         >
-          Extract ZIP
+          Extract Files
         </button>
       </div>
 
@@ -361,9 +402,9 @@ export default function ArchiveTool() {
                 <div className="w-16 h-16 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-full flex items-center justify-center mb-4">
                   <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg>
                 </div>
-                <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200">Open ZIP File</h3>
-                <p className="text-sm text-slate-500 mt-1">Drag & drop a .zip file here</p>
-                <input ref={zipInputRef} type="file" accept=".zip,application/zip" className="hidden" onChange={(e) => e.target.files && e.target.files.length > 0 && loadZipFile(e.target.files[0])} />
+                <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200">Open Archive File</h3>
+                <p className="text-sm text-slate-500 mt-1">Drag & drop a .zip, .rar, .7z here</p>
+                <input ref={zipInputRef} type="file" accept=".zip,application/zip,.rar,.7z,.tar,.gz,.bz2" className="hidden" onChange={(e) => e.target.files && e.target.files.length > 0 && loadZipFile(e.target.files[0])} />
               </div>
             ) : (
               <div className="bg-white dark:bg-[#18181B] border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm">
