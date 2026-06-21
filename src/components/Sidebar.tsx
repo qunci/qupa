@@ -2,14 +2,30 @@
 
 import Link from "next/link";
 import { BrandLogo } from "./BrandLogo";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { useSettings } from "@/hooks/useSettings";
 
 function SidebarContent() {
   const searchParams = useSearchParams();
   const currentHub = searchParams.get("hub") || "dashboard";
-  const { t, isSidebarOpen: isOpen, setIsSidebarOpen: setIsOpen } = useSettings();
+  const { t, isSidebarOpen: isOpen, setIsSidebarOpen: setIsOpen, recentTools } = useSettings();
+  const [isRecentOpen, setIsRecentOpen] = useState(true);
+
+  const getToolTitle = (toolId: string) => {
+    switch (toolId) {
+      case "merge-pdf": return "Merge PDF";
+      case "split-pdf": return "Split PDF";
+      case "compress-file": return t("compressFile");
+      case "extract-archive": return t("extractArchive");
+      case "encrypt-file": return t("encryptFile");
+      case "decrypt-file": return t("decryptFile");
+      case "convert-image": return t("imageConverter");
+      case "convert-document": return t("documentConverter");
+      case "compress-image": return "Image Compressor";
+      default: return toolId;
+    }
+  };
 
   const getMenuClass = (hubName: string) => {
     const isActive = currentHub === hubName;
@@ -79,6 +95,33 @@ function SidebarContent() {
           </svg>
           {isOpen && <span>{t("dashboard")}</span>}
         </Link>
+
+        {/* Recent Tools Section */}
+        {recentTools.length > 0 && isOpen && (
+          <div className="mt-6">
+            <button 
+              onClick={() => setIsRecentOpen(!isRecentOpen)}
+              className="w-full flex items-center justify-between px-4 py-1.5 text-[11px] font-semibold tracking-wide text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors group"
+            >
+              <span className="uppercase">{t("recentTools")}</span>
+              <svg className={`w-3.5 h-3.5 transition-transform duration-200 ${isRecentOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" /></svg>
+            </button>
+            
+            <div className={`mt-1 space-y-0.5 overflow-hidden transition-all duration-300 ${isRecentOpen ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'}`}>
+              {recentTools.map(tool => (
+                <Link 
+                  key={tool}
+                  href={`/?hub=dashboard&tool=${tool}`}
+                  className="flex items-center gap-3 px-4 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-200/50 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-white/5 rounded-full transition-colors mx-2"
+                  title={getToolTitle(tool)}
+                >
+                  <svg className="w-4 h-4 shrink-0 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                  <span className="truncate">{getToolTitle(tool)}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* Settings */}

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useSettings } from "@/hooks/useSettings";
 import WorkspaceSwitcher from "./WorkspaceSwitcher";
 import MobileHeaderToggle from "./MobileHeaderToggle";
@@ -13,9 +14,30 @@ import ImageConverter from "./ImageConverter";
 import DocumentConverter from "./DocumentConverter";
 
 export default function ToolsHub() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const urlTool = searchParams.get("tool");
+
   const [activeTab, setActiveTab] = useState<"document" | "image" | "file">("document");
-  const [activeTool, setActiveTool] = useState<"merge-pdf" | "split-pdf" | "compress-image" | "compress-file" | "extract-archive" | "encrypt-file" | "decrypt-file" | "convert-image" | "convert-document" | null>(null);
-  const { isSidebarOpen, t } = useSettings();
+  const [activeTool, setActiveToolState] = useState<"merge-pdf" | "split-pdf" | "compress-image" | "compress-file" | "extract-archive" | "encrypt-file" | "decrypt-file" | "convert-image" | "convert-document" | null>(null);
+  const { isSidebarOpen, t, addRecentTool } = useSettings();
+
+  useEffect(() => {
+    if (urlTool) {
+      setActiveToolState(urlTool as any);
+      addRecentTool(urlTool);
+    } else {
+      setActiveToolState(null);
+    }
+  }, [urlTool, addRecentTool]);
+
+  const setActiveTool = (tool: string | null) => {
+    if (tool) {
+      router.push(`/?hub=dashboard&tool=${tool}`);
+    } else {
+      router.push(`/?hub=dashboard`);
+    }
+  };
 
   return (
     <div className="flex flex-col w-full h-full animate-in fade-in duration-500">

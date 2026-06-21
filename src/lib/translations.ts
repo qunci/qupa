@@ -9,7 +9,8 @@ type Translations = {
 export const translations: Translations = {
   en: {
     // Sidebar
-    coreWorkspaces: "Workspace",
+    coreWorkspaces: "Core Workspaces",
+    recentTools: "Recent",
     dashboard: "Dashboard",
     fileConverters: "File Converters",
     advancedTools: "Advanced Tools",

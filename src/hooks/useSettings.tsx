@@ -11,6 +11,8 @@ interface SettingsContextType {
   setTheme: (theme: Theme) => void;
   isSidebarOpen: boolean;
   setIsSidebarOpen: (isOpen: boolean) => void;
+  recentTools: string[];
+  addRecentTool: (toolId: string) => void;
   t: (key: keyof typeof translations['en']) => string;
 }
 
@@ -20,6 +22,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const [language] = useState<Language>("en");
   const [theme, setThemeState] = useState<Theme>("light");
   const [isSidebarOpenState, setIsSidebarOpenState] = useState<boolean>(true);
+  const [recentToolsState, setRecentToolsState] = useState<string[]>([]);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -33,6 +36,13 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     const isDark = document.documentElement.classList.contains("dark");
     setThemeState(isDark ? "dark" : "light");
     
+    const savedRecentTools = localStorage.getItem("recentTools");
+    if (savedRecentTools !== null) {
+      try {
+        setRecentToolsState(JSON.parse(savedRecentTools));
+      } catch (e) {}
+    }
+
     setMounted(true);
   }, []);
 
@@ -58,8 +68,17 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     return translations[currentLang][key] || String(key);
   };
 
+  const addRecentTool = (toolId: string) => {
+    setRecentToolsState(prev => {
+      const filtered = prev.filter(t => t !== toolId);
+      const newTools = [toolId, ...filtered].slice(0, 5);
+      localStorage.setItem("recentTools", JSON.stringify(newTools));
+      return newTools;
+    });
+  };
+
   return (
-    <SettingsContext.Provider value={{ language, theme, setTheme, t, isSidebarOpen: isSidebarOpenState, setIsSidebarOpen }}>
+    <SettingsContext.Provider value={{ language, theme, setTheme, t, isSidebarOpen: isSidebarOpenState, setIsSidebarOpen, recentTools: recentToolsState, addRecentTool }}>
       {children}
     </SettingsContext.Provider>
   );
