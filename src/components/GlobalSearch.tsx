@@ -166,7 +166,7 @@ export default function GlobalSearch() {
                   }}
                   onKeyDown={handleModalKeyDown}
                   placeholder="Search tools, settings, or workspaces..."
-                  className="w-full bg-transparent border-none outline-none focus:ring-0 text-slate-900 dark:text-slate-100 text-lg px-3 placeholder:text-slate-400"
+                  className="w-full bg-transparent border-none outline-none focus:ring-0 text-slate-700 dark:text-slate-200 text-lg px-3 placeholder:text-slate-400/80 dark:placeholder:text-slate-500"
                 />
                 <button
                   onClick={() => setIsOpen(false)}
