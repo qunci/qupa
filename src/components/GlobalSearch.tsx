@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Search, FileText, Image as ImageIcon, Archive, Lock, Unlock, Settings, Home, ArrowRight, CornerDownLeft } from "lucide-react";
+import { Search, FileText, Image as ImageIcon, Archive, Lock, Unlock, Settings, Home, ArrowRight, CornerDownLeft, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 type ToolItem = {
@@ -170,9 +170,11 @@ export default function GlobalSearch() {
                 />
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="shrink-0 px-2 py-1 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 rounded-md text-xs font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                  className="shrink-0 p-1.5 md:px-2 md:py-1 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 rounded-md text-xs font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                  title="Close search"
                 >
-                  ESC
+                  <span className="hidden md:inline">ESC</span>
+                  <X className="w-4 h-4 md:hidden" />
                 </button>
               </div>
 
