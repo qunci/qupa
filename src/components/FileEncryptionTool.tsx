@@ -259,7 +259,7 @@ export default function FileEncryptionTool({ mode }: { mode: "encrypt" | "decryp
                 {isEncrypt ? "Set Password" : "Enter Password"}
                 {isEncrypt && (
                   <div className="relative group flex items-center">
-                    <svg className="w-4 h-4 text-amber-500 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-3.5 h-3.5 text-amber-500 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 p-2.5 bg-slate-800 dark:bg-slate-700 text-slate-100 text-[11px] rounded-lg shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 z-10 text-center font-medium leading-relaxed">
