@@ -86,19 +86,6 @@ export default function ToolsHub() {
                     File Utilities
                   </button>
                 </nav>
-                <div className="hidden md:flex items-center">
-                  <button
-                    onClick={openSearch}
-                    className="flex items-center gap-3 px-3 py-1.5 bg-slate-100/80 hover:bg-slate-200/80 dark:bg-slate-800/80 dark:hover:bg-slate-700/80 text-slate-500 dark:text-slate-400 rounded-full text-sm font-medium transition-colors ring-1 ring-slate-200/50 dark:ring-slate-700/50 shadow-sm"
-                  >
-                    <Search className="w-4 h-4" />
-                    <span>Search tools...</span>
-                    <div className="flex items-center gap-0.5 opacity-60">
-                      <kbd className="font-sans text-xs bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded">⌘</kbd>
-                      <kbd className="font-sans text-xs bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded">K</kbd>
-                    </div>
-                  </button>
-                </div>
               </>
             ) : (
               <div className="flex items-center gap-1 w-full">
