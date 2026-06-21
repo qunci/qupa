@@ -394,7 +394,7 @@ export default function ArchiveTool() {
                         <span className="text-sm text-slate-700 dark:text-slate-300 truncate">{entry.filename}</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        {entry.encrypted && <svg className="w-3.5 h-3.5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" title="Encrypted"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>}
+                        {entry.encrypted && <svg className="w-3.5 h-3.5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><title>Encrypted</title><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>}
                         {!entry.directory && <span className="text-xs text-slate-400 whitespace-nowrap">{formatBytes(entry.uncompressedSize)}</span>}
                       </div>
                     </div>
