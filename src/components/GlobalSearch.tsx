@@ -181,7 +181,7 @@ export default function GlobalSearch() {
               {/* Results List */}
               <div 
                 ref={listRef}
-                className="overflow-y-auto p-2 scrollbar-hide flex-1"
+                className="overflow-y-auto p-2 pb-4 scrollbar-hide flex-1"
               >
                 {flatFilteredItems.length === 0 ? (
                   <div className="py-14 text-center text-slate-500 dark:text-slate-400">
