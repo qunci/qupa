@@ -255,8 +255,19 @@ export default function FileEncryptionTool({ mode }: { mode: "encrypt" | "decryp
           
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
+              <label className="flex items-center gap-2 text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
                 {isEncrypt ? "Set Password" : "Enter Password"}
+                {isEncrypt && (
+                  <div className="relative group flex items-center">
+                    <svg className="w-4 h-4 text-amber-500 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 p-2.5 bg-slate-800 dark:bg-slate-700 text-slate-100 text-[11px] rounded-lg shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 z-10 text-center font-medium leading-relaxed">
+                      Important: Keep this password safe. If you forget it, your file cannot be recovered!
+                      <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800 dark:border-t-slate-700"></div>
+                    </div>
+                  </div>
+                )}
               </label>
               <input 
                 type="password"
@@ -267,14 +278,6 @@ export default function FileEncryptionTool({ mode }: { mode: "encrypt" | "decryp
                 disabled={isProcessing}
               />
             </div>
-            
-            {isEncrypt && (
-              <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-xl border border-amber-200 dark:border-amber-800/50">
-                <p className="text-xs text-amber-800 dark:text-amber-300 leading-relaxed font-medium">
-                  Important: Keep this password safe. If you forget it, your file cannot be recovered!
-                </p>
-              </div>
-            )}
           </div>
 
           <div className="mt-8">
