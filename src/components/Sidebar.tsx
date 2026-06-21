@@ -47,7 +47,7 @@ function SidebarContent() {
         aria-hidden="true"
       />
 
-      <aside className={`bg-[#f0f4f9]/90 dark:bg-[#1e1f20]/90 backdrop-blur-2xl border-r border-slate-200/50 dark:border-slate-800/50 flex flex-col h-screen fixed md:sticky top-0 transition-transform md:transition-all duration-300 ease-in-out shrink-0 z-50 ${isOpen ? 'w-[280px] md:w-[260px] translate-x-0' : 'w-[280px] md:w-[68px] -translate-x-full md:translate-x-0'}`}>
+      <aside className={`bg-[#f0f4f9]/90 dark:bg-[#1e1f20]/90 backdrop-blur-2xl border-r border-slate-200/50 dark:border-slate-800/50 flex flex-col h-[100dvh] fixed md:sticky top-0 transition-transform md:transition-all duration-300 ease-in-out shrink-0 z-50 ${isOpen ? 'w-[280px] md:w-[260px] translate-x-0' : 'w-[280px] md:w-[68px] -translate-x-full md:translate-x-0'}`}>
       
       {/* Brand Logo Header Area */}
       <div className={`h-16 flex items-center shrink-0 ${isOpen ? 'px-5 justify-between w-full' : 'px-0 justify-center'}`}>
@@ -91,7 +91,7 @@ function SidebarContent() {
         </Link>
 
         {/* Recent Tools Section */}
-        {recentTools.length > 0 && isOpen && (
+        {isOpen && (
           <div className="mt-6">
             <button 
               onClick={() => setIsRecentOpen(!isRecentOpen)}
@@ -102,17 +102,23 @@ function SidebarContent() {
             </button>
             
             <div className={`mt-1 space-y-0.5 overflow-hidden transition-all duration-300 ${isRecentOpen ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'}`}>
-              {recentTools.map(tool => (
-                <Link 
-                  key={tool}
-                  href={`/?hub=dashboard&tool=${tool}`}
-                  className="flex items-center gap-3 px-3 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-200/50 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-white/5 rounded-full transition-colors"
-                  title={getToolTitle(tool)}
-                >
-                  <svg className="w-4 h-4 shrink-0 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                  <span className="truncate">{getToolTitle(tool)}</span>
-                </Link>
-              ))}
+              {recentTools.length > 0 ? (
+                recentTools.map(tool => (
+                  <Link 
+                    key={tool}
+                    href={`/?hub=dashboard&tool=${tool}`}
+                    className="flex items-center gap-3 px-3 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-200/50 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-white/5 rounded-full transition-colors"
+                    title={getToolTitle(tool)}
+                  >
+                    <svg className="w-4 h-4 shrink-0 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    <span className="truncate">{getToolTitle(tool)}</span>
+                  </Link>
+                ))
+              ) : (
+                <div className="px-4 py-2 text-xs text-slate-400 dark:text-slate-500 italic">
+                  Belum ada riwayat
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -135,7 +141,7 @@ function SidebarContent() {
 
 export default function Sidebar() {
   return (
-    <Suspense fallback={<div className="hidden md:block w-[260px] bg-[#f0f4f9]/80 dark:bg-[#1e1f20]/80 backdrop-blur-2xl border-r border-slate-200/50 dark:border-slate-800/50 h-screen transition-colors duration-300 shrink-0" />}>
+    <Suspense fallback={<div className="hidden md:block w-[260px] bg-[#f0f4f9]/80 dark:bg-[#1e1f20]/80 backdrop-blur-2xl border-r border-slate-200/50 dark:border-slate-800/50 h-[100dvh] transition-colors duration-300 shrink-0" />}>
       <SidebarContent />
     </Suspense>
   );

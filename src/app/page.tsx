@@ -23,13 +23,23 @@ function HomeContent() {
   };
 
   return (
-    <main className="flex-1 flex flex-col min-h-screen w-full relative transition-colors duration-300">
+    <main className="flex-1 flex flex-col min-h-[100dvh] w-full relative transition-colors duration-300">
       
       <header className="absolute top-0 right-0 w-full h-16 flex items-center justify-end px-4 md:px-6 z-30 pointer-events-none gap-3">
-        <div className="pointer-events-auto hidden md:flex">
+        <div className="pointer-events-auto flex items-center gap-3">
+          {/* Mobile Search Button */}
           <button
             onClick={openSearch}
-            className="flex items-center gap-3 px-3 py-1.5 bg-slate-100/80 hover:bg-slate-200/80 dark:bg-slate-800/80 dark:hover:bg-slate-700/80 text-slate-500 dark:text-slate-400 rounded-full text-sm font-medium transition-colors ring-1 ring-slate-200/50 dark:ring-slate-700/50 shadow-sm backdrop-blur-md"
+            className="md:hidden flex items-center justify-center w-[32px] h-[32px] bg-slate-100/80 hover:bg-slate-200/80 dark:bg-slate-800/80 dark:hover:bg-slate-700/80 text-slate-500 dark:text-slate-400 rounded-full transition-colors ring-1 ring-slate-200/50 dark:ring-slate-700/50 shadow-sm backdrop-blur-md"
+            title="Search tools"
+          >
+            <Search className="w-4 h-4" />
+          </button>
+          
+          {/* Desktop Search Button */}
+          <button
+            onClick={openSearch}
+            className="hidden md:flex items-center gap-3 px-3 py-1.5 bg-slate-100/80 hover:bg-slate-200/80 dark:bg-slate-800/80 dark:hover:bg-slate-700/80 text-slate-500 dark:text-slate-400 rounded-full text-sm font-medium transition-colors ring-1 ring-slate-200/50 dark:ring-slate-700/50 shadow-sm backdrop-blur-md"
           >
             <Search className="w-4 h-4" />
             <span className="text-slate-400 dark:text-slate-500">Search tools...</span>
