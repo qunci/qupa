@@ -84,7 +84,7 @@ function SidebarContent() {
       {/* Navigation */}
       <nav className={`flex-1 space-y-1 overflow-y-auto scrollbar-hide px-3 py-2`}>
         {isOpen && (
-          <p className="px-4 text-[11px] font-semibold tracking-wide text-slate-500 dark:text-slate-400 mb-2 mt-1 transition-colors duration-300">
+          <p className="px-4 text-[11px] font-semibold tracking-wide text-slate-500 dark:text-slate-400 mb-2 mt-1 transition-colors duration-300 uppercase">
             {t("coreWorkspaces")}
           </p>
         )}
