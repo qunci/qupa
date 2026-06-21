@@ -35,15 +35,32 @@ export default function GlobalSearch() {
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
-  // Filter items based on query
-  const filteredItems = searchData.filter((item) => {
-    if (!query) return true;
-    const searchStr = query.toLowerCase();
-    return (
-      item.name.toLowerCase().includes(searchStr) ||
-      item.category.toLowerCase().includes(searchStr)
-    );
-  });
+  // Filter and sort items based on query relevance
+  const filteredItems = searchData
+    .map((item) => {
+      if (!query) return { item, score: 1 };
+      
+      const searchStr = query.toLowerCase();
+      const nameLower = item.name.toLowerCase();
+      const categoryLower = item.category.toLowerCase();
+      
+      let score = 0;
+      
+      if (nameLower === searchStr) score += 100;
+      else if (nameLower.startsWith(searchStr)) score += 50;
+      else if (nameLower.includes(` ${searchStr}`)) score += 30;
+      else if (nameLower.includes(searchStr)) score += 10;
+      
+      if (categoryLower === searchStr) score += 8;
+      else if (categoryLower.startsWith(searchStr)) score += 4;
+      else if (categoryLower.includes(` ${searchStr}`)) score += 2;
+      else if (categoryLower.includes(searchStr)) score += 1;
+
+      return { item, score };
+    })
+    .filter((x) => x.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .map((x) => x.item);
 
   // Group by category
   const groupedItems = filteredItems.reduce((acc, item) => {
