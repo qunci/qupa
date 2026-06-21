@@ -227,7 +227,7 @@ export default function GlobalSearch() {
               </div>
 
               {/* Footer */}
-              <div className="px-4 py-3 bg-slate-50 dark:bg-[#131415] border-t border-slate-100 dark:border-slate-800 flex items-center justify-center gap-6 text-[11px] text-slate-400 dark:text-slate-500">
+              <div className="hidden md:flex px-4 py-3 bg-slate-50 dark:bg-[#131415] border-t border-slate-100 dark:border-slate-800 items-center justify-center gap-6 text-[11px] text-slate-400 dark:text-slate-500">
                 <span className="flex items-center gap-1.5">
                   <kbd className="px-1.5 py-0.5 rounded bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm">↑</kbd>
                   <kbd className="px-1.5 py-0.5 rounded bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm">↓</kbd>

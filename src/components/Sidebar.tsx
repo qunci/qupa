@@ -116,7 +116,7 @@ function SidebarContent() {
                 ))
               ) : (
                 <div className="px-4 py-2 text-xs text-slate-400 dark:text-slate-500 italic">
-                  Belum ada riwayat
+                  No recent tools
                 </div>
               )}
             </div>
