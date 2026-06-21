@@ -29,13 +29,13 @@ function HomeContent() {
         <div className="pointer-events-auto hidden md:flex">
           <button
             onClick={openSearch}
-            className="flex items-center gap-3 px-3 py-1.5 bg-slate-100/80 hover:bg-slate-200/80 dark:bg-slate-800/80 dark:hover:bg-slate-700/80 text-slate-400 dark:text-slate-500 rounded-full text-sm font-medium transition-colors ring-1 ring-slate-200/50 dark:ring-slate-700/50 shadow-sm backdrop-blur-md"
+            className="flex items-center gap-3 px-3 py-1.5 bg-slate-100/80 hover:bg-slate-200/80 dark:bg-slate-800/80 dark:hover:bg-slate-700/80 text-slate-500 dark:text-slate-400 rounded-full text-sm font-medium transition-colors ring-1 ring-slate-200/50 dark:ring-slate-700/50 shadow-sm backdrop-blur-md"
           >
-            <Search className="w-4 h-4 text-slate-400/80 dark:text-slate-500" />
-            <span>Search tools...</span>
+            <Search className="w-4 h-4" />
+            <span className="text-slate-400 dark:text-slate-500">Search tools...</span>
             <div className="flex items-center gap-0.5 opacity-60">
-              <kbd className="font-sans text-xs font-bold bg-slate-200/70 dark:bg-slate-700/50 px-1.5 py-0.5 rounded text-slate-400 dark:text-slate-500">⌘</kbd>
-              <kbd className="font-sans text-xs font-bold bg-slate-200/70 dark:bg-slate-700/50 px-1.5 py-0.5 rounded text-slate-400 dark:text-slate-500">K</kbd>
+              <kbd className="font-sans text-xs font-bold bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300">⌘</kbd>
+              <kbd className="font-sans text-xs font-bold bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300">K</kbd>
             </div>
           </button>
         </div>
