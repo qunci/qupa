@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from "react";
 import { translations, Language } from "@/lib/translations";
 
 type Theme = "light" | "dark";
@@ -68,14 +68,17 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     return translations[currentLang][key] || String(key);
   };
 
-  const addRecentTool = (toolId: string) => {
+  const addRecentTool = useCallback((toolId: string) => {
     setRecentToolsState(prev => {
+      // Don't update state if it's already at the front
+      if (prev.length > 0 && prev[0] === toolId) return prev;
+      
       const filtered = prev.filter(t => t !== toolId);
       const newTools = [toolId, ...filtered].slice(0, 5);
       localStorage.setItem("recentTools", JSON.stringify(newTools));
       return newTools;
     });
-  };
+  }, []);
 
   return (
     <SettingsContext.Provider value={{ language, theme, setTheme, t, isSidebarOpen: isSidebarOpenState, setIsSidebarOpen, recentTools: recentToolsState, addRecentTool }}>
