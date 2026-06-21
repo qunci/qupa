@@ -21,8 +21,7 @@ interface ZipEntryInfo {
   archiveObj?: any; // reference to Archive instance for password
 }
 
-export default function ArchiveTool() {
-  const [mode, setMode] = useState<"compress" | "extract">("compress");
+export default function ArchiveTool({ mode }: { mode: "compress" | "extract" }) {
   
   // Compress State
   const [filesToZip, setFilesToZip] = useState<File[]>([]);
@@ -273,23 +272,6 @@ export default function ArchiveTool() {
 
   return (
     <div className="w-full space-y-6 animate-in fade-in duration-500">
-      
-      {/* Mode Switcher */}
-      <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-xl w-full max-w-md mx-auto mb-8">
-        <button 
-          onClick={() => setMode("compress")}
-          className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${mode === 'compress' ? 'bg-white dark:bg-[#18181B] text-blue-600 dark:text-blue-400 shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
-        >
-          Compress to ZIP
-        </button>
-        <button 
-          onClick={() => setMode("extract")}
-          className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${mode === 'extract' ? 'bg-white dark:bg-[#18181B] text-indigo-600 dark:text-indigo-400 shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
-        >
-          Extract Files
-        </button>
-      </div>
-
       {mode === "compress" ? (
         <div className="flex flex-col xl:flex-row gap-6">
           <div className="flex-1 space-y-4">

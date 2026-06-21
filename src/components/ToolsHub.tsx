@@ -11,7 +11,7 @@ import ArchiveTool from "./ArchiveTool";
 
 export default function ToolsHub() {
   const [activeTab, setActiveTab] = useState<"document" | "image" | "file">("document");
-  const [activeTool, setActiveTool] = useState<"merge-pdf" | "split-pdf" | "compress-image" | "archive" | null>(null);
+  const [activeTool, setActiveTool] = useState<"merge-pdf" | "split-pdf" | "compress-image" | "compress-file" | "extract-archive" | null>(null);
   const { isSidebarOpen, t } = useSettings();
 
   return (
@@ -72,8 +72,12 @@ export default function ToolsHub() {
                       <svg className="w-7 h-7 text-rose-500 dark:text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
                       </svg>
-                    ) : activeTool === "archive" ? (
+                    ) : activeTool === "compress-file" ? (
                       <svg className="w-7 h-7 text-indigo-500 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                      </svg>
+                    ) : activeTool === "extract-archive" ? (
+                      <svg className="w-7 h-7 text-fuchsia-500 dark:text-fuchsia-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
                       </svg>
                     ) : (
@@ -84,16 +88,18 @@ export default function ToolsHub() {
                   </div>
                   <div className="flex flex-col justify-center">
                     <h2 className="text-[15px] font-bold text-slate-900 dark:text-white leading-none tracking-tight">
-                      {activeTool === "merge-pdf" ? "Merge PDF" : activeTool === "split-pdf" ? "Split PDF" : activeTool === "archive" ? t("archiveTool") : "Image Compressor"}
+                      {activeTool === "merge-pdf" ? "Merge PDF" : activeTool === "split-pdf" ? "Split PDF" : activeTool === "compress-file" ? t("compressFile") : activeTool === "extract-archive" ? t("extractArchive") : "Image Compressor"}
                     </h2>
                     <p className="text-[12px] text-slate-500 dark:text-slate-400 mt-1 leading-none hidden md:block">
                       {activeTool === "merge-pdf" 
                         ? "Combine multiple PDF files into one sequence."
                         : activeTool === "split-pdf"
                           ? "Extract pages or burst large PDF into single sheets."
-                          : activeTool === "archive"
-                            ? "Compress files into ZIP or extract securely in browser."
-                            : "Compress and resize images with real-time visual comparison."}
+                          : activeTool === "compress-file"
+                            ? "Compress multiple files into a single ZIP archive."
+                            : activeTool === "extract-archive"
+                              ? "Extract files securely from ZIP, RAR, 7Z directly in browser."
+                              : "Compress and resize images with real-time visual comparison."}
                     </p>
                   </div>
                 </div>
@@ -109,7 +115,8 @@ export default function ToolsHub() {
           {activeTool === "merge-pdf" && <MergePdfTool />}
           {activeTool === "split-pdf" && <SplitPdfTool />}
           {activeTool === "compress-image" && <ImageCompressorTool />}
-          {activeTool === "archive" && <ArchiveTool />}
+          {activeTool === "compress-file" && <ArchiveTool key="compress" mode="compress" />}
+          {activeTool === "extract-archive" && <ArchiveTool key="extract" mode="extract" />}
 
           {!activeTool && activeTab === "document" && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -182,9 +189,22 @@ export default function ToolsHub() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
                   </svg>
                 </div>
-                <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-1.5">{t("archiveTool")}</h3>
-                <p className="text-[13px] leading-relaxed text-slate-500 dark:text-slate-400 mb-5 flex-1">Create ZIP files with password protection or extract securely.</p>
-                <button onClick={() => setActiveTool("archive")} className="w-full py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition-colors">
+                <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-1.5">{t("compressFile")}</h3>
+                <p className="text-[13px] leading-relaxed text-slate-500 dark:text-slate-400 mb-5 flex-1">Create ZIP files with optional password protection.</p>
+                <button onClick={() => setActiveTool("compress-file")} className="w-full py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition-colors">
+                  Open Workspace
+                </button>
+              </div>
+
+              <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col transition-colors duration-300 shadow-sm hover:shadow-md">
+                <div className="w-10 h-10 bg-gradient-to-br from-fuchsia-400 to-fuchsia-600 rounded-lg flex items-center justify-center mb-3 shadow-sm shadow-fuchsia-500/20 ring-1 ring-fuchsia-500/30">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                  </svg>
+                </div>
+                <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-1.5">{t("extractArchive")}</h3>
+                <p className="text-[13px] leading-relaxed text-slate-500 dark:text-slate-400 mb-5 flex-1">Extract files from ZIP, RAR, 7Z, TAR directly in your browser.</p>
+                <button onClick={() => setActiveTool("extract-archive")} className="w-full py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition-colors">
                   Open Workspace
                 </button>
               </div>

@@ -56,6 +56,7 @@ export const translations: Translations = {
     unpinTool: "Unpin from Dashboard",
     downloadZip: "Download as ZIP",
     clearAll: "Clear All",
-    archiveTool: "Archive Manager"
+    compressFile: "Compress to ZIP",
+    extractArchive: "Extract Archive"
   }
 };

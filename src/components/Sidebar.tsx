@@ -38,7 +38,7 @@ function SidebarContent() {
         <div className={`overflow-hidden transition-all duration-300 ${isOpen ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>
           <Link href="/" className="flex items-center gap-2 group select-none outline-none transition-opacity hover:opacity-80 rounded-md focus-visible:ring-2 focus-visible:ring-blue-500 whitespace-nowrap">
             <BrandLogo className="h-6 w-auto drop-shadow-sm transition-transform duration-500 group-hover:scale-105 origin-left" />
-            <span className="font-semibold text-[17px] text-slate-800 dark:text-slate-100 tracking-tight">Dashboard</span>
+            <span className="font-semibold text-[17px] text-slate-800 dark:text-slate-100 tracking-tight">Qupa</span>
           </Link>
         </div>
 
