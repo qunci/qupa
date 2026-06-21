@@ -46,6 +46,11 @@ export default function GlobalSearch() {
       
       let score = 0;
       
+      // Bonus for starting with the exact same first letter
+      if (nameLower[0] === searchStr[0]) {
+        score += 20;
+      }
+      
       // Exact and substring matches
       if (nameLower === searchStr) score += 100;
       else if (nameLower.startsWith(searchStr)) score += 50;
