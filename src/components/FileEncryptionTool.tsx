@@ -61,7 +61,7 @@ export default function FileEncryptionTool({ mode }: { mode: "encrypt" | "decryp
     return window.crypto.subtle.deriveKey(
       {
         name: "PBKDF2",
-        salt: salt,
+        salt: salt as BufferSource,
         iterations: 100000,
         hash: "SHA-256",
       },
@@ -87,7 +87,7 @@ export default function FileEncryptionTool({ mode }: { mode: "encrypt" | "decryp
       const aesKey = await deriveKey(passwordKey, salt);
 
       const encryptedContent = await window.crypto.subtle.encrypt(
-        { name: "AES-GCM", iv: iv },
+        { name: "AES-GCM", iv: iv as BufferSource },
         aesKey,
         fileBuffer
       );
@@ -137,7 +137,7 @@ export default function FileEncryptionTool({ mode }: { mode: "encrypt" | "decryp
       let decryptedContent;
       try {
         decryptedContent = await window.crypto.subtle.decrypt(
-          { name: "AES-GCM", iv: iv },
+          { name: "AES-GCM", iv: iv as BufferSource },
           aesKey,
           encryptedData
         );
