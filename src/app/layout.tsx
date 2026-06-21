@@ -7,6 +7,18 @@ import { SettingsProvider } from "@/hooks/useSettings";
 export const metadata = {
   title: "Qupa - The Ultimate File Converter",
   description: "Secure client-side file converter",
+  icons: [
+    {
+      rel: 'icon',
+      url: '/api/icon?theme=light&v=1',
+      media: '(prefers-color-scheme: light)',
+    },
+    {
+      rel: 'icon',
+      url: '/api/icon?theme=dark&v=1',
+      media: '(prefers-color-scheme: dark)',
+    },
+  ]
 };
 
 
