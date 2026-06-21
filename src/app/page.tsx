@@ -9,14 +9,13 @@ import ThemeToggle from "@/components/ThemeToggle";
 
 import { AnimatePresence, motion } from "framer-motion";
 
-const ConverterHub = dynamic(() => import("@/components/ConverterHub"), { ssr: false });
 const ToolsHub = dynamic(() => import("@/components/ToolsHub"), { ssr: false });
 const SettingsHub = dynamic(() => import("@/components/SettingsHub"), { ssr: false });
 
 
 function HomeContent() {
   const searchParams = useSearchParams();
-  const hub = searchParams.get("hub") || "converters";
+  const hub = searchParams.get("hub") || "dashboard";
 
   return (
     <main className="flex-1 flex flex-col min-h-screen w-full relative transition-colors duration-300">
@@ -28,17 +27,13 @@ function HomeContent() {
       </header>
 
       <AnimatePresence mode="wait">
-        {hub === "tools" ? (
-          <motion.div key="tools" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} transition={{ duration: 0.3 }} className="w-full h-full flex flex-col">
-            <ToolsHub />
-          </motion.div>
-        ) : hub === "settings" ? (
+        {hub === "settings" ? (
           <motion.div key="settings" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} transition={{ duration: 0.3 }} className="w-full h-full flex flex-col">
             <SettingsHub />
           </motion.div>
         ) : (
-          <motion.div key="converters" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} transition={{ duration: 0.3 }} className="w-full h-full flex flex-col">
-            <ConverterHub />
+          <motion.div key="tools" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} transition={{ duration: 0.3 }} className="w-full h-full flex flex-col">
+            <ToolsHub />
           </motion.div>
         )}
       </AnimatePresence>

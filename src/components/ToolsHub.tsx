@@ -9,10 +9,12 @@ import SplitPdfTool from "./SplitPdfTool";
 import ImageCompressorTool from "./ImageCompressorTool";
 import ArchiveTool from "./ArchiveTool";
 import FileEncryptionTool from "./FileEncryptionTool";
+import ImageConverter from "./ImageConverter";
+import DocumentConverter from "./DocumentConverter";
 
 export default function ToolsHub() {
   const [activeTab, setActiveTab] = useState<"document" | "image" | "file">("document");
-  const [activeTool, setActiveTool] = useState<"merge-pdf" | "split-pdf" | "compress-image" | "compress-file" | "extract-archive" | "encrypt-file" | "decrypt-file" | null>(null);
+  const [activeTool, setActiveTool] = useState<"merge-pdf" | "split-pdf" | "compress-image" | "compress-file" | "extract-archive" | "encrypt-file" | "decrypt-file" | "convert-image" | "convert-document" | null>(null);
   const { isSidebarOpen, t } = useSettings();
 
   return (
@@ -73,6 +75,10 @@ export default function ToolsHub() {
                       <svg className="w-7 h-7 text-rose-500 dark:text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
                       </svg>
+                    ) : activeTool === "convert-document" ? (
+                      <svg className="w-7 h-7 text-indigo-600 dark:text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                      </svg>
                     ) : activeTool === "compress-file" ? (
                       <svg className="w-7 h-7 text-indigo-500 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
@@ -89,6 +95,10 @@ export default function ToolsHub() {
                       <svg className="w-7 h-7 text-sky-500 dark:text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
                       </svg>
+                    ) : activeTool === "convert-image" ? (
+                      <svg className="w-7 h-7 text-blue-600 dark:text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
                     ) : (
                       <svg className="w-7 h-7 text-emerald-500 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -97,7 +107,7 @@ export default function ToolsHub() {
                   </div>
                   <div className="flex flex-col justify-center">
                     <h2 className="text-[15px] font-bold text-slate-900 dark:text-white leading-none tracking-tight">
-                      {activeTool === "merge-pdf" ? "Merge PDF" : activeTool === "split-pdf" ? "Split PDF" : activeTool === "compress-file" ? t("compressFile") : activeTool === "extract-archive" ? t("extractArchive") : activeTool === "encrypt-file" ? t("encryptFile") : activeTool === "decrypt-file" ? t("decryptFile") : "Image Compressor"}
+                      {activeTool === "merge-pdf" ? "Merge PDF" : activeTool === "split-pdf" ? "Split PDF" : activeTool === "compress-file" ? t("compressFile") : activeTool === "extract-archive" ? t("extractArchive") : activeTool === "encrypt-file" ? t("encryptFile") : activeTool === "decrypt-file" ? t("decryptFile") : activeTool === "convert-image" ? t("imageConverter") : activeTool === "convert-document" ? t("documentConverter") : "Image Compressor"}
                     </h2>
                     <p className="text-[12px] text-slate-500 dark:text-slate-400 mt-1 leading-none hidden md:block">
                       {activeTool === "merge-pdf" 
@@ -112,7 +122,11 @@ export default function ToolsHub() {
                                 ? "Lock any file securely with AES-GCM encryption."
                                 : activeTool === "decrypt-file"
                                   ? "Unlock files protected by Qupa Encryption."
-                                  : "Compress and resize images with real-time visual comparison."}
+                                  : activeTool === "convert-image"
+                                    ? "Convert between JPG, PNG, WebP, SVG, and more effortlessly."
+                                    : activeTool === "convert-document"
+                                      ? "Convert PDF, DOCX, XLSX, and CSV with advanced layout retention."
+                                      : "Compress and resize images with real-time visual comparison."}
                     </p>
                   </div>
                 </div>
@@ -132,9 +146,24 @@ export default function ToolsHub() {
           {activeTool === "extract-archive" && <ArchiveTool key="extract" mode="extract" />}
           {activeTool === "encrypt-file" && <FileEncryptionTool key="encrypt" mode="encrypt" />}
           {activeTool === "decrypt-file" && <FileEncryptionTool key="decrypt" mode="decrypt" />}
+          {activeTool === "convert-image" && <ImageConverter />}
+          {activeTool === "convert-document" && <DocumentConverter />}
 
           {!activeTool && activeTab === "document" && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+
+              <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col transition-colors duration-300 shadow-sm hover:shadow-md">
+                <div className="w-10 h-10 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-lg flex items-center justify-center mb-3 shadow-sm shadow-indigo-500/20 ring-1 ring-indigo-500/30">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-1.5">{t("documentConverter")}</h3>
+                <p className="text-[13px] leading-relaxed text-slate-500 dark:text-slate-400 mb-5 flex-1">Convert PDF, DOCX, XLSX, and CSV with advanced layout retention.</p>
+                <button onClick={() => setActiveTool("convert-document")} className="w-full py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition-colors">
+                  Open Workspace
+                </button>
+              </div>
               
               <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col transition-colors duration-300 shadow-sm hover:shadow-md">
                 <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-lg flex items-center justify-center mb-3 shadow-sm shadow-orange-500/20 ring-1 ring-orange-500/30">
@@ -167,6 +196,19 @@ export default function ToolsHub() {
 
           {!activeTool && activeTab === "image" && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+
+              <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col transition-colors duration-300 shadow-sm hover:shadow-md relative group">
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center mb-3 shadow-sm shadow-blue-500/20 ring-1 ring-blue-500/30">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-1.5">{t("imageConverter")}</h3>
+                <p className="text-[13px] leading-relaxed text-slate-500 dark:text-slate-400 mb-5 flex-1">Convert between JPG, PNG, WebP, SVG, and more effortlessly.</p>
+                <button onClick={() => setActiveTool("convert-image")} className="w-full py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition-colors">
+                  Open Workspace
+                </button>
+              </div>
               
               <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col transition-colors duration-300 shadow-sm hover:shadow-md">
                 <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-lg flex items-center justify-center mb-3 shadow-sm shadow-teal-500/20 ring-1 ring-teal-500/30">
