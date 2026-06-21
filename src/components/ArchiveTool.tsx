@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
 import { useSettings } from "@/hooks/useSettings";
 import { ZipReader, ZipWriter, BlobReader, BlobWriter } from "@zip.js/zip.js";
-import { Archive } from "libarchive.js/main.js";
+import { Archive } from "libarchive.js";
 
 Archive.init({
   workerUrl: "/libarchive.js/worker-bundle.js"
