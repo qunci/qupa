@@ -7,11 +7,12 @@ import MobileHeaderToggle from "./MobileHeaderToggle";
 import MergePdfTool from "./MergePdfTool";
 import SplitPdfTool from "./SplitPdfTool";
 import ImageCompressorTool from "./ImageCompressorTool";
+import ArchiveTool from "./ArchiveTool";
 
 export default function ToolsHub() {
-  const [activeTab, setActiveTab] = useState<"document" | "image">("document");
-  const [activeTool, setActiveTool] = useState<"merge-pdf" | "split-pdf" | "compress-image" | null>(null);
-  const { isSidebarOpen, pinnedTools, togglePinTool, t } = useSettings();
+  const [activeTab, setActiveTab] = useState<"document" | "image" | "file">("document");
+  const [activeTool, setActiveTool] = useState<"merge-pdf" | "split-pdf" | "compress-image" | "archive" | null>(null);
+  const { isSidebarOpen, t } = useSettings();
 
   return (
     <div className="flex flex-col w-full h-full animate-in fade-in duration-500">
@@ -46,6 +47,13 @@ export default function ToolsHub() {
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                   Image Tools
                 </button>
+                <button 
+                  onClick={() => setActiveTab("file")}
+                  className={`h-full text-sm font-medium border-b-2 transition-colors flex items-center gap-2 whitespace-nowrap ${activeTab === "file" ? "border-blue-600 text-slate-900 dark:text-white" : "border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"}`}
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg>
+                  File Utilities
+                </button>
               </nav>
             ) : (
               <div className="flex items-center gap-1 w-full">
@@ -64,6 +72,10 @@ export default function ToolsHub() {
                       <svg className="w-7 h-7 text-rose-500 dark:text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
                       </svg>
+                    ) : activeTool === "archive" ? (
+                      <svg className="w-7 h-7 text-indigo-500 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                      </svg>
                     ) : (
                       <svg className="w-7 h-7 text-emerald-500 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -72,14 +84,16 @@ export default function ToolsHub() {
                   </div>
                   <div className="flex flex-col justify-center">
                     <h2 className="text-[15px] font-bold text-slate-900 dark:text-white leading-none tracking-tight">
-                      {activeTool === "merge-pdf" ? "Merge PDF" : activeTool === "split-pdf" ? "Split PDF" : "Image Compressor"}
+                      {activeTool === "merge-pdf" ? "Merge PDF" : activeTool === "split-pdf" ? "Split PDF" : activeTool === "archive" ? t("archiveTool") : "Image Compressor"}
                     </h2>
                     <p className="text-[12px] text-slate-500 dark:text-slate-400 mt-1 leading-none hidden md:block">
                       {activeTool === "merge-pdf" 
                         ? "Combine multiple PDF files into one sequence."
                         : activeTool === "split-pdf"
                           ? "Extract pages or burst large PDF into single sheets."
-                          : "Compress and resize images with real-time visual comparison."}
+                          : activeTool === "archive"
+                            ? "Compress files into ZIP or extract securely in browser."
+                            : "Compress and resize images with real-time visual comparison."}
                     </p>
                   </div>
                 </div>
@@ -95,18 +109,12 @@ export default function ToolsHub() {
           {activeTool === "merge-pdf" && <MergePdfTool />}
           {activeTool === "split-pdf" && <SplitPdfTool />}
           {activeTool === "compress-image" && <ImageCompressorTool />}
+          {activeTool === "archive" && <ArchiveTool />}
 
           {!activeTool && activeTab === "document" && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
               
-              <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col transition-colors duration-300 shadow-sm hover:shadow-md relative group">
-                <button
-                  onClick={(e) => { e.stopPropagation(); togglePinTool("merge-pdf"); }}
-                  className={`absolute top-4 right-4 p-1.5 rounded-md transition-all z-10 ${pinnedTools.includes("merge-pdf") ? 'text-amber-500 opacity-100' : 'text-slate-400 opacity-0 group-hover:opacity-100 hover:text-amber-500'}`}
-                  title={pinnedTools.includes("merge-pdf") ? t("unpinTool") : t("pinTool")}
-                >
-                  <svg className="w-5 h-5" fill={pinnedTools.includes("merge-pdf") ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
-                </button>
+              <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col transition-colors duration-300 shadow-sm hover:shadow-md">
                 <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-lg flex items-center justify-center mb-3 shadow-sm shadow-orange-500/20 ring-1 ring-orange-500/30">
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
@@ -119,14 +127,7 @@ export default function ToolsHub() {
                 </button>
               </div>
 
-              <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col transition-colors duration-300 shadow-sm hover:shadow-md relative group">
-                <button
-                  onClick={(e) => { e.stopPropagation(); togglePinTool("split-pdf"); }}
-                  className={`absolute top-4 right-4 p-1.5 rounded-md transition-all z-10 ${pinnedTools.includes("split-pdf") ? 'text-amber-500 opacity-100' : 'text-slate-400 opacity-0 group-hover:opacity-100 hover:text-amber-500'}`}
-                  title={pinnedTools.includes("split-pdf") ? t("unpinTool") : t("pinTool")}
-                >
-                  <svg className="w-5 h-5" fill={pinnedTools.includes("split-pdf") ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
-                </button>
+              <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col transition-colors duration-300 shadow-sm hover:shadow-md">
                 <div className="w-10 h-10 bg-gradient-to-br from-rose-400 to-red-500 rounded-lg flex items-center justify-center mb-3 shadow-sm shadow-red-500/20 ring-1 ring-red-500/30">
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
@@ -145,14 +146,7 @@ export default function ToolsHub() {
           {!activeTool && activeTab === "image" && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
               
-              <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col transition-colors duration-300 shadow-sm hover:shadow-md relative group">
-                <button
-                  onClick={(e) => { e.stopPropagation(); togglePinTool("compress-image"); }}
-                  className={`absolute top-4 right-4 p-1.5 rounded-md transition-all z-10 ${pinnedTools.includes("compress-image") ? 'text-amber-500 opacity-100' : 'text-slate-400 opacity-0 group-hover:opacity-100 hover:text-amber-500'}`}
-                  title={pinnedTools.includes("compress-image") ? t("unpinTool") : t("pinTool")}
-                >
-                  <svg className="w-5 h-5" fill={pinnedTools.includes("compress-image") ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
-                </button>
+              <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col transition-colors duration-300 shadow-sm hover:shadow-md">
                 <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-lg flex items-center justify-center mb-3 shadow-sm shadow-teal-500/20 ring-1 ring-teal-500/30">
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -173,6 +167,25 @@ export default function ToolsHub() {
                 <p className="text-[13px] leading-relaxed text-slate-500 dark:text-slate-400 mb-5 flex-1">Encrypt image pixels or attach security locks directly in-browser.</p>
                 <button disabled className="w-full py-1.5 text-sm bg-slate-100 dark:bg-slate-800/80 text-slate-400 dark:text-slate-500 rounded-md font-medium cursor-not-allowed transition-colors border border-transparent dark:border-slate-700">
                   Coming Soon
+                </button>
+              </div>
+
+            </div>
+          )}
+
+          {!activeTool && activeTab === "file" && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+              
+              <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col transition-colors duration-300 shadow-sm hover:shadow-md">
+                <div className="w-10 h-10 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-lg flex items-center justify-center mb-3 shadow-sm shadow-indigo-500/20 ring-1 ring-indigo-500/30">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                  </svg>
+                </div>
+                <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-1.5">{t("archiveTool")}</h3>
+                <p className="text-[13px] leading-relaxed text-slate-500 dark:text-slate-400 mb-5 flex-1">Create ZIP files with password protection or extract securely.</p>
+                <button onClick={() => setActiveTool("archive")} className="w-full py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition-colors">
+                  Open Workspace
                 </button>
               </div>
 

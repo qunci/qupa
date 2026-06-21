@@ -52,13 +52,10 @@ export const translations: Translations = {
     docPending: "Client-side document conversion logic pending.",
 
     // Dashboard & Batch
-    pinnedTools: "Pinned Tools",
-    noPinnedTools: "You haven't pinned any tools yet. Explore Converters or Tools to pin your favorites.",
     pinTool: "Pin to Dashboard",
     unpinTool: "Unpin from Dashboard",
-    compressAll: "Compress All",
-    downloadAll: "Download All",
     downloadZip: "Download as ZIP",
-    clearAll: "Clear All"
+    clearAll: "Clear All",
+    archiveTool: "Archive Manager"
   }
 };

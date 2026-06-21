@@ -9,7 +9,7 @@ import MobileHeaderToggle from "./MobileHeaderToggle";
 
 export default function ConverterHub() {
   const [activeTool, setActiveTool] = useState<"image" | "document" | null>(null);
-  const { t, isSidebarOpen, pinnedTools, togglePinTool } = useSettings();
+  const { t, isSidebarOpen } = useSettings();
 
   return (
     <div className="flex flex-col w-full h-full animate-in fade-in duration-500">
@@ -84,13 +84,6 @@ export default function ConverterHub() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
               
               <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col transition-colors duration-300 shadow-sm hover:shadow-md relative group">
-                <button
-                  onClick={(e) => { e.stopPropagation(); togglePinTool("image"); }}
-                  className={`absolute top-4 right-4 p-1.5 rounded-md transition-all z-10 ${pinnedTools.includes("image") ? 'text-amber-500 opacity-100' : 'text-slate-400 opacity-0 group-hover:opacity-100 hover:text-amber-500'}`}
-                  title={pinnedTools.includes("image") ? t("unpinTool") : t("pinTool")}
-                >
-                  <svg className="w-5 h-5" fill={pinnedTools.includes("image") ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
-                </button>
                 <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center mb-3 shadow-sm shadow-blue-500/20 ring-1 ring-blue-500/30">
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -103,14 +96,7 @@ export default function ConverterHub() {
                 </button>
               </div>
 
-              <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col transition-colors duration-300 shadow-sm hover:shadow-md relative group">
-                <button
-                  onClick={(e) => { e.stopPropagation(); togglePinTool("document"); }}
-                  className={`absolute top-4 right-4 p-1.5 rounded-md transition-all z-10 ${pinnedTools.includes("document") ? 'text-amber-500 opacity-100' : 'text-slate-400 opacity-0 group-hover:opacity-100 hover:text-amber-500'}`}
-                  title={pinnedTools.includes("document") ? t("unpinTool") : t("pinTool")}
-                >
-                  <svg className="w-5 h-5" fill={pinnedTools.includes("document") ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
-                </button>
+              <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col transition-colors duration-300 shadow-sm hover:shadow-md">
                 <div className="w-10 h-10 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-lg flex items-center justify-center mb-3 shadow-sm shadow-indigo-500/20 ring-1 ring-indigo-500/30">
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />

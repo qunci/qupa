@@ -8,7 +8,7 @@ import { useSettings } from "@/hooks/useSettings";
 
 function SidebarContent() {
   const searchParams = useSearchParams();
-  const currentHub = searchParams.get("hub") || "dashboard";
+  const currentHub = searchParams.get("hub") || "converters";
   const { t, isSidebarOpen: isOpen, setIsSidebarOpen: setIsOpen } = useSettings();
 
   const getMenuClass = (hubName: string) => {
@@ -72,13 +72,6 @@ function SidebarContent() {
             {t("coreWorkspaces")}
           </p>
         )}
-
-        <Link href="/?hub=dashboard" onClick={() => { if (window.innerWidth < 768) setIsOpen(false); }} className={getMenuClass("dashboard")} title={!isOpen ? t("dashboard") : undefined}>
-          <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-          </svg>
-          {isOpen && <span>{t("dashboard")}</span>}
-        </Link>
 
         <Link href="/?hub=converters" onClick={() => { if (window.innerWidth < 768) setIsOpen(false); }} className={getMenuClass("converters")} title={!isOpen ? t("fileConverters") : undefined}>
           <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
