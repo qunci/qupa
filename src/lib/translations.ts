@@ -59,7 +59,7 @@ export const translations: Translations = {
     clearAll: "Clear All",
     compressFile: "Compress to ZIP",
     extractArchive: "Extract Archive",
-    encryptFile: "Protect File",
+    encryptFile: "Secure File",
     decryptFile: "Unlock File"
   }
 };

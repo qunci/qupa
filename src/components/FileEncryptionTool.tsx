@@ -43,13 +43,30 @@ export default function FileEncryptionTool({ mode = "encrypt" }: { mode?: "encry
     }
   };
 
-  const handleFileSelection = (selectedFile: File) => {
+  const handleFileSelection = async (selectedFile: File) => {
     if (internalMode === "decrypt" && !selectedFile.name.endsWith(".locked")) {
       toast.error("Please upload a .locked file for decryption.");
       return;
     }
     setFile(selectedFile);
     setPassword("");
+
+    if (internalMode === "decrypt") {
+      try {
+        const fileBuffer = await selectedFile.slice(0, 5).arrayBuffer();
+        const magicCheck = new Uint8Array(fileBuffer.slice(0, 4));
+        const magicStr = new TextDecoder().decode(magicCheck);
+        
+        if (magicStr === "QUPA") {
+          const algoByte = new Uint8Array(fileBuffer.slice(4, 5))[0];
+          setAlgorithm(algoByte === 0 ? "AES-GCM" : "AES-CBC");
+        } else {
+          setAlgorithm("AES-GCM");
+        }
+      } catch (e) {
+        console.error("Auto-detect failed", e);
+      }
+    }
   };
 
   // --- Cryptography Engine ---
@@ -115,11 +132,11 @@ export default function FileEncryptionTool({ mode = "encrypt" }: { mode?: "encry
       document.body.removeChild(a);
       
       setTimeout(() => URL.revokeObjectURL(url), 10000);
-      toast.success("File encrypted successfully!");
+      toast.success("File secured successfully!");
       
     } catch (err) {
       console.error(err);
-      toast.error("An error occurred during encryption.");
+      toast.error("An error occurred during securing process.");
     } finally {
       setIsProcessing(false);
     }
@@ -225,26 +242,25 @@ export default function FileEncryptionTool({ mode = "encrypt" }: { mode?: "encry
   );
 
   return (
-    <div className="w-full space-y-6 animate-in fade-in duration-500">
-      <div className="flex flex-col xl:flex-row gap-6">
-        <div className="flex-1 flex flex-col space-y-4">
-          
-          {/* Mode Toggle */}
-          <div className="flex items-center gap-2 p-1 bg-slate-100 dark:bg-[#18181B] rounded-xl border border-slate-200 dark:border-slate-800 w-fit self-center xl:self-start mb-2">
-            <button
-              onClick={() => { setInternalMode("encrypt"); setFile(null); }}
-              className={`px-5 py-2 rounded-lg text-sm font-bold transition-all ${isEncrypt ? 'bg-white dark:bg-slate-700 text-emerald-600 dark:text-emerald-400 shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
-            >
-              Lock File
-            </button>
-            <button
-              onClick={() => { setInternalMode("decrypt"); setFile(null); }}
-              className={`px-5 py-2 rounded-lg text-sm font-bold transition-all ${!isEncrypt ? 'bg-white dark:bg-slate-700 text-sky-600 dark:text-sky-400 shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
-            >
-              Unlock File
-            </button>
-          </div>
+    <div className="w-full flex flex-col space-y-6 animate-in fade-in duration-500 h-full">
+      {/* Mode Toggle */}
+      <div className="flex items-center gap-2 p-1 bg-slate-100 dark:bg-[#18181B] rounded-xl border border-slate-200 dark:border-slate-800 w-fit self-center xl:self-start">
+        <button
+          onClick={() => { setInternalMode("encrypt"); setFile(null); }}
+          className={`px-5 py-2.5 rounded-lg text-sm font-bold transition-all ${isEncrypt ? 'bg-white dark:bg-slate-700 text-emerald-600 dark:text-emerald-400 shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
+        >
+          Secure File
+        </button>
+        <button
+          onClick={() => { setInternalMode("decrypt"); setFile(null); }}
+          className={`px-5 py-2.5 rounded-lg text-sm font-bold transition-all ${!isEncrypt ? 'bg-white dark:bg-slate-700 text-sky-600 dark:text-sky-400 shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
+        >
+          Unlock File
+        </button>
+      </div>
 
+      <div className="flex flex-col xl:flex-row gap-6 items-stretch w-full flex-1 min-h-0">
+        <div className="flex-1 flex flex-col h-full min-h-[20rem]">
           {!file ? (
             <div 
               onDragOver={handleDragOver}
@@ -261,7 +277,7 @@ export default function FileEncryptionTool({ mode = "encrypt" }: { mode?: "encry
                 {icon}
               </div>
               <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200">
-                {isEncrypt ? "Select File to Encrypt" : "Select File to Decrypt"}
+                {isEncrypt ? "Select File to Secure" : "Select File to Unlock"}
               </h3>
               <p className="text-sm text-slate-500 mt-1">
                 {isEncrypt ? "Drag & drop any file here" : "Drag & drop a .locked file here"}
@@ -298,7 +314,7 @@ export default function FileEncryptionTool({ mode = "encrypt" }: { mode?: "encry
         </div>
 
         {/* Action Controls */}
-        <div className="w-full xl:w-80 flex flex-col shrink-0 bg-white dark:bg-[#1C1C1E] p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div className="flex-1 flex flex-col w-full bg-white dark:bg-[#1C1C1E] p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm h-full min-h-[20rem]">
           <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">Security Settings</h3>
           
           <div className="space-y-5">
@@ -359,7 +375,7 @@ export default function FileEncryptionTool({ mode = "encrypt" }: { mode?: "encry
               {isProcessing ? (
                 <svg className="animate-spin h-5 w-5 text-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
               ) : isEncrypt ? (
-                <><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg> Lock File</>
+                <><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg> Secure File</>
               ) : (
                 <><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" /></svg> Unlock File</>
               )}

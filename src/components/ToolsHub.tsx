@@ -148,9 +148,9 @@ export default function ToolsHub() {
                             : activeTool === "extract-archive"
                               ? "Extract files securely from ZIP, RAR, 7Z directly in browser."
                               : activeTool === "encrypt-file"
-                                ? "Lock any file securely with AES-GCM encryption."
+                                ? "Secure any file with military-grade encryption."
                                 : activeTool === "decrypt-file"
-                                  ? "Unlock files protected by Qupa Encryption."
+                                  ? "Unlock files secured by Qupa Encryption."
                                   : activeTool === "convert-image"
                                     ? "Convert between JPG, PNG, WebP, SVG, and more effortlessly."
                                     : activeTool === "convert-document"
@@ -291,7 +291,7 @@ export default function ToolsHub() {
                   </svg>
                 </div>
                 <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-1.5">{t("encryptFile")}</h3>
-                <p className="text-[13px] leading-relaxed text-slate-500 dark:text-slate-400 mb-5 flex-1">Lock any file securely with AES-GCM encryption.</p>
+                <p className="text-[13px] leading-relaxed text-slate-500 dark:text-slate-400 mb-5 flex-1">Secure any file with military-grade encryption.</p>
                 <button onClick={() => setActiveTool("encrypt-file")} className="w-full py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition-colors">
                   Open Workspace
                 </button>
@@ -304,7 +304,7 @@ export default function ToolsHub() {
                   </svg>
                 </div>
                 <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-1.5">{t("decryptFile")}</h3>
-                <p className="text-[13px] leading-relaxed text-slate-500 dark:text-slate-400 mb-5 flex-1">Unlock files protected by Qupa Encryption.</p>
+                <p className="text-[13px] leading-relaxed text-slate-500 dark:text-slate-400 mb-5 flex-1">Unlock files secured by Qupa Encryption.</p>
                 <button onClick={() => setActiveTool("decrypt-file")} className="w-full py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition-colors">
                   Open Workspace
                 </button>
