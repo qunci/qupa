@@ -1,15 +1,23 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
 
-export default function FileEncryptionTool({ mode }: { mode: "encrypt" | "decrypt" }) {
+export default function FileEncryptionTool({ mode = "encrypt" }: { mode?: "encrypt" | "decrypt" }) {
+  const [internalMode, setInternalMode] = useState<"encrypt" | "decrypt">(mode);
   const [file, setFile] = useState<File | null>(null);
   const [password, setPassword] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [algorithm, setAlgorithm] = useState<"AES-GCM" | "AES-CBC">("AES-GCM");
   
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setInternalMode(mode);
+    setFile(null);
+    setPassword("");
+  }, [mode]);
 
   const formatBytes = (bytes: number) => {
     if (bytes === 0) return "0 B";
@@ -36,7 +44,7 @@ export default function FileEncryptionTool({ mode }: { mode: "encrypt" | "decryp
   };
 
   const handleFileSelection = (selectedFile: File) => {
-    if (mode === "decrypt" && !selectedFile.name.endsWith(".locked")) {
+    if (internalMode === "decrypt" && !selectedFile.name.endsWith(".locked")) {
       toast.error("Please upload a .locked file for decryption.");
       return;
     }
@@ -57,7 +65,7 @@ export default function FileEncryptionTool({ mode }: { mode: "encrypt" | "decryp
     );
   };
 
-  const deriveKey = async (passwordKey: CryptoKey, salt: Uint8Array) => {
+  const deriveKey = async (passwordKey: CryptoKey, salt: Uint8Array, algoName: string) => {
     return window.crypto.subtle.deriveKey(
       {
         name: "PBKDF2",
@@ -66,7 +74,7 @@ export default function FileEncryptionTool({ mode }: { mode: "encrypt" | "decryp
         hash: "SHA-256",
       },
       passwordKey,
-      { name: "AES-GCM", length: 256 },
+      { name: algoName, length: 256 },
       false,
       ["encrypt", "decrypt"]
     );
@@ -79,21 +87,24 @@ export default function FileEncryptionTool({ mode }: { mode: "encrypt" | "decryp
     try {
       const fileBuffer = await file.arrayBuffer();
       
-      // Generate secure random salt and IV
+      const ivLength = algorithm === "AES-GCM" ? 12 : 16;
       const salt = window.crypto.getRandomValues(new Uint8Array(16));
-      const iv = window.crypto.getRandomValues(new Uint8Array(12));
+      const iv = window.crypto.getRandomValues(new Uint8Array(ivLength));
+      
+      const algoByte = new Uint8Array([algorithm === "AES-GCM" ? 0 : 1]);
+      const magic = new TextEncoder().encode("QUPA");
 
       const passwordKey = await getPasswordKey(password);
-      const aesKey = await deriveKey(passwordKey, salt);
+      const aesKey = await deriveKey(passwordKey, salt, algorithm);
 
       const encryptedContent = await window.crypto.subtle.encrypt(
-        { name: "AES-GCM", iv: iv as BufferSource },
+        { name: algorithm, iv: iv as BufferSource },
         aesKey,
         fileBuffer
       );
 
-      // Construct final package: [Salt (16)] + [IV (12)] + [Encrypted Data]
-      const encryptedBlob = new Blob([salt, iv, encryptedContent], { type: "application/octet-stream" });
+      // Package: [QUPA (4)] + [Algo (1)] + [Salt (16)] + [IV (12/16)] + [Encrypted Data]
+      const encryptedBlob = new Blob([magic, algoByte, salt, iv, encryptedContent], { type: "application/octet-stream" });
       const url = URL.createObjectURL(encryptedBlob);
       
       const a = document.createElement("a");
@@ -121,23 +132,44 @@ export default function FileEncryptionTool({ mode }: { mode: "encrypt" | "decryp
     try {
       const fileBuffer = await file.arrayBuffer();
       
-      // File must be at least 16 (salt) + 12 (iv) bytes long
-      if (fileBuffer.byteLength < 28) {
-        throw new Error("Invalid file format");
-      }
+      const magicCheck = new Uint8Array(fileBuffer.slice(0, 4));
+      const magicStr = new TextDecoder().decode(magicCheck);
+      
+      let salt: Uint8Array;
+      let iv: Uint8Array;
+      let encryptedData: ArrayBuffer;
+      let usedAlgorithm = "AES-GCM"; 
 
-      // Extract Salt, IV, and the encrypted data
-      const salt = new Uint8Array(fileBuffer.slice(0, 16));
-      const iv = new Uint8Array(fileBuffer.slice(16, 28));
-      const encryptedData = fileBuffer.slice(28);
+      if (magicStr === "QUPA") {
+        const algoByte = new Uint8Array(fileBuffer.slice(4, 5))[0];
+        usedAlgorithm = algoByte === 0 ? "AES-GCM" : "AES-CBC";
+        const ivLength = usedAlgorithm === "AES-GCM" ? 12 : 16;
+        
+        if (fileBuffer.byteLength < 5 + 16 + ivLength) {
+           throw new Error("Invalid file format");
+        }
+        
+        salt = new Uint8Array(fileBuffer.slice(5, 21));
+        iv = new Uint8Array(fileBuffer.slice(21, 21 + ivLength));
+        encryptedData = fileBuffer.slice(21 + ivLength);
+      } else {
+        if (fileBuffer.byteLength < 28) {
+          throw new Error("Invalid file format");
+        }
+        salt = new Uint8Array(fileBuffer.slice(0, 16));
+        iv = new Uint8Array(fileBuffer.slice(16, 28));
+        encryptedData = fileBuffer.slice(28);
+      }
+      
+      setAlgorithm(usedAlgorithm as any);
 
       const passwordKey = await getPasswordKey(password);
-      const aesKey = await deriveKey(passwordKey, salt);
+      const aesKey = await deriveKey(passwordKey, salt, usedAlgorithm);
 
       let decryptedContent;
       try {
         decryptedContent = await window.crypto.subtle.decrypt(
-          { name: "AES-GCM", iv: iv as BufferSource },
+          { name: usedAlgorithm, iv: iv as BufferSource },
           aesKey,
           encryptedData
         );
@@ -152,7 +184,6 @@ export default function FileEncryptionTool({ mode }: { mode: "encrypt" | "decryp
       
       const a = document.createElement("a");
       a.href = url;
-      // Remove '.locked' from the filename
       a.download = file.name.endsWith(".locked") ? file.name.slice(0, -7) : `decrypted_${file.name}`;
       document.body.appendChild(a);
       a.click();
@@ -169,7 +200,7 @@ export default function FileEncryptionTool({ mode }: { mode: "encrypt" | "decryp
     }
   };
 
-  const isEncrypt = mode === "encrypt";
+  const isEncrypt = internalMode === "encrypt";
   
   const dragActiveClasses = isEncrypt 
     ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-500/10 dark:border-emerald-400" 
@@ -186,6 +217,7 @@ export default function FileEncryptionTool({ mode }: { mode: "encrypt" | "decryp
   const buttonActiveClasses = isEncrypt
     ? "bg-emerald-600 text-white hover:bg-emerald-700 shadow-md hover:shadow-lg"
     : "bg-sky-600 text-white hover:bg-sky-700 shadow-md hover:shadow-lg";
+
   const icon = isEncrypt ? (
     <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
   ) : (
@@ -197,6 +229,22 @@ export default function FileEncryptionTool({ mode }: { mode: "encrypt" | "decryp
       <div className="flex flex-col xl:flex-row gap-6">
         <div className="flex-1 flex flex-col space-y-4">
           
+          {/* Mode Toggle */}
+          <div className="flex items-center gap-2 p-1 bg-slate-100 dark:bg-[#18181B] rounded-xl border border-slate-200 dark:border-slate-800 w-fit self-center xl:self-start mb-2">
+            <button
+              onClick={() => { setInternalMode("encrypt"); setFile(null); }}
+              className={`px-5 py-2 rounded-lg text-sm font-bold transition-all ${isEncrypt ? 'bg-white dark:bg-slate-700 text-emerald-600 dark:text-emerald-400 shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
+            >
+              Lock File
+            </button>
+            <button
+              onClick={() => { setInternalMode("decrypt"); setFile(null); }}
+              className={`px-5 py-2 rounded-lg text-sm font-bold transition-all ${!isEncrypt ? 'bg-white dark:bg-slate-700 text-sky-600 dark:text-sky-400 shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}
+            >
+              Unlock File
+            </button>
+          </div>
+
           {!file ? (
             <div 
               onDragOver={handleDragOver}
@@ -253,7 +301,25 @@ export default function FileEncryptionTool({ mode }: { mode: "encrypt" | "decryp
         <div className="w-full xl:w-80 flex flex-col shrink-0 bg-white dark:bg-[#1C1C1E] p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">Security Settings</h3>
           
-          <div className="space-y-4">
+          <div className="space-y-5">
+            <div>
+              <label className="flex items-center gap-2 text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
+                Algorithm
+              </label>
+              <select
+                value={algorithm}
+                onChange={(e) => setAlgorithm(e.target.value as "AES-GCM" | "AES-CBC")}
+                disabled={isProcessing || !isEncrypt}
+                className={`w-full p-2.5 border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white rounded-lg focus:ring-2 transition-colors ${inputFocusClasses} ${!isEncrypt ? 'opacity-70 cursor-not-allowed' : ''}`}
+              >
+                <option value="AES-GCM">AES-256-GCM (Recommended)</option>
+                <option value="AES-CBC">AES-256-CBC</option>
+              </select>
+              {!isEncrypt && (
+                <p className="text-[11px] text-slate-500 mt-1.5">Auto-detected from file</p>
+              )}
+            </div>
+
             <div>
               <label className="flex items-center gap-2 text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
                 {isEncrypt ? "Set Password" : "Enter Password"}

@@ -252,17 +252,6 @@ export default function ToolsHub() {
                 </button>
               </div>
 
-              <div className="bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex flex-col transition-colors duration-300 shadow-sm">
-                <div className="w-10 h-10 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center mb-3 text-slate-700 dark:text-slate-300">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                </div>
-                <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-1.5">Protect Image</h3>
-                <p className="text-[13px] leading-relaxed text-slate-500 dark:text-slate-400 mb-5 flex-1">Encrypt image pixels or attach security locks directly in-browser.</p>
-                <button disabled className="w-full py-1.5 text-sm bg-slate-100 dark:bg-slate-800/80 text-slate-400 dark:text-slate-500 rounded-md font-medium cursor-not-allowed transition-colors border border-transparent dark:border-slate-700">
-                  Coming Soon
-                </button>
-              </div>
-
             </div>
           )}
 
