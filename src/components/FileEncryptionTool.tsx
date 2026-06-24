@@ -259,15 +259,15 @@ export default function FileEncryptionTool({ mode = "encrypt" }: { mode?: "encry
         </button>
       </div>
 
-      <div className="flex flex-col xl:flex-row gap-6 items-stretch w-full flex-1 min-h-0">
-        <div className="flex-1 flex flex-col h-full min-h-[20rem]">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 w-full flex-1 min-h-0">
+        <div className="flex flex-col h-full">
           {!file ? (
             <div 
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
               onClick={() => fileInputRef.current?.click()}
-              className={`w-full flex-1 min-h-[16rem] border-2 border-dashed rounded-xl flex flex-col items-center justify-center transition-colors cursor-pointer ${
+              className={`w-full h-full min-h-[20rem] border-2 border-dashed rounded-2xl flex flex-col items-center justify-center transition-colors cursor-pointer ${
                 isDragging 
                   ? dragActiveClasses
                   : "border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50 bg-white dark:bg-[#18181B]"
@@ -291,7 +291,7 @@ export default function FileEncryptionTool({ mode = "encrypt" }: { mode?: "encry
               />
             </div>
           ) : (
-            <div className="bg-white dark:bg-[#18181B] border border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm">
+            <div className="bg-white dark:bg-[#18181B] border border-slate-200 dark:border-slate-700 rounded-2xl p-6 shadow-sm h-full flex flex-col justify-center">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4 overflow-hidden">
                   <div className={`w-12 h-12 shrink-0 rounded-lg flex items-center justify-center ${iconWrapperClasses}`}>
@@ -314,7 +314,7 @@ export default function FileEncryptionTool({ mode = "encrypt" }: { mode?: "encry
         </div>
 
         {/* Action Controls */}
-        <div className="flex-1 flex flex-col w-full bg-white dark:bg-[#1C1C1E] p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm h-full min-h-[20rem]">
+        <div className="flex flex-col w-full bg-white dark:bg-[#1C1C1E] p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm h-full min-h-[20rem]">
           <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">Security Settings</h3>
           
           <div className="space-y-5">
