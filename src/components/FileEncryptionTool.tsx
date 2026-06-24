@@ -322,17 +322,22 @@ export default function FileEncryptionTool({ mode = "encrypt" }: { mode?: "encry
               <label className="flex items-center gap-2 text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
                 Algorithm
               </label>
-              <select
-                value={algorithm}
-                onChange={(e) => setAlgorithm(e.target.value as "AES-GCM" | "AES-CBC")}
-                disabled={isProcessing || !isEncrypt}
-                className={`w-full p-2.5 border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white rounded-lg focus:ring-2 transition-colors ${inputFocusClasses} ${!isEncrypt ? 'opacity-70 cursor-not-allowed' : ''}`}
-              >
-                <option value="AES-GCM">AES-256-GCM (Recommended)</option>
-                <option value="AES-CBC">AES-256-CBC</option>
-              </select>
-              {!isEncrypt && (
-                <p className="text-[11px] text-slate-500 mt-1.5">Auto-detected from file</p>
+              {isEncrypt ? (
+                <select
+                  value={algorithm}
+                  onChange={(e) => setAlgorithm(e.target.value as "AES-GCM" | "AES-CBC")}
+                  disabled={isProcessing}
+                  className={`w-full p-2.5 border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white rounded-lg focus:ring-2 transition-colors ${inputFocusClasses}`}
+                >
+                  <option value="AES-GCM">AES-256-GCM (Recommended)</option>
+                  <option value="AES-CBC">AES-256-CBC</option>
+                </select>
+              ) : (
+                <div className="w-full p-2.5 border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/50 rounded-lg flex items-center cursor-not-allowed">
+                  <span className={!file ? "text-slate-500 dark:text-slate-400" : "text-slate-700 dark:text-slate-300 font-medium"}>
+                    {!file ? "Auto-detected from file" : (algorithm === "AES-GCM" ? "AES-256-GCM" : "AES-256-CBC")}
+                  </span>
+                </div>
               )}
             </div>
 
